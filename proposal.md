@@ -11,3 +11,4 @@ Some short description of the project will go here . . .
  - sound effects
  - better graphics
  - etc . . .
+ - mini games played at each 'task level' 
