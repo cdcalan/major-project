@@ -30,6 +30,10 @@ let menuY;
 let menuWidth = 250;
 let menuHeight = 200;
 
+// Player variables:
+let playerLives;
+let score;
+
 
 
 function setup() {
@@ -49,6 +53,10 @@ function setup() {
   startButton = new Button(menuX, menuY + 20, "Start");
   infoButton = new Button(menuX, menuY + 95, "Info");
   console.log(menuX, menuY);
+
+  // Gameplay stuff ----------------------------------------------should i be declaring these in setup or the gamescreen?
+  playerLives = 4;
+  score = 0;
 }
 
 function draw() {
@@ -68,9 +76,6 @@ function draw() {
   }
   // Optional: level up screens? or just messages?
   
-  player.show();
-  player.move();
-  player.jump();
 }
 
 
@@ -102,6 +107,7 @@ function displayStartScreen() {
 
 
 
+// Scrolling background??????????????????????????????????
 function displayInfoScreen() {
   background(200);
 }
@@ -110,6 +116,9 @@ function displayInfoScreen() {
 
 function displayGameScreen() {
   background(70, 150, 100);
+  player.show();
+  player.move();
+  player.jump();
 }
 
 
