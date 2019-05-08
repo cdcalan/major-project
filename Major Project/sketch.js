@@ -12,6 +12,10 @@
 // - create a start screen with menu buttons: start, info
 // - Extra: loading animation? (maybe use css)?
 
+// http://molleindustria.github.io/p5.play/examples/index.html?fileName=camera.js
+// http://molleindustria.github.io/p5.play/examples/index.html?fileName=sprites_with_sheet.js
+
+
 
 
 // Player object:
@@ -77,6 +81,7 @@ function setup() {
 
   // Menu Button Objects:
   startButton = new Button(menuX, menuY + 20, "Start");
+  textStyle(BOLD);
   infoButton = new Button(menuX, menuY + 95, "Info");
 
   // Gameplay stuff ----------------------------------------------should i be declaring these in setup or the gamescreen?
@@ -172,6 +177,7 @@ function displayGameOverScreen() {
 // grass = (70, 150, 10)
 
 
+
 // Displays player lives:
 function playerLifeCounter() {
   fill(190);
@@ -187,9 +193,9 @@ function coinCounter() {
   fill(190);
   rect(175, 25, 125, 40, 5);
   
+  image(coinImage, 260, 27, 38, 38);
+
   fill(0);
   textSize(25);
-  text("Coins :   " + coins, 30, 55);
-
-  image(coinImage, 200, 25, 30);
+  text("Coins : " + coins, 180, 55);
 }
