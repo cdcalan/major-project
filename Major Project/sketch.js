@@ -32,7 +32,27 @@ let menuHeight = 200;
 
 // Player variables:
 let playerLives;
+let coins;
 let score;
+
+let playerAvatar;
+let marioRun;
+let marioJump;
+let marioDuck;
+let coinImage;
+
+
+let gravity;
+let yLocation, ground;
+let yVelocity, yAcceleration;
+
+
+function preload() {
+  marioRun = loadImage("assets/marioRun.png");
+  marioJump = loadImage("assets/marioJump.png");
+  marioDuck = loadImage("assets/marioDuck.png");
+  coinImage = loadImage("assets/coin.png");
+}
 
 
 
@@ -41,23 +61,33 @@ function setup() {
 
   textSize(40);
 
+  // Start Screen: 
   screenState = "Start Screen";
 
   menuX = (windowWidth/2) - (menuWidth/2);
   menuY = (windowHeight/2) - (menuHeight/2);
 
+  yVelocity = 0;
+  yAcceleration = 0;
+  gravity = 0.1;
+  ground = windowHeight-250;
+  yLocation = ground;
   // Demo Sprite Object:
-  player = new User(300, windowHeight-250);
+  player = new User(300, yLocation);
 
   // Menu Button Objects:
   startButton = new Button(menuX, menuY + 20, "Start");
   infoButton = new Button(menuX, menuY + 95, "Info");
-  console.log(menuX, menuY);
 
   // Gameplay stuff ----------------------------------------------should i be declaring these in setup or the gamescreen?
   playerLives = 4;
+  coins = 0;
   score = 0;
+
+  playerAvatar = marioDuck;
 }
+
+
 
 function draw() {
   background(220);
@@ -75,7 +105,7 @@ function draw() {
     displayGameOverScreen();
   }
   // Optional: level up screens? or just messages?
-  
+
 }
 
 
@@ -117,19 +147,49 @@ function displayInfoScreen() {
 function displayGameScreen() {
   background(70, 150, 100);
   player.show();
-  player.move();
-  player.jump();
+  player.updateShow(playerAvatar);
+  player.move(playerAvatar);
+  player.jump(playerAvatar);
+
+  playerLifeCounter();
+  coinCounter();
 }
 
 
 
 function displayGameOverScreen() {
   background(80);
-  textSize(80);
   textAlign(CENTER);
+  textSize(80);
   fill(255, 0, 0);
   text("GAME OVER", windowWidth/2, windowHeight/2);
+  textSize(50);
+  fill(255);
+  text("Score " + score, windowWidth/2, windowHeight/2);
 }
 
 /////////////////COLORS//////////////////////
 // grass = (70, 150, 10)
+
+
+// Displays player lives:
+function playerLifeCounter() {
+  fill(190);
+  rect(25, 25, 125, 40, 5);
+  
+  fill(0);
+  textSize(25);
+  text("Life : " + playerLives, 30, 55);
+}
+
+// Displays coins earned:
+function coinCounter() {
+  fill(190);
+  rect(175, 25, 125, 40, 5);
+  
+  fill(0);
+  textSize(25);
+  text("Coins :   " + coins, 30, 55);
+
+  image(coinImage, 200, 25, 30);
+}
