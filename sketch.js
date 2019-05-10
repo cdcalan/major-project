@@ -31,14 +31,15 @@ let infoButton;
 // Menu coordinates and dimensions:
 let menuX;
 let menuY;
-let menuWidth = 250;
-let menuHeight = 200;
+let menuWidth = 350;
+let menuHeight = 250;
 
 // Player variables:
 let playerLives;
 let coins;
 let score;
 
+// Image holders:
 let playerAvatar;
 let marioRun;
 let marioJump;
@@ -71,25 +72,27 @@ function setup() {
   menuX = (windowWidth/2) - (menuWidth/2);
   menuY = (windowHeight/2) - (menuHeight/2);
 
+  //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   yVelocity = 0;
   yAcceleration = 0;
   gravity = 0.1;
   ground = windowHeight-250;
   yLocation = ground;
+  //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+
   // Demo Sprite Object:
   player = new User(300, yLocation);
+  playerAvatar = marioDuck;
 
   // Menu Button Objects:
-  startButton = new Button(menuX, menuY + 20, "Start");
   textStyle(BOLD);
-  infoButton = new Button(menuX, menuY + 95, "Info");
+  startButton = new Button(menuX, menuY + menuHeight/5, "Start");
+  infoButton = new Button(menuX, menuY + menuHeight/5 + 80, "Info");
 
   // Gameplay stuff ----------------------------------------------should i be declaring these in setup or the gamescreen?
   playerLives = 4;
   coins = 0;
   score = 0;
-
-  playerAvatar = marioDuck;
 }
 
 

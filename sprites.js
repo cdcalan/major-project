@@ -87,17 +87,11 @@ class User extends Sprites {
 
 class Button {
   constructor(x, y, z) {
-    this.w = 150;
+    this.w = (menuWidth/10)*8;
     this.h = 50;
     this.x = x;
     this.y = y;
     this.message = z;
-  }
-  show(){
-    fill(58, 62, 99);
-    rect(this.x + (menuWidth/5), this.y, this.w, this.h, 50);
-    fill(255);
-    text(this.message, this.x + (this.w/2), this.y + this.h/1.5);
   }
   // Takes in mouseX (mX) and mouseY (mY) values to check if button is clicked:
   clickedOn(mX, mY) {
@@ -107,5 +101,11 @@ class Button {
              (mY >= this.y && 
               mY <= this.y + this.h);
     }
+  }
+  show(){
+    fill(58, 62, 99);
+    rect(this.x + (menuWidth/10), this.y, this.w, this.h, 50);
+    fill(255);
+    text(this.message, this.x + (this.w/2), this.y + this.h/1.3);
   }
 }
