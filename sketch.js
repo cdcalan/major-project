@@ -16,6 +16,10 @@
 // http://molleindustria.github.io/p5.play/examples/index.html?fileName=sprites_with_sheet.js
 
 
+/////////////////COLORS//////////////////////
+// grass = (70, 150, 10)
+
+
 
 
 // Player object:
@@ -51,11 +55,24 @@ let gravity;
 let yLocation, ground;
 let yVelocity, yAcceleration;
 
+let level, lines;
+let platform;
+
 
 function preload() {
+  // Backgorund environment:
+  level = "assets/levels/1.txt";
+  lines = loadStrings(level);
+
+  // Tiles:
+  platform = loadImage("assets/platform.png");
+
+  // Player Avatars:
   marioRun = loadImage("assets/marioRun.png");
   marioJump = loadImage("assets/marioJump.png");
   marioDuck = loadImage("assets/marioDuck.png");
+
+  // Game elements:
   coinImage = loadImage("assets/coin.png");
 }
 
@@ -161,6 +178,16 @@ function displayGameScreen() {
 
   playerLifeCounter();
   coinCounter();
+
+  showTiles(tiles[x][y], x, y); //////???????????????????????????????????????????implement 2 d array and grid generation
+}
+
+
+
+function showTiles(location, x, y) {
+  if (location === "#") {
+    image(platform, x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+  }
 }
 
 
@@ -175,9 +202,6 @@ function displayGameOverScreen() {
   fill(255);
   text("Score " + score, windowWidth/2, windowHeight/2);
 }
-
-/////////////////COLORS//////////////////////
-// grass = (70, 150, 10)
 
 
 
