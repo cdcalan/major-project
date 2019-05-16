@@ -43,19 +43,16 @@ class User extends Sprites {
   //   yVelocity += yAcceleration;
   //   yLocation += yVelocity;
 
-  //   // physics
-  //   yAcceleration = 0;  // after movign each tim, turn the acceleration back to 0
-  //   yVelocity += gravity;
-  //   // if it is going past the grpound make it stay on the ground and stop it from moving 
-  //   if (yLocation > ground) {
-  //     yLocation = ground;
-  //     yVelocity = 0;
-  //   }
-  // }
   // Implement gravity!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   updateShow(playerAvatar) {
     if (keyIsPressed && keyCode === UP_ARROW) {
-      yAcceleration = -5;
+      yAcceleration = 0;   // after movign each tim, turn the acceleration back to 0
+      yVelocity += gravity;
+      // if it is going past the grpound make it stay on the ground and stop it from moving 
+      if (yLocation > ground) {
+        yLocation = ground;
+        yVelocity = 0;
+      }
       playerAvatar = marioJump;
     }
     else if (keyIsPressed && keyCode === RIGHT_ARROW) {
