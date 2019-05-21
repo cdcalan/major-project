@@ -2,7 +2,7 @@ class Sprites {
   constructor(x, y) {
     // Coordinates:
     this.x = x;
-    this.y = yLocation;
+    this.y = y;
     // Dimensions:
     this.h = 75;
     this.w = 50;
@@ -37,36 +37,49 @@ class Sprites {
 
 
 class User extends Sprites {
-  // constructor(yVelocity, yAcceleration) {
-  //   super();
-  //   // move ball
-  //   yVelocity += yAcceleration;
-  //   yLocation += yVelocity;
+  constructor() {                            ///////causes porblem with displaying player
+    super();
+    
+    this.yVel = yVelocity;
+    this.yAccel = yAcceleration;
+    this.yLoc = yLocation;
+  }
 
   // Implement gravity!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   updateShow(playerAvatar) {
+
     if (keyIsPressed && keyCode === UP_ARROW) {
-      yAcceleration = 0;   // after movign each tim, turn the acceleration back to 0
-      yVelocity += gravity;
-      // if it is going past the grpound make it stay on the ground and stop it from moving 
-      if (yLocation > ground) {
-        yLocation = ground;
-        yVelocity = 0;
-      }
+      //show jump:
+      yAcceleration = -5;
       playerAvatar = marioJump;
     }
     else if (keyIsPressed && keyCode === RIGHT_ARROW) {
+      // show run:
       playerAvatar = marioRun; 
     }
     else {
+      // show duck:
       playerAvatar = marioDuck;
     }
+    // show user:
     image(playerAvatar, this.x, this.y, this.w, this.h);
   }
 
   jump() {
     if (keyIsPressed && keyCode === UP_ARROW) {
-      this.y -= this.dy;
+      // this.y -= this.dy;
+      yVelocity += yAcceleration;
+      yLocation += yVelocity;
+      yAcceleration = 0;   // after moving each time, turn the acceleration back to 0
+      yVelocity += gravity;
+
+    
+      // if it is going past the grpound make it stay on the ground and stop it from moving 
+      if (yLocation > ground) {
+        yLocation = ground;
+        yVelocity = 0;
+      }
+
     }
   }
 

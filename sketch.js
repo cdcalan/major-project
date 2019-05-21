@@ -61,11 +61,11 @@ let platform;
 
 function preload() {
   // Backgorund environment:
-  level = "assets/levels/1.txt";
-  lines = loadStrings(level);
+  //level = "assets/levels/1.txt";
+  //lines = loadStrings(level);
 
   // Tiles:
-  platform = loadImage("assets/platform.png");
+  //platform = loadImage("assets/platform.png");
 
   // Player Avatars:
   marioRun = loadImage("assets/marioRun.png");
@@ -174,12 +174,12 @@ function displayGameScreen() {
   player.show();
   player.updateShow(playerAvatar);
   player.move(playerAvatar);
-  player.jump(playerAvatar);
+  player.jump();
 
   playerLifeCounter();
   coinCounter();
 
-  showTiles(tiles[x][y], x, y); //////???????????????????????????????????????????implement 2 d array and grid generation
+  //showTiles(tiles[x][y], x, y); //////???????????????????????????????????????????implement 2 d array and grid generation
 }
 
 
