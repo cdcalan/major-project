@@ -20,9 +20,10 @@ class Sprites {
   }
 
   // Sprite horizontal movement:
-  move() {
-    if (keyIsPressed && keyCode === RIGHT_ARROW) {
-      this.x += this.dx;
+  glide() {
+    this.x += this.dx;
+    if (this.x + this.w >= windowWidth || this.x <= 0) {
+      this.dx = -1 * this.dx;
     }
   }
 
@@ -37,8 +38,8 @@ class Sprites {
 
 
 class User extends Sprites {
-  constructor() {                            ///////causes porblem with displaying player
-    super();
+  constructor(x, y) {                            ///////causes porblem with displaying player
+    super(x, y);
     
     this.yVel = yVelocity;
     this.yAccel = yAcceleration;
@@ -56,6 +57,8 @@ class User extends Sprites {
     else if (keyIsPressed && keyCode === RIGHT_ARROW) {
       // show run:
       playerAvatar = marioRun; 
+      // Sprite horizontal movement:
+      this.x += this.dx;
     }
     else {
       // show duck:
@@ -66,21 +69,20 @@ class User extends Sprites {
   }
 
   jump() {
-    if (keyIsPressed && keyCode === UP_ARROW) {
-      // this.y -= this.dy;
-      yVelocity += yAcceleration;
-      yLocation += yVelocity;
-      yAcceleration = 0;   // after moving each time, turn the acceleration back to 0
-      yVelocity += gravity;
+    //if (keyIsPressed && keyCode === UP_ARROW) {
+    // this.y -= this.dy;
+    yVelocity += yAcceleration;
+    yLocation += yVelocity;
+    yAcceleration = 0;   // after moving each time, turn the acceleration back to 0
+    yVelocity += gravity;
 
     
-      // if it is going past the grpound make it stay on the ground and stop it from moving 
-      if (yLocation > ground) {
-        yLocation = ground;
-        yVelocity = 0;
-      }
-
+    // if it is going past the grpound make it stay on the ground and stop it from moving 
+    if (yLocation > ground) {
+      yLocation = ground;
+      yVelocity = 0;
     }
+
   }
 
   kick() {

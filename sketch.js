@@ -12,6 +12,9 @@
 // - create a start screen with menu buttons: start, info
 // - Extra: loading animation? (maybe use css)?
 
+// if removing somethign from an array, always count backwards through an array: start at the back and iterate through to the front of the array. 
+
+
 // http://molleindustria.github.io/p5.play/examples/index.html?fileName=camera.js
 // http://molleindustria.github.io/p5.play/examples/index.html?fileName=sprites_with_sheet.js
 
@@ -24,6 +27,7 @@
 
 // Player object:
 let player;
+let foe;
 
 // Screen state variable:
 let screenState;
@@ -50,13 +54,12 @@ let marioJump;
 let marioDuck;
 let coinImage;
 
+let level, lines;
+let platform;
 
 let gravity;
 let yLocation, ground;
 let yVelocity, yAcceleration;
-
-let level, lines;
-let platform;
 
 
 function preload() {
@@ -99,6 +102,7 @@ function setup() {
 
   // Demo Sprite Object:
   player = new User(300, yLocation);
+  foe = new Sprites(300, yLocation - 400);
   playerAvatar = marioDuck;
 
   // Menu Button Objects:
@@ -171,10 +175,12 @@ function displayInfoScreen() {
 
 function displayGameScreen() {
   background(70, 150, 100);
-  player.show();
-  player.updateShow(playerAvatar);
-  player.move(playerAvatar);
+
+  foe.show();
+  foe.glide();
+
   player.jump();
+  player.updateShow(playerAvatar);
 
   playerLifeCounter();
   coinCounter();
