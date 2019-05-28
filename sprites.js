@@ -8,7 +8,9 @@ class Sprites {
     this.w = 50;
     // Speed variables:
     this.dx = random(3, 10);
-    this.dy = 1;
+    //this.dy = 1;
+
+    this.life = 3;
 
 
   }
@@ -29,6 +31,7 @@ class Sprites {
 
   // Checks if sprite has collided with player:
   hasCollided() {
+    // return (if this sprite is touching the player); then, in another function, add if hasCollided, this.life -= 1; and display the life co7unter.
 
   }
 }
@@ -49,9 +52,19 @@ class User extends Sprites {
   // Implement gravity!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   updateShow(playerAvatar) {
 
-    if (keyIsPressed && keyCode === UP_ARROW) {
+    this.yVel += this.yAccel;
+    this.yLoc += this.yVel;
+    this.yAccel = 0;   // after moving each time, turn the acceleration back to 0
+    this.yVel += gravity;
+
+    // if it is going past the grpound make it stay on the ground and stop it from moving 
+    if (this.yLoc > ground) {
+      this.yLoc = ground;
+      this.yVel = 0;
+    }
+
+    if (keyIsPressed && key === " ") {
       //show jump:
-      yAcceleration = -5;
       playerAvatar = marioJump;
     }
     else if (keyIsPressed && keyCode === RIGHT_ARROW) {
@@ -59,6 +72,9 @@ class User extends Sprites {
       playerAvatar = marioRun; 
       // Sprite horizontal movement:
       this.x += this.dx;
+    }
+    else if (keyIsPressed && keyCode === LEFT_ARROW) {
+      this.x -= this.dx;
     }
     else {
       // show duck:
@@ -71,18 +87,7 @@ class User extends Sprites {
   jump() {
     //if (keyIsPressed && keyCode === UP_ARROW) {
     // this.y -= this.dy;
-    yVelocity += yAcceleration;
-    yLocation += yVelocity;
-    yAcceleration = 0;   // after moving each time, turn the acceleration back to 0
-    yVelocity += gravity;
-
     
-    // if it is going past the grpound make it stay on the ground and stop it from moving 
-    if (yLocation > ground) {
-      yLocation = ground;
-      yVelocity = 0;
-    }
-
   }
 
   kick() {
@@ -94,6 +99,14 @@ class User extends Sprites {
   }
 }
 
+
+
+function keyPressed(yAcceleration) {
+  if (key === " ") {
+    console.log("this " + yAcceleration);
+    return yAcceleration = -5;
+  }
+}
 
 
 

@@ -61,6 +61,8 @@ let gravity;
 let yLocation, ground;
 let yVelocity, yAcceleration;
 
+let imageX1 = 0, imageX2;
+let scrollImage, scrollSpeed = 1.5;
 
 function preload() {
   // Backgorund environment:
@@ -69,6 +71,9 @@ function preload() {
 
   // Tiles:
   //platform = loadImage("assets/platform.png");
+
+  // BG screen:
+  scrollImage = loadImage("assets/scrollImage.jpg");
 
   // Player Avatars:
   marioRun = loadImage("assets/marioRun.png");
@@ -83,6 +88,8 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+
+  imageX2 = windowWidth;
 
   textSize(40);
 
@@ -175,6 +182,24 @@ function displayInfoScreen() {
 
 function displayGameScreen() {
   background(70, 150, 100);
+
+  //////////////////SCROLL SCREEN//////////////////////////////////////////////////////////////////////////////////////////////////////////
+  // Creates two identical copies of the preloaded background image, and positions them side by side. 
+  image(scrollImage, imageX1, 0, windowWidth, windowHeight);
+  image(scrollImage, imageX2, 0, windowWidth, windowHeight);
+
+  // Moves the x-pos. of each background image to the left of the canvas to 'scroll backwards'. 
+  imageX1 -= scrollSpeed;
+  imageX2 -= scrollSpeed;
+  
+  // Continously loops the two images together, side by side as they move out of the frame to create a scrolling effect. 
+  if (imageX1 < -windowWidth){
+    imageX1 = windowWidth;
+  }
+  if (imageX2 < -windowWidth){
+    imageX2 = windowWidth;
+  }
+  ////////////////// E N D ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   foe.show();
   foe.glide();
