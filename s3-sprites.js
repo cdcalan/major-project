@@ -57,23 +57,27 @@ class User extends Sprites {
     this.yAccel = 0;   // after moving each time, turn the acceleration back to 0
     this.yVel += gravity;
 
-    // if it is going past the grpound make it stay on the ground and stop it from moving 
+    // if it is going past the ground make it stay on the ground and stop it from moving 
     if (this.yLoc > ground) {
       this.yLoc = ground;
       this.yVel = 0;
     }
 
-    if (keyIsPressed && key === " ") {
-      //show jump:
-      playerAvatar = marioJump;
-    }
-    else if (keyIsPressed && keyCode === RIGHT_ARROW) {
+    // if (keyIsPressed && keyCode === UP_ARROW) {
+    //   //show jump:
+    //   playerAvatar = marioJump;
+    //   this.yAccel = -5;
+    // }
+
+    if (keyIsPressed && keyCode === RIGHT_ARROW) {
       // show run:
       playerAvatar = marioRun; 
       // Sprite horizontal movement:
       this.x += this.dx;
     }
     else if (keyIsPressed && keyCode === LEFT_ARROW) {
+      // show run:
+      playerAvatar = marioRun; 
       this.x -= this.dx;
     }
     else {
@@ -81,7 +85,9 @@ class User extends Sprites {
       playerAvatar = marioDuck;
     }
     // show user:
-    image(playerAvatar, this.x, this.y, this.w, this.h);
+    image(playerAvatar, this.x, this.yLoc, this.w, this.h);
+
+    console.log(this.yAccel, this.yVel, this.yLoc);
   }
 
   jump() {
@@ -96,15 +102,6 @@ class User extends Sprites {
   attack() {
     fill(255, 0, 0);
     ellipse(this.x, this.y, 50, 50);
-  }
-}
-
-
-
-function keyPressed(yAcceleration) {
-  if (key === " ") {
-    console.log("this " + yAcceleration);
-    return yAcceleration = -5;
   }
 }
 

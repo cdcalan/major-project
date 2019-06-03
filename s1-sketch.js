@@ -66,19 +66,19 @@ let scrollImage, scrollSpeed = 1.5;
 
 function preload() {
   // Backgorund environment:
-  //level = "assets/levels/1.txt";
-  //lines = loadStrings(level);
+  level = "assets/textFiles/1.txt";
+  lines = loadStrings(level);
 
   // Tiles:
-  //platform = loadImage("assets/platform.png");
+  platform = loadImage("assets/environment/platform.png");
 
   // BG screen:
-  scrollImage = loadImage("assets/scrollImage.jpg");
+  scrollImage = loadImage("assets/environment/scrollImage.jpg");
 
   // Player Avatars:
-  marioRun = loadImage("assets/marioRun.png");
-  marioJump = loadImage("assets/marioJump.png");
-  marioDuck = loadImage("assets/marioDuck.png");
+  marioRun = loadImage("assets/marios/marioRun.png");
+  marioJump = loadImage("assets/marios/marioJump.png");
+  marioDuck = loadImage("assets/marios/marioDuck.png");
 
   // Game elements:
   coinImage = loadImage("assets/coin.png");
@@ -172,6 +172,16 @@ function displayStartScreen() {
 }
 
 
+function keyPressed() {
+  if (screenState === "Game Screen") {
+    if (key === " ") {
+      playerAvatar = marioJump;
+      return yAcceleration = -1;
+    }
+  }
+}
+
+
 
 // Scrolling background??????????????????????????????????
 function displayInfoScreen() {
@@ -257,3 +267,15 @@ function coinCounter() {
   textSize(25);
   text("Coins : " + coins, 180, 55);
 }
+
+
+
+// function twoDArray(columns, rows) {
+//   let thegrid = [];
+//   for (let c = 0; c < columns; c++) {
+//     thegrid.push([r])
+//   }
+//   for (let r = 0; r < rows; r++) {
+//     thegrid.push([]);
+//   }
+// }
