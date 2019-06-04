@@ -17,6 +17,9 @@
 
 // http://molleindustria.github.io/p5.play/examples/index.html?fileName=camera.js
 // http://molleindustria.github.io/p5.play/examples/index.html?fileName=sprites_with_sheet.js
+// https://www.raywenderlich.com/2891-how-to-make-a-platform-game-like-super-mario-brothers-part-1
+// https://eloquentjavascript.net/16_game.html
+// https://hackclub.com/workshops/platformer
 
 
 /////////////////COLORS//////////////////////
@@ -56,6 +59,9 @@ let coinImage;
 
 let level, lines;
 let platform;
+let lettersHigh, lettersWide, tileHeight, tileWidth;
+
+
 
 let gravity;
 let yLocation, ground;
@@ -63,6 +69,7 @@ let yVelocity, yAcceleration;
 
 let imageX1 = 0, imageX2;
 let scrollImage, scrollSpeed = 1.5;
+
 
 function preload() {
   // Backgorund environment:
@@ -88,6 +95,22 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+
+  lettersHigh = lines.length;
+  lettersWide = lines[0].length;
+
+  tileHeight = height/lettersHigh;
+  tileWidth = width/lettersWide;
+
+  tiles = twoDArray(lettersWide, lettersHigh);
+
+  for (let y = 0; y < lettersHigh; y++) {
+    for (let x = 0; x < lettersWide; x++) {
+      let theTile = lines[y][x];
+      tiles[x][y] = theTile;     // assigns/ puts a letter of the string (line) of the text file to a spot in the empty array.
+    }
+  }
+
 
   imageX2 = windowWidth;
 
@@ -172,11 +195,19 @@ function displayStartScreen() {
 }
 
 
+let isJumping = false;
+
 function keyPressed() {
   if (screenState === "Game Screen") {
     if (key === " ") {
-      playerAvatar = marioJump;
-      return yAcceleration = -1;
+      isJumping = true;
+      if (isJumping === true) {
+        playerAvatar = marioJump;
+        yAcceleration = -5;
+      }
+    }
+    else {
+      isJumping = false;
     }
   }
 }
@@ -192,6 +223,12 @@ function displayInfoScreen() {
 
 function displayGameScreen() {
   background(70, 150, 100);
+
+  for (let y = 0; y < lettersHigh; y++) {
+    for (let x = 0; x < lettersWide; x++) {
+      showTiles(tiles[x][y], x, y); //////???????????????????????????????????????????implement 2 d array and grid generation
+    }
+  }
 
   //////////////////SCROLL SCREEN//////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Creates two identical copies of the preloaded background image, and positions them side by side. 
@@ -220,7 +257,6 @@ function displayGameScreen() {
   playerLifeCounter();
   coinCounter();
 
-  //showTiles(tiles[x][y], x, y); //////???????????????????????????????????????????implement 2 d array and grid generation
 }
 
 
@@ -269,13 +305,14 @@ function coinCounter() {
 }
 
 
-
-// function twoDArray(columns, rows) {
-//   let thegrid = [];
-//   for (let c = 0; c < columns; c++) {
-//     thegrid.push([r])
-//   }
-//   for (let r = 0; r < rows; r++) {
-//     thegrid.push([]);
-//   }
-// }
+// Empty 2-D Array:
+function twoDArray(columns, rows) {
+  let thegrid = [];
+  for (let c = 0; c < columns; c++) {
+    thegrid.push([]);
+    for (let r = 0; r < rows; r++) {
+      thegrid[c].push(0);
+    }
+  }
+  return thegrid;
+}
