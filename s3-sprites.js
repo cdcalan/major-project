@@ -1,3 +1,12 @@
+// Sprite objects:
+let player;
+let foe;
+
+
+
+
+
+// All sprites:
 class Sprites {
   constructor(x, y) {
     // Coordinates:
@@ -8,17 +17,14 @@ class Sprites {
     this.w = 50;
     // Speed variables:
     this.dx = random(3, 10);
-    //this.dy = 1;
+    ////this.dy = 1;
 
     this.life = 3;
-
-
   }
   // Displays sprites:
   show() {
     fill(100, 200, 150);
     rect(this.x, this.y, this.w, this.h);
-
   }
 
   // Sprite horizontal movement:
@@ -40,8 +46,9 @@ class Sprites {
 
 
 
+// Mario:                                 //resdtrict marios' x velocity so that it stays within the screen:
 class User extends Sprites {
-  constructor(x, y) {                            ///////causes porblem with displaying player
+  constructor(x, y) {                            
     super(x, y);
     
     this.yVel = yVelocity;
@@ -70,15 +77,19 @@ class User extends Sprites {
     // }
 
     if (keyIsPressed && keyCode === RIGHT_ARROW) {
-      // show run:
-      playerAvatar = marioRun; 
-      // Sprite horizontal movement:
-      this.x += this.dx;
+      if (this.x < windowWidth) {                          ///fix
+        // show run:
+        playerAvatar = marioRun; 
+        // Sprite horizontal movement:
+        this.x += this.dx;
+      }
     }
     else if (keyIsPressed && keyCode === LEFT_ARROW) {
-      // show run:
-      playerAvatar = marioRunBack; 
-      this.x -= this.dx;
+      if (this.x > 0) {                                      ///fix
+        // show run:
+        playerAvatar = marioRunBack; 
+        this.x -= this.dx;
+      }
     }
     else {
       // show duck:
@@ -93,7 +104,6 @@ class User extends Sprites {
   jump() {
     //if (keyIsPressed && keyCode === UP_ARROW) {
     // this.y -= this.dy;
-    
   }
 
   kick() {
@@ -107,6 +117,9 @@ class User extends Sprites {
 
 
 
+
+
+// Button:
 class Button {
   constructor(x, y, z) {
     this.w = (menuWidth/10)*8;

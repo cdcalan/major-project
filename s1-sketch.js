@@ -28,10 +28,6 @@
 
 
 
-// Player object:
-let player;
-let foe;
-
 // Screen state variable:
 let screenState;
 
@@ -68,6 +64,8 @@ let yVelocity, yAcceleration;
 let imageX1 = 0, imageX2;
 let scrollImage, scrollSpeed = 1.5;
 
+let stationaryObject;
+
 
 function preload() {
   // Backgorund environment:
@@ -93,21 +91,26 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  let camera = 20;
 
   lettersHigh = lines.length;
   lettersWide = lines[0].length;
 
   tileHeight = height/lettersHigh;
-  tileWidth = width/lettersWide;
+  tileWidth = width/camera;
 
   tiles = twoDArray(lettersWide, lettersHigh);
 
-  for (let y = 0; y < lettersHigh; y++) {
-    for (let x = 0; x < lettersWide; x++) {
+  console.log("letters wide " + lettersWide);
+
+  for (let y = 0; y < lettersHigh; y++) {     /////////////add the scrp;ll text file by looking at the first 30 
+    for (let x = 0; x < 80; x++) {
       let theTile = lines[y][x];
       tiles[x][y] = theTile;     // assigns/ puts a letter of the string (line) of the text file to a spot in the empty array.
     }
   }
+
+  stationaryObject = new Constant(0, ground);
 
 
   imageX2 = windowWidth;
@@ -148,7 +151,7 @@ function setup() {
 
 function draw() {
   background(220);
-  console.log(tileHeight, ground, windowHeight, yLocation);
+  //console.log(tileHeight, ground, windowHeight, yLocation);
 
   if (screenState === "Start Screen") {
     displayStartScreen();
@@ -241,6 +244,10 @@ function displayGameScreen() {
   }
   ////////////////// E N D ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  translate(-stationaryObject.position.x, 0);
+  stationaryObject.move();
+  stationaryObject.show();
+
   foe.show();
   foe.glide();
 
@@ -261,7 +268,9 @@ function displayGameScreen() {
 
 function showTiles(location, x, y) {
   if (location === "#") {
-    image(platform, x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+    for (let i = x; i < windowWidth; i += 300) {
+      image(platform, i * tileWidth, y * tileHeight, tileWidth, tileHeight);
+    }
   }
 }
 
@@ -280,7 +289,7 @@ function displayGameOverScreen() {
 
 
 
-// Displays player lives:
+// Displays player lives:                  //turn it into an object or class an dthen give it a velocity so that it could offset the velocity of the scrollling screen:
 function playerLifeCounter() {
   fill(190);
   rect(25, 25, 125, 40, 5);
