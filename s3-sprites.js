@@ -77,7 +77,7 @@ class User extends Sprites {
     }
     else if (keyIsPressed && keyCode === LEFT_ARROW) {
       // show run:
-      playerAvatar = marioRun; 
+      playerAvatar = marioRunBack; 
       this.x -= this.dx;
     }
     else {
@@ -87,7 +87,7 @@ class User extends Sprites {
     // show user:
     image(playerAvatar, this.x, this.yLoc, this.w, this.h);
 
-    console.log(this.yAccel, this.yVel, this.yLoc);
+    //console.log(this.yAccel, this.yVel, this.yLoc);
   }
 
   jump() {

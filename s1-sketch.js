@@ -52,9 +52,7 @@ let score;
 
 // Image holders:
 let playerAvatar;
-let marioRun;
-let marioJump;
-let marioDuck;
+let marioRun, marioRunBack, marioJump, marioDuck;
 let coinImage;
 
 let level, lines;
@@ -84,13 +82,13 @@ function preload() {
 
   // Player Avatars:
   marioRun = loadImage("assets/marios/marioRun.png");
+  marioRunBack = loadImage("assets/marios/marioRunInverted.png");
   marioJump = loadImage("assets/marios/marioJump.png");
   marioDuck = loadImage("assets/marios/marioDuck.png");
 
   // Game elements:
   coinImage = loadImage("assets/coin.png");
 }
-
 
 
 function setup() {
@@ -126,7 +124,7 @@ function setup() {
   yVelocity = 0;
   yAcceleration = 0;
   gravity = 0.1;
-  ground = windowHeight-250;
+  ground = windowHeight- 2.4*tileHeight;
   yLocation = ground;
   //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
@@ -150,6 +148,7 @@ function setup() {
 
 function draw() {
   background(220);
+  console.log(tileHeight, ground, windowHeight, yLocation);
 
   if (screenState === "Start Screen") {
     displayStartScreen();
@@ -222,13 +221,7 @@ function displayInfoScreen() {
 
 
 function displayGameScreen() {
-  background(70, 150, 100);
-
-  for (let y = 0; y < lettersHigh; y++) {
-    for (let x = 0; x < lettersWide; x++) {
-      showTiles(tiles[x][y], x, y); //////???????????????????????????????????????????implement 2 d array and grid generation
-    }
-  }
+  //background(70, 150, 100);
 
   //////////////////SCROLL SCREEN//////////////////////////////////////////////////////////////////////////////////////////////////////////
   // Creates two identical copies of the preloaded background image, and positions them side by side. 
@@ -256,7 +249,12 @@ function displayGameScreen() {
 
   playerLifeCounter();
   coinCounter();
-
+  
+  for (let y = 0; y < lettersHigh; y++) {
+    for (let x = 0; x < lettersWide; x++) {
+      showTiles(tiles[x][y], x, y); //////???????????????????????????????????????????implement 2 d array and grid generation
+    }
+  }
 }
 
 
@@ -302,6 +300,11 @@ function coinCounter() {
   fill(0);
   textSize(25);
   text("Coins : " + coins, 180, 55);
+}
+
+// Displays the time left in the round (resets at each level/game):
+function countdownTimer() {
+
 }
 
 
