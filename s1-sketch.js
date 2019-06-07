@@ -20,6 +20,7 @@
 // https://www.raywenderlich.com/2891-how-to-make-a-platform-game-like-super-mario-brothers-part-1
 // https://eloquentjavascript.net/16_game.html
 // https://hackclub.com/workshops/platformer
+// https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Collision_detection
 
 
 /////////////////COLORS//////////////////////
@@ -205,7 +206,7 @@ function keyPressed() {
       isJumping = true;
       if (isJumping === true) {
         playerAvatar = marioJump;
-        yAcceleration = -5;
+        player.yAccel = -5;
       }
     }
     else {
@@ -243,7 +244,7 @@ function displayGameScreen() {
     imageX2 = windowWidth;
   }
   ////////////////// E N D ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+  // For Scroll:
   translate(-stationaryObject.position.x, 0);
   stationaryObject.move();
   stationaryObject.show();
@@ -265,15 +266,21 @@ function displayGameScreen() {
 }
 
 
+/////////////////////////////////////////////////////////////////////currently fixing///////////////////////////////
+let collision;
 
 function showTiles(location, x, y) {
   if (location === "#") {
     for (let i = x; i < windowWidth; i += 300) {
       image(platform, i * tileWidth, y * tileHeight, tileWidth, tileHeight);
+      // if (mario.x = platform.x && mario.y > platform.y && mario.y < platform.y+platform.width) {
+      //   collision  = true;
+      // if true, make mario fall (gravity). 
+      //}
     }
   }
 }
-
+/////////////////////////////////////////////////////////////////////currently fixing///////////////////////////////
 
 
 function displayGameOverScreen() {
@@ -288,27 +295,26 @@ function displayGameOverScreen() {
 }
 
 
-
-// Displays player lives:                  //turn it into an object or class an dthen give it a velocity so that it could offset the velocity of the scrollling screen:
+// Displays player lives:                  
 function playerLifeCounter() {
   fill(190);
-  rect(25, 25, 125, 40, 5);
+  rect(stationaryObject.position.x+25, 25, 125, 40, 5);   // offsets the x position of counter displayed on screen by the scroll screen rate, thereby, making the counter "stationary" on screen while the rest of the game moves.
   
   fill(0);
   textSize(25);
-  text("Life : " + playerLives, 30, 55);
+  text("Life : " + playerLives, stationaryObject.position.x+30, 55);
 }
 
 // Displays coins earned:
 function coinCounter() {
   fill(190);
-  rect(175, 25, 125, 40, 5);
+  rect(stationaryObject.position.x+175, 25, 125, 40, 5);
   
-  image(coinImage, 260, 27, 38, 38);
+  image(coinImage, stationaryObject.position.x+260, 27, 38, 38);
 
   fill(0);
   textSize(25);
-  text("Coins : " + coins, 180, 55);
+  text("Coins : " + coins, stationaryObject.position.x+180, 55);
 }
 
 // Displays the time left in the round (resets at each level/game):
@@ -328,3 +334,10 @@ function twoDArray(columns, rows) {
   }
   return thegrid;
 }
+
+
+// NEXT:
+// - jump with gravity
+// - collision detection
+// - timer
+// - other sprites

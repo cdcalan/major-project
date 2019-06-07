@@ -77,7 +77,7 @@ class User extends Sprites {
     // }
 
     if (keyIsPressed && keyCode === RIGHT_ARROW) {
-      if (this.x < windowWidth) {                          ///fix
+      if (this.x < (stationaryObject.position.x + stationaryObject.width) - this.w) {                          
         // show run:
         playerAvatar = marioRun; 
         // Sprite horizontal movement:
@@ -85,10 +85,14 @@ class User extends Sprites {
       }
     }
     else if (keyIsPressed && keyCode === LEFT_ARROW) {
-      if (this.x > 0) {                                      ///fix
+      if (this.x > (stationaryObject.position.x)) {                                      
         // show run:
         playerAvatar = marioRunBack; 
         this.x -= this.dx;
+      }
+      else {
+        this.x = stationaryObject.position.x;             // keep mario from moving off left screen. 
+
       }
     }
     else {
