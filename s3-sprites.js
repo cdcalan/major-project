@@ -69,6 +69,10 @@ class User extends Sprites {
       this.yLoc = ground;
       this.yVel = 0;
     }
+    else if (this.yLoc < 0) {   // if it is going past the roof make it fall 
+      this.yVel = 0;
+      this.yAccel = +5;
+    }
 
     // if (keyIsPressed && keyCode === UP_ARROW) {
     //   //show jump:
@@ -103,11 +107,6 @@ class User extends Sprites {
     image(playerAvatar, this.x, this.yLoc, this.w, this.h);
 
     //console.log(this.yAccel, this.yVel, this.yLoc);
-  }
-
-  jump() {
-    //if (keyIsPressed && keyCode === UP_ARROW) {
-    // this.y -= this.dy;
   }
 
   kick() {

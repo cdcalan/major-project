@@ -66,6 +66,7 @@ let imageX1 = 0, imageX2;
 let scrollImage, scrollSpeed = 1.5;
 
 let stationaryObject;
+let collision;
 
 
 function preload() {
@@ -102,8 +103,6 @@ function setup() {
 
   tiles = twoDArray(lettersWide, lettersHigh);
 
-  console.log("letters wide " + lettersWide);
-
   for (let y = 0; y < lettersHigh; y++) {     /////////////add the scrp;ll text file by looking at the first 30 
     for (let x = 0; x < 80; x++) {
       let theTile = lines[y][x];
@@ -111,8 +110,8 @@ function setup() {
     }
   }
 
-  stationaryObject = new Constant(0, ground);
-
+  
+  stationaryObject = new Constant(0, 0);
 
   imageX2 = windowWidth;
 
@@ -136,6 +135,7 @@ function setup() {
   player = new User(300, yLocation);
   foe = new Sprites(300, yLocation - 400);
   playerAvatar = marioDuck;
+  collision = false;
 
   // Menu Button Objects:
   textStyle(BOLD);
@@ -159,6 +159,8 @@ function draw() {
   }
   else if (screenState === "Game Screen") {
     displayGameScreen();
+    console.log("collision " + collision);
+    console.log("player.x " + player.x);
   }
   else if (screenState === "Info Screen") {
     displayInfoScreen();
@@ -202,7 +204,7 @@ let isJumping = false;
 
 function keyPressed() {
   if (screenState === "Game Screen") {
-    if (key === " ") {
+    if (keyCode === UP_ARROW) {
       isJumping = true;
       if (isJumping === true) {
         playerAvatar = marioJump;
@@ -252,7 +254,6 @@ function displayGameScreen() {
   foe.show();
   foe.glide();
 
-  player.jump();
   player.updateShow(playerAvatar);
 
   playerLifeCounter();
@@ -267,16 +268,17 @@ function displayGameScreen() {
 
 
 /////////////////////////////////////////////////////////////////////currently fixing///////////////////////////////
-let collision;
 
 function showTiles(location, x, y) {
   if (location === "#") {
     for (let i = x; i < windowWidth; i += 300) {
       image(platform, i * tileWidth, y * tileHeight, tileWidth, tileHeight);
-      // if (mario.x = platform.x && mario.y > platform.y && mario.y < platform.y+platform.width) {
-      //   collision  = true;
-      // if true, make mario fall (gravity). 
-      //}
+      if (player.x > i * tileWidth && player.x < i * tileWidth+tileWidth && player.y > y * tileHeight && player.y < y * tileHeight+tileHeight) {
+        collision  = true;
+      // if true, 
+      //    make mario fall (gravity). 
+      //    subtract 1 life.
+      }
     }
   }
 }
@@ -298,23 +300,23 @@ function displayGameOverScreen() {
 // Displays player lives:                  
 function playerLifeCounter() {
   fill(190);
-  rect(stationaryObject.position.x+25, 25, 125, 40, 5);   // offsets the x position of counter displayed on screen by the scroll screen rate, thereby, making the counter "stationary" on screen while the rest of the game moves.
+  rect(stationaryObject.position.x+25, 20, 125, 40, 5);   // offsets the x position of counter displayed on screen by the scroll screen rate, thereby, making the counter "stationary" on screen while the rest of the game moves.
   
   fill(0);
   textSize(25);
-  text("Life : " + playerLives, stationaryObject.position.x+30, 55);
+  text("Life : " + playerLives, stationaryObject.position.x+30, 50);
 }
 
 // Displays coins earned:
 function coinCounter() {
   fill(190);
-  rect(stationaryObject.position.x+175, 25, 125, 40, 5);
+  rect(stationaryObject.position.x+175, 20, 125, 40, 5);
   
-  image(coinImage, stationaryObject.position.x+260, 27, 38, 38);
+  image(coinImage, stationaryObject.position.x+260, 22, 38, 38);
 
   fill(0);
   textSize(25);
-  text("Coins : " + coins, stationaryObject.position.x+180, 55);
+  text("Coins : " + coins, stationaryObject.position.x+180, 50);
 }
 
 // Displays the time left in the round (resets at each level/game):
