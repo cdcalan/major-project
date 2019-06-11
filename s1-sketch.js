@@ -132,7 +132,7 @@ function setup() {
   //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
 
   // Demo Sprite Object:
-  player = new User(300, yLocation);
+  player = new Player(300, yLocation);
   foe = new Sprites(300, yLocation - 400);
   playerAvatar = marioDuck;
   collision = false;
@@ -159,9 +159,18 @@ function draw() {
   }
   else if (screenState === "Game Screen") {
     displayGameScreen();
-    console.log("collision " + collision);
-    console.log("player.x " + player.x);
+    if (collison === true) {
+      console.log("done");
+      this.yVel = 0;
+      this.yAccel = +5;
+      playerLives -= 1;
+    }
+    else {
+      console.log("nothing");
+    }
+    console.log("collision " + collision + ", player.x " + player.x + ", foe.x " + foe.x);
   }
+
   else if (screenState === "Info Screen") {
     displayInfoScreen();
   }
@@ -251,12 +260,14 @@ function displayGameScreen() {
   stationaryObject.move();
   stationaryObject.show();
 
+  //foe.glide(); ////////////////////////////////////////uncomment
+  foe.hasCollided(player);
   foe.show();
-  foe.glide();
 
   player.updateShow(playerAvatar);
 
   playerLifeCounter();
+
   coinCounter();
   
   for (let y = 0; y < lettersHigh; y++) {
@@ -273,12 +284,12 @@ function showTiles(location, x, y) {
   if (location === "#") {
     for (let i = x; i < windowWidth; i += 300) {
       image(platform, i * tileWidth, y * tileHeight, tileWidth, tileHeight);
-      if (player.x > i * tileWidth && player.x < i * tileWidth+tileWidth && player.y > y * tileHeight && player.y < y * tileHeight+tileHeight) {
-        collision  = true;
+      // if (player.x > i * tileWidth && player.x < i * tileWidth+tileWidth && player.y > y * tileHeight && player.y < y * tileHeight+tileHeight) {
+      //   collision  = true;
       // if true, 
       //    make mario fall (gravity). 
       //    subtract 1 life.
-      }
+      //}
     }
   }
 }

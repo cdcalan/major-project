@@ -35,10 +35,17 @@ class Sprites {
     }
   }
 
-  // Checks if sprite has collided with player:
-  hasCollided() {
+//   // Checks if sprite has collided with player:
+  hasCollided(player) {
     // return (if this sprite is touching the player); then, in another function, add if hasCollided, this.life -= 1; and display the life co7unter.
-
+    if (player.x + player.w > this.x && player.x < this.x + this.w && player.yLoc + player.h > this.Y && player.yLoc < this.y +this.h) {
+      //collision = true;
+      return true;
+    }
+    else {
+      //collision = false;
+      return false;
+    }
   }
 }
 
@@ -47,7 +54,7 @@ class Sprites {
 
 
 // Mario:                                 //resdtrict marios' x velocity so that it stays within the screen:
-class User extends Sprites {
+class Player extends Sprites {
   constructor(x, y) {                            
     super(x, y);
     
@@ -74,10 +81,12 @@ class User extends Sprites {
       this.yAccel = +5;
     }
 
-    // if (keyIsPressed && keyCode === UP_ARROW) {
-    //   //show jump:
-    //   playerAvatar = marioJump;
-    //   this.yAccel = -5;
+    // // Response to collision:
+    // if (collision === true) {
+    //   console.log("done");
+    //   this.yVel = 0;
+    //   this.yAccel = +5;
+    //   playerLives -= 1;
     // }
 
     if (keyIsPressed && keyCode === RIGHT_ARROW) {
