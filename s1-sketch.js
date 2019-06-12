@@ -4,25 +4,6 @@
 //
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
-
-// To Do:
-// - create sprites classes
-// - use parent and subclasses of sprites.
-// - create background txt file (?)
-// - create a start screen with menu buttons: start, info
-// - Extra: loading animation? (maybe use css)?
-
-// if removing somethign from an array, always count backwards through an array: start at the back and iterate through to the front of the array. 
-
-
-// http://molleindustria.github.io/p5.play/examples/index.html?fileName=camera.js
-// http://molleindustria.github.io/p5.play/examples/index.html?fileName=sprites_with_sheet.js
-// https://www.raywenderlich.com/2891-how-to-make-a-platform-game-like-super-mario-brothers-part-1
-// https://eloquentjavascript.net/16_game.html
-// https://hackclub.com/workshops/platformer
-// https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Collision_detection
-
-
 /////////////////COLORS//////////////////////
 // grass = (70, 150, 10)
 
@@ -33,39 +14,28 @@
 let screenState;
 
 // Button objects:
-let startButton;
-let infoButton;
+let startButton, infoButton;
 
 // Menu coordinates and dimensions:
-let menuX;
-let menuY;
-let menuWidth = 350;
-let menuHeight = 250;
+let menuX, menuY, menuWidth = 350, menuHeight = 250;
 
 // Player variables:
-let playerLives;
-let coins;
-let score;
+let playerLives, coins, score;
 
 // Image holders:
-let playerAvatar;
-let marioRun, marioRunBack, marioJump, marioDuck;
-let coinImage;
+let playerAvatar, marioRun, marioRunBack, marioJump, marioDuck, coinImage;
 
 let level, lines;
 let platform;
 let lettersHigh, lettersWide, tileHeight, tileWidth;
 
 
+// Jump physics
+let gravity, yLocation, ground, yVelocity, yAcceleration;
 
-let gravity;
-let yLocation, ground;
-let yVelocity, yAcceleration;
+// Scrolling
+let imageX1 = 0, imageX2, scrollImage, scrollSpeed = 1.5, stationaryObject;
 
-let imageX1 = 0, imageX2;
-let scrollImage, scrollSpeed = 1.5;
-
-let stationaryObject;
 let collision;
 
 
@@ -91,6 +61,8 @@ function preload() {
 }
 
 
+
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   let camera = 20;
@@ -110,7 +82,6 @@ function setup() {
     }
   }
 
-  
   stationaryObject = new Constant(0, 0);
 
   imageX2 = windowWidth;
@@ -150,6 +121,7 @@ function setup() {
 
 
 
+
 function draw() {
   background(220);
   //console.log(tileHeight, ground, windowHeight, yLocation);
@@ -159,16 +131,16 @@ function draw() {
   }
   else if (screenState === "Game Screen") {
     displayGameScreen();
-    if (collison === true) {
-      console.log("done");
-      this.yVel = 0;
-      this.yAccel = +5;
-      playerLives -= 1;
-    }
-    else {
-      console.log("nothing");
-    }
-    console.log("collision " + collision + ", player.x " + player.x + ", foe.x " + foe.x);
+    // if (collison === true) {   
+    //   console.log("done");
+    //   this.yVel = 0;
+    //   this.yAccel = +5;
+    //   playerLives -= 1;
+    // }
+    // else {
+    //   console.log("nothing");
+    // }
+    //console.log("collision " + collision + ", player.x " + player.x + ", foe.x " + foe.x);
   }
 
   else if (screenState === "Info Screen") {
@@ -177,9 +149,9 @@ function draw() {
   else if (screenState === "Game Over") {
     displayGameOverScreen();
   }
-  // Optional: level up screens? or just messages?
 
 }
+
 
 
 
@@ -195,18 +167,6 @@ function mousePressed() {
 }
 
 
-
-//SCREENS-----------------------------------------------------------------------------------------------------------------------------
-function displayStartScreen() {
-  background(50, 100, 150);
-
-  fill(200, 50, 20, 100);
-  rect(menuX, menuY, menuWidth, menuHeight, 30); 
-
-  startButton.show();
-  infoButton.show();
-
-}
 
 
 let isJumping = false;
@@ -228,85 +188,6 @@ function keyPressed() {
 
 
 
-// Scrolling background??????????????????????????????????
-function displayInfoScreen() {
-  background(200);
-}
-
-
-
-function displayGameScreen() {
-  //background(70, 150, 100);
-
-  //////////////////SCROLL SCREEN//////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // Creates two identical copies of the preloaded background image, and positions them side by side. 
-  image(scrollImage, imageX1, 0, windowWidth, windowHeight);
-  image(scrollImage, imageX2, 0, windowWidth, windowHeight);
-
-  // Moves the x-pos. of each background image to the left of the canvas to 'scroll backwards'. 
-  imageX1 -= scrollSpeed;
-  imageX2 -= scrollSpeed;
-  
-  // Continously loops the two images together, side by side as they move out of the frame to create a scrolling effect. 
-  if (imageX1 < -windowWidth){
-    imageX1 = windowWidth;
-  }
-  if (imageX2 < -windowWidth){
-    imageX2 = windowWidth;
-  }
-  ////////////////// E N D ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  // For Scroll:
-  translate(-stationaryObject.position.x, 0);
-  stationaryObject.move();
-  stationaryObject.show();
-
-  //foe.glide(); ////////////////////////////////////////uncomment
-  foe.hasCollided(player);
-  foe.show();
-
-  player.updateShow(playerAvatar);
-
-  playerLifeCounter();
-
-  coinCounter();
-  
-  for (let y = 0; y < lettersHigh; y++) {
-    for (let x = 0; x < lettersWide; x++) {
-      showTiles(tiles[x][y], x, y); //////???????????????????????????????????????????implement 2 d array and grid generation
-    }
-  }
-}
-
-
-/////////////////////////////////////////////////////////////////////currently fixing///////////////////////////////
-
-function showTiles(location, x, y) {
-  if (location === "#") {
-    for (let i = x; i < windowWidth; i += 300) {
-      image(platform, i * tileWidth, y * tileHeight, tileWidth, tileHeight);
-      // if (player.x > i * tileWidth && player.x < i * tileWidth+tileWidth && player.y > y * tileHeight && player.y < y * tileHeight+tileHeight) {
-      //   collision  = true;
-      // if true, 
-      //    make mario fall (gravity). 
-      //    subtract 1 life.
-      //}
-    }
-  }
-}
-/////////////////////////////////////////////////////////////////////currently fixing///////////////////////////////
-
-
-function displayGameOverScreen() {
-  background(80);
-  textAlign(CENTER);
-  textSize(80);
-  fill(255, 0, 0);
-  text("GAME OVER", windowWidth/2, windowHeight/2);
-  textSize(50);
-  fill(255);
-  text("Score " + score, windowWidth/2, windowHeight/2);
-}
-
 
 // Displays player lives:                  
 function playerLifeCounter() {
@@ -317,6 +198,7 @@ function playerLifeCounter() {
   textSize(25);
   text("Life : " + playerLives, stationaryObject.position.x+30, 50);
 }
+
 
 // Displays coins earned:
 function coinCounter() {
@@ -330,10 +212,13 @@ function coinCounter() {
   text("Coins : " + coins, stationaryObject.position.x+180, 50);
 }
 
+
 // Displays the time left in the round (resets at each level/game):
 function countdownTimer() {
 
 }
+
+
 
 
 // Empty 2-D Array:
