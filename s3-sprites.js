@@ -126,14 +126,39 @@ class Player extends Sprites {
     //console.log(this.yAccel, this.yVel, this.yLoc);
   }
 
-  collision(objectX, objectY) {
-    this.isColliding = collideRectRect(objectX, objectY, tileWidth, tileHeight, this.x, this.yLoc, this.w, this.h);
+  collision(platformX, platformY, platformXFar, platformYBottom) {
+    // // // if (this.x+this.w >= objectX && this.x+this.w < objectX + tileWidth) {
+    // // //   if (this.yLoc+this.h < objectY) {
+    // // //     console.log("DONE!");
+    // // //     // this.yVel = 0;
+    // // //     // this.yLoc = objectY - 1;
+    // // //   }
+    // // // }
+    // // else {
+    //   this.isColliding = collideRectRect(objectX, objectY, tileWidth, tileHeight, this.x, this.yLoc, this.w, this.h);
+    //   if (this.isColliding) {
+    //     this.dx = 0;            // restrict player's movement in the x direction (until done falling).
+    //     this.yVel = 0;
+    //     this.yAccel = +5;
+    //     playerLives -= 1;
+    //   }
+    //   if (this.yLoc === ground) {
+    //     this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
+    //   }
+    // //}
+    this.isColliding = collideLineRect(platformXFar, platformY, platformXFar, platformYBottom, this.x, this.yLoc, this.w, this.h);
+    this.isColliding = collideLineRect(platformX, platformY, platformX, platformYBottom, this.x, this.yLoc, this.w, this.h);
+    this.isColliding = collideLineRect(platformX, platformYBottom, platformXFar, platformYBottom, this.x, this.yLoc, this.w, this.h);
     if (this.isColliding) {
-      this.dx = 0;            // restrict player's movement in the x direction (until done falling).
-      this.yVel = 0;
-      this.yAccel = +5;
-      playerLives -= 1;
+        this.dx = 0;            // restrict player's movement in the x direction (until done falling).
+        this.yVel = 0;
+        this.yAccel = +1;      //////////change to 5
+        playerLives -= 1;
     }
+    // else if (this.isColliding) {
+    //   this.yVel = 0;
+    //   this.yLoc = platformY - 1;
+    // }
     if (this.yLoc === ground) {
       this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
     }

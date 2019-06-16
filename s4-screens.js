@@ -1,3 +1,5 @@
+let nextLocation; 
+
 function displayStartScreen() {
     background(50, 100, 150);
   
@@ -58,19 +60,31 @@ function displayStartScreen() {
     
     for (let y = 0; y < lettersHigh; y++) {
       for (let x = 0; x < lettersWide; x++) {
+        //let b = x + 1;
         showTiles(tiles[x][y], x, y); //////???????????????????????????????????????????implement 2 d array and grid generation
       }
     }
   }
+
   /////////////////////////////////////////////////////////////////////currently fixing///////////////////////////////
   function showTiles(location, x, y) {
     if (location === "G") {
       image(groundImage, x * tileWidth, y * tileHeight, tileWidth, tileHeight);
     }
-    if (location === "#") {
+    if (location  === "#") {
+      strokeWeight(10);
+      let platformX = x * tileWidth;
+      let platformY = y * tileWidth;
+      let platformYBottom = platformY+tileHeight;
+      let platformXFar = platformX+tileWidth;
       
-      image(platformImage, x * tileWidth, y * tileHeight, tileWidth, tileHeight);
-      player.collision(x * tileWidth, y * tileHeight);
+      let platformLeft = line(platformX, platformY, platformX, platformYBottom);
+      let platformRight = line(platformXFar, platformY, platformXFar, platformYBottom);
+      let platformTop = line(platformX, platformY, platformXFar, platformY);
+      let platformBottom = line(platformX, platformYBottom, platformXFar, platformYBottom);
+
+      image(platformImage, platformX, platformY, tileWidth, tileHeight);
+      player.collision(platformX, platformY, platformXFar, platformYBottom); //, platformTop, platformBottom);
       // totalPlatforms.push(new Platform());
       // console.log(totalPlatforms);
       //for (let i = x; i < windowWidth; i += 300) {
