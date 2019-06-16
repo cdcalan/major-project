@@ -10,6 +10,17 @@ class Button {
     this.x = x;
     this.y = y;
     this.message = z;
+    this.color;
+    this.hovering = false;
+  }
+  hoveredOver() {
+    this.hovering = collidePointRect(mouseX, mouseY, this.x, this.y, this.w, this.h);
+    if (this.hovering) {
+      this.color = 99, 62, 40;
+    }
+    else {
+      this.color = 58, 62, 99;
+    }
   }
   // Takes in mouseX (mX) and mouseY (mY) values to check if button is clicked:
   clickedOn(mX, mY) {
@@ -21,7 +32,7 @@ class Button {
     }
   }
   show(){
-    fill(58, 62, 99);
+    fill(this.color);
     rect(this.x + (menuWidth/10), this.y, this.w, this.h, 50);
     fill(255);
     text(this.message, this.x + (this.w/2), this.y + this.h/1.3);
@@ -61,6 +72,6 @@ class Platform {
 
   }
   show() {
-    image(platform, i * tileWidth, y * tileHeight, tileWidth, tileHeight);
+    image(platformImage, i * tileWidth, y * tileHeight, tileWidth, tileHeight);
   }
 }

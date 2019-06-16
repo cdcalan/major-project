@@ -26,7 +26,7 @@ let playerLives, coins, score;
 let playerAvatar, marioRun, marioRunBack, marioJump, marioDuck, coinImage;
 
 let level, lines;
-let platform;
+let platformImage;
 let lettersHigh, lettersWide, tileHeight, tileWidth;
 
 
@@ -37,7 +37,8 @@ let gravity, yLocation, ground, yVelocity, yAcceleration;
 let imageX1 = 0, imageX2, scrollImage, scrollSpeed = 1.5, stationaryObject;
 
 let collision;
-
+let isJumping;
+let fall;
 
 function preload() {
   // Backgorund environment:
@@ -45,10 +46,11 @@ function preload() {
   lines = loadStrings(level);
 
   // Tiles:
-  platform = loadImage("assets/environment/platform.png");
+  groundImage = loadImage("assets/environment/groundArt.png");
+  platformImage = loadImage("assets/environment/platform.png");
 
   // BG screen:
-  scrollImage = loadImage("assets/environment/scrollImage.jpg");
+  scrollImage = loadImage("assets/environment/marioBg1.jpg");
 
   // Player Avatars:
   marioRun = loadImage("assets/marios/marioRun.png");
@@ -65,13 +67,13 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  let camera = 20;
+  let camera = 20;   // Letters wide
 
   lettersHigh = lines.length;
   lettersWide = lines[0].length;
 
   tileHeight = height/lettersHigh;
-  tileWidth = width/camera;
+  tileWidth = width/camera;   // bc i dont watn to display the entire text file at once; only a section of it.
 
   tiles = twoDArray(lettersWide, lettersHigh);
 
@@ -82,7 +84,7 @@ function setup() {
     }
   }
 
-  stationaryObject = new Constant(0, 0);
+  stationaryObject = new Constant(0, 0);   ///??? might change this into mario himself.
 
   imageX2 = windowWidth;
 
@@ -97,7 +99,7 @@ function setup() {
   //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   yVelocity = 0;
   yAcceleration = 0;
-  gravity = 0.1;
+  gravity = 0.068;
   ground = windowHeight- 2.4*tileHeight;
   yLocation = ground;
   //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
@@ -107,6 +109,8 @@ function setup() {
   foe = new Sprites(300, yLocation - 400);
   playerAvatar = marioDuck;
   collision = false;
+  isJumping = false;
+  fall = false;
 
   // Menu Button Objects:
   textStyle(BOLD);
@@ -130,17 +134,8 @@ function draw() {
     displayStartScreen();
   }
   else if (screenState === "Game Screen") {
+    console.log("jumping? " + isJumping);
     displayGameScreen();
-    // if (collison === true) {   
-    //   console.log("done");
-    //   this.yVel = 0;
-    //   this.yAccel = +5;
-    //   playerLives -= 1;
-    // }
-    // else {
-    //   console.log("nothing");
-    // }
-    //console.log("collision " + collision + ", player.x " + player.x + ", foe.x " + foe.x);
   }
 
   else if (screenState === "Info Screen") {
@@ -167,21 +162,19 @@ function mousePressed() {
 }
 
 
-
-
-let isJumping = false;
-
 function keyPressed() {
   if (screenState === "Game Screen") {
     if (keyCode === UP_ARROW) {
-      isJumping = true;
-      if (isJumping === true) {
-        playerAvatar = marioJump;
-        player.yAccel = -5;
+      if (player.yLoc === ground) {
+        isJumping = true;  ///
+         if (isJumping === true) {
+          playerAvatar = marioJump;
+          player.yAccel = -5;
+        }
       }
-    }
-    else {
-      isJumping = false;
+      else {
+        isJumping = false;
+      }
     }
   }
 }

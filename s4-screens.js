@@ -3,7 +3,9 @@ function displayStartScreen() {
   
     fill(200, 50, 20, 100);
     rect(menuX, menuY, menuWidth, menuHeight, 30); 
-  
+
+    startButton.hoveredOver();
+    infoButton.hoveredOver();
     startButton.show();
     infoButton.show();
   }
@@ -13,6 +15,7 @@ function displayStartScreen() {
 
   function displayInfoScreen() {
     background(200);
+    //text("To jump forwards or backwards, it is best if you hold down the jump key (UP ARROW) before you press the direction key (LEFT ARROW or RIGHT ARROW).")
   }
   
   
@@ -44,9 +47,9 @@ function displayStartScreen() {
     stationaryObject.show();
   
     foe.glide(); ////////////////////////////////////////uncomment
-    foe.hasCollided(player);
+    //foe.hasCollided(player);
     foe.show();
-  
+    
     player.updateShow(playerAvatar);
   
     playerLifeCounter();
@@ -61,12 +64,17 @@ function displayStartScreen() {
   }
   /////////////////////////////////////////////////////////////////////currently fixing///////////////////////////////
   function showTiles(location, x, y) {
+    if (location === "G") {
+      image(groundImage, x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+    }
     if (location === "#") {
-      for (let i = x; i < windowWidth; i += 300) {
-        totalPlatforms.push(new Platform(i));
+      
+      image(platformImage, x * tileWidth, y * tileHeight, tileWidth, tileHeight);
+      player.collision(x * tileWidth, y * tileHeight);
+      // totalPlatforms.push(new Platform());
+      // console.log(totalPlatforms);
+      //for (let i = x; i < windowWidth; i += 300) {
         //totalPlatforms[i].show;
-        
-        image(platform, i * tileWidth, y * tileHeight, tileWidth, tileHeight);
   
   
         // if (player.x > i * tileWidth && player.x < i * tileWidth+tileWidth && player.y > y * tileHeight && player.y < y * tileHeight+tileHeight) {
@@ -75,7 +83,7 @@ function displayStartScreen() {
         //    make mario fall (gravity). 
         //    subtract 1 life.
         // }
-      }
+      //}
     }
   }
   /////////////////////////////////////////////////////////////////////currently fixing///////////////////////////////

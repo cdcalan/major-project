@@ -8,10 +8,10 @@ let foe;
 
 // All sprites:
 class Sprites {
-  constructor(x, y) {
+  constructor(spriteX, spriteY) {
     // Coordinates:
-    this.x = x;
-    this.y = y;
+    this.x = spriteX;
+    this.y = spriteY;
     // Dimensions:
     this.h = 75;
     this.w = 50;
@@ -35,18 +35,18 @@ class Sprites {
     }
   }
 
-//   // Checks if sprite has collided with player:
-  hasCollided(player) {
-    // return (if this sprite is touching the player); then, in another function, add if hasCollided, this.life -= 1; and display the life co7unter.
-    if (player.x + player.w > this.x && player.x < this.x + this.w && player.yLoc + player.h > this.Y && player.yLoc < this.y +this.h) {
-      //collision = true;
-      return true;
-    }
-    else {
-      //collision = false;
-      return false;
-    }
-  }
+// //   // Checks if sprite has collided with player:
+//   hasCollided(player) {
+//     // return (if this sprite is touching the player); then, in another function, add if hasCollided, this.life -= 1; and display the life co7unter.
+//     if (player.x + player.w > this.x && player.x < this.x + this.w && player.yLoc + player.h > this.Y && player.yLoc < this.y +this.h) {
+//       //collision = true;
+//       return true;
+//     }
+//     else {
+//       //collision = false;
+//       return false;
+//     }
+//   }
 }
 
 
@@ -55,12 +55,18 @@ class Sprites {
 
 // Mario:                                 //resdtrict marios' x velocity so that it stays within the screen:
 class Player extends Sprites {
-  constructor(x, y) {                            
-    super(x, y);
+  constructor(spriteX, spriteY) {                            
+    super(spriteX, spriteY);
     
     this.yVel = yVelocity;
     this.yAccel = yAcceleration;
     this.yLoc = yLocation;
+
+    this.isColliding = false;
+
+    this.rightEdge = line (this.x+this.w, this.yLoc, this.x+this.w, this.yLoc+this.h);
+    this.leftEdge = line (this.x, this.yLoc, this.x, this.yLoc+this.h);
+    this.bottomEdge = line (this.x, this.yLoc+this.h, this.x+this.w, this.yLoc+this.h);
   }
 
   // Implement gravity!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -90,11 +96,13 @@ class Player extends Sprites {
     // }
 
     if (keyIsPressed && keyCode === RIGHT_ARROW) {
-      if (this.x < (stationaryObject.position.x + stationaryObject.width) - this.w) {                          
-        // show run:
-        playerAvatar = marioRun; 
-        // Sprite horizontal movement:
-        this.x += this.dx;
+      if (fall === false) {
+        if (this.x < (stationaryObject.position.x + stationaryObject.width) - this.w) {                          
+          // show run:
+          playerAvatar = marioRun; 
+          // Sprite horizontal movement:
+          this.x += this.dx;
+        }
       }
     }
     else if (keyIsPressed && keyCode === LEFT_ARROW) {
@@ -116,6 +124,19 @@ class Player extends Sprites {
     image(playerAvatar, this.x, this.yLoc, this.w, this.h);
 
     //console.log(this.yAccel, this.yVel, this.yLoc);
+  }
+
+  collision(objectX, objectY) {
+    this.isColliding = collideRectRect(objectX, objectY, tileWidth, tileHeight, this.x, this.yLoc, this.w, this.h);
+    if (this.isColliding) {
+      this.dx = 0;            // restrict player's movement in the x direction (until done falling).
+      this.yVel = 0;
+      this.yAccel = +5;
+      playerLives -= 1;
+    }
+    if (this.yLoc === ground) {
+      this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
+    }
   }
 
   kick() {
