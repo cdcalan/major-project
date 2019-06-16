@@ -75,16 +75,21 @@ function displayStartScreen() {
       strokeWeight(10);
       let platformX = x * tileWidth;
       let platformY = y * tileWidth;
+
       let platformYBottom = platformY+tileHeight;
       let platformXFar = platformX+tileWidth;
-      
+
       let platformLeft = line(platformX, platformY, platformX, platformYBottom);
       let platformRight = line(platformXFar, platformY, platformXFar, platformYBottom);
       let platformTop = line(platformX, platformY, platformXFar, platformY);
       let platformBottom = line(platformX, platformYBottom, platformXFar, platformYBottom);
 
       image(platformImage, platformX, platformY, tileWidth, tileHeight);
-      player.collision(platformX, platformY, platformXFar, platformYBottom); //, platformTop, platformBottom);
+      
+      player.collisionLeft(platformX, platformY, platformXFar, platformYBottom);
+      player.collisionRight(platformX, platformY, platformXFar, platformYBottom);
+      player.collisionBottom(platformX, platformY, platformXFar, platformYBottom);
+      player.collisionTop(platformX, platformY, platformXFar, platformYBottom); //, platformTop, platformBottom);
       // totalPlatforms.push(new Platform());
       // console.log(totalPlatforms);
       //for (let i = x; i < windowWidth; i += 300) {
