@@ -1,5 +1,6 @@
 let nextLocation; 
 let platformConstant; 
+let platformX, platformXFar;
 
 function displayStartScreen() {
     background(50, 100, 150);
@@ -52,6 +53,12 @@ function displayStartScreen() {
     foe.glide(); ////////////////////////////////////////uncomment
     //foe.hasCollided(player);
     foe.show();
+    koopa1.move();
+    koopa2.move();
+    koopa3.move();
+    koopa4.move();
+    koopa5.move();
+    koopa6.move();
     
     player.updateShow(playerAvatar);
   
@@ -79,11 +86,11 @@ function displayStartScreen() {
     }
     if (location  === "#") {
       strokeWeight(10);
-      let platformX = x * tileWidth;
+      platformX = x * tileWidth;
       let platformY = y * tileHeight;
 
       let platformYBottom = platformY+tileHeight;
-      let platformXFar = platformX+tileWidth;
+      platformXFar = platformX+tileWidth;
 
       // let platformLeft = line(platformX, platformY, platformX, platformYBottom);
       // let platformRight = line(platformXFar, platformY, platformXFar, platformYBottom);
@@ -111,11 +118,20 @@ function displayStartScreen() {
       //}
     }
     if (location === "B") {
-      console.log(x, y);
-      crab1.updateShow(x, y);
+      crab1.updateShow();
+      crab2.updateShow();
+      crab3.updateShow();
+      crab4.updateShow();
+      crab5.updateShow();
+      crab6.updateShow();
     }
     if (location === "K") {
-      koopa1.updateShow(x, y);
+      koopa1.updateShow();
+      koopa2.updateShow();
+      koopa3.updateShow();
+      koopa4.updateShow();
+      koopa5.updateShow();
+      koopa6.updateShow();
     }
   }
   /////////////////////////////////////////////////////////////////////currently fixing///////////////////////////////

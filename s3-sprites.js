@@ -56,23 +56,35 @@ class Sprites {
 
 
 class Koopa extends Sprites {
-  constructor(spriteX, spriteY) {
-    super(spriteX, spriteY);
+  constructor(x, y) {
+    super();
+    this.x = x*tileWidth;
+    this.y = y*tileHeight-(this.h/4);
   }
-  updateShow(x, y) {
-    image(koopaImage, x*tileWidth, y*tileHeight-(this.h/4), this.w/1.1, this.h/1.1);
+  updateShow() {
+    image(koopaImage, this.x, this.y, this.w/1.1, this.h/1.1);
   }
+  /////////////////////////////////////////////////////////////////
+  move() {
+    this.x += this.dx;
+    if (this.x + this.w > platformXFar || this.x < platformX) {
+      this.dx = -1 * this.dx;
+    }
+  }
+  /////////////////////////////////////////////////////////////////
 }
 
 
 
 
 class Crab extends Sprites {
-  constructor(spriteX, spriteY) {
-    super(spriteX, spriteY);
+  constructor(x, y) {
+    super();
+    this.x = x*tileWidth;
+    this.y = y*tileHeight;
   }
-  updateShow(x, y) {
-    image(crabLeftImage, x*tileWidth, y*tileHeight, this.w*1.4, this.h/1.5);
+  updateShow() {
+    image(crabLeftImage, this.x, this.y, this.w*1.4, this.h/1.5);
   }
 }
 
@@ -167,7 +179,7 @@ class Player extends Sprites {
     if (this.isColliding) {
         this.dx = 0;            // restrict player's movement in the x direction (until done falling).
         this.yVel = 0;
-        this.yAccel = +1;      //////////change to 5
+        this.yAccel = +5;      //////////change to 5
         playerLives -= 1;
     }
     if (this.yLoc === ground) {

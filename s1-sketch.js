@@ -50,6 +50,8 @@ let crabRightImage;
 let rockImage;
 let koopaImage;
 
+let koopa1, crab1;
+
 function preload() {
   // Backgorund environment:
   level = "assets/textFiles/1.txt";
@@ -124,17 +126,18 @@ function setup() {
   player = new Player(300, yLocation);
   foe = new Sprites(300, yLocation - 400);
   crab1 = new Crab(29, 2);
+  crab2 = new Crab(19, 4);
+  crab3 = new Crab(2, 9);
+  crab4 = new Crab(19, 13);
+  crab5 = new Crab(32, 13); 
+  crab6 = new Crab(52, 13);
   koopa1 = new Koopa(40, 4);   //apparently works with just one now?
-  // koopa2 = new Koopa(58, 4);
-  // koopa3 = new Koopa(16, 9);
-  // koopa4 = new Koopa(23, 9);
-  // koopa5 = new Koopa(43, 9);
-  // koopa6 = new Koopa(56, 9);
-  //(19, 4);
-  //(2, 9);
-  //(19, 13);
-  //(32, 13); 
-  //(52, 13);
+  koopa2 = new Koopa(58, 4);
+  koopa3 = new Koopa(16, 9);
+  koopa4 = new Koopa(23, 9);
+  koopa5 = new Koopa(43, 9);
+  koopa6 = new Koopa(56, 9);
+
   
   playerAvatar = marioDuck;
   collision = false;
