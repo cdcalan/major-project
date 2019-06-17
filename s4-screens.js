@@ -2,6 +2,9 @@ let nextLocation;
 let platformConstant; 
 let platformX, platformXFar;
 
+// let platformLeft, platformRight;
+// let platformCoordinates = new Map();
+
 function displayStartScreen() {
     background(50, 100, 150);
   
@@ -50,15 +53,13 @@ function displayStartScreen() {
     stationaryObject.move();
     stationaryObject.show();
   
-    foe.glide(); ////////////////////////////////////////uncomment
-    //foe.hasCollided(player);
-    foe.show();
-    koopa1.move();
-    koopa2.move();
-    koopa3.move();
-    koopa4.move();
-    koopa5.move();
-    koopa6.move();
+    koopa1.move(40, 4, 2026, 2228.6);
+    koopa2.move(58, 4, 2937.7, 3140.3);
+    koopa3.move(16, 9, 810.4, 1000);
+    koopa4.move(23, 9, 1164.95, 1364.95);
+    koopa5.move(43, 9, 2177.95, 2377.95);
+    koopa6.move(56, 9, 2836.4, 1036.4);
+
     
     player.updateShow(playerAvatar);
   
@@ -69,6 +70,8 @@ function displayStartScreen() {
     for (let y = 0; y < lettersHigh; y++) {
       for (let x = 0; x < lettersWide; x++) {
         //let b = x + 1;
+        // platformLeft = tiles[x-1][y];
+        // platformRight = tiles[x+1][y];
         showTiles(tiles[x][y], x, y); //////???????????????????????????????????????????implement 2 d array and grid generation
       }
     }
@@ -85,6 +88,12 @@ function displayStartScreen() {
       image(groundImage, x * tileWidth, y * tileHeight, tileWidth, tileHeight);
     }
     if (location  === "#") {
+      // if (platformLeft ==! "#") {
+      //   platformCoordinates.set("coorX1Left", platformLeft);
+      // }
+      // if (platformRight ==! "#") {
+      //   platformCoordinates.set("coorX1Right", platformRight);
+      // }
       strokeWeight(10);
       platformX = x * tileWidth;
       let platformY = y * tileHeight;

@@ -124,20 +124,18 @@ function setup() {
 
   // Demo Sprite Object:
   player = new Player(300, yLocation);
-  foe = new Sprites(300, yLocation - 400);
   crab1 = new Crab(29, 2);
   crab2 = new Crab(19, 4);
   crab3 = new Crab(2, 9);
   crab4 = new Crab(19, 13);
   crab5 = new Crab(32, 13); 
   crab6 = new Crab(52, 13);
-  koopa1 = new Koopa(40, 4);   //apparently works with just one now?
-  koopa2 = new Koopa(58, 4);
-  koopa3 = new Koopa(16, 9);
-  koopa4 = new Koopa(23, 9);
-  koopa5 = new Koopa(43, 9);
-  koopa6 = new Koopa(56, 9);
-
+  koopa1 = new Koopa(40, 4, 2026, 2428.6, 1);   //apparently works with just one now?
+  koopa2 = new Koopa(58, 4, 2937.7, 3140.3, 2);
+  koopa3 = new Koopa(16, 9, 810.4, 1000, 3);
+  koopa4 = new Koopa(23, 9, 1164.95, 1364.95, 4);
+  koopa5 = new Koopa(43, 9, 2177.95, 2377.95, 5);
+  koopa6 = new Koopa(56, 9, 2836.4, 3036.4, 6);
   
   playerAvatar = marioDuck;
   collision = false;
@@ -177,6 +175,10 @@ function draw() {
     displayGameOverScreen();
   }
 
+}
+
+function mouseClicked(mouseX, mouseY) {
+  console.log(mouseX, mouseY);
 }
 
 

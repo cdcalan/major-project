@@ -19,7 +19,7 @@ class Sprites {
     this.h = 75;
     this.w = 50;
     // Speed variables:
-    this.dx = random(3, 10);
+    this.dx = random(2, 6);
     ////this.dy = 1;
 
     this.life = 3;
@@ -56,18 +56,44 @@ class Sprites {
 
 
 class Koopa extends Sprites {
-  constructor(x, y) {
+  constructor(x, y, boundaryLeft, boundaryRight, identifier) {
     super();
-    this.x = x*tileWidth;
-    this.y = y*tileHeight-(this.h/4);
+    this.x = x * tileWidth;
+    this.y = y * tileHeight-(this.h/4);
+    this.boundaryXLeft = boundaryLeft;
+    this.boundaryXRight = boundaryRight;
+    this.identifier = identifier;
+
+    if (this.identifier === 1) {
+      this.color = (255, 0, 0);
+    }
+    else if (this.identifier === 2) {
+      this.color = (0, 0, 255);
+    }
+    else if (this.identifier === 3) {
+      this.color = (0, 255, 0);
+    }
+    else if (this.identifier === 4) {
+      this.color = (15, 100, 50);
+    }
+    else if (this.identifier === 5) {
+      this.color = (100, 75, 25);
+    }
+    else {
+      this.color = (60, 100, 255);
+    }
   }
   updateShow() {
     image(koopaImage, this.x, this.y, this.w/1.1, this.h/1.1);
+    fill(this.color);
+    ellipse(this.x, this.y, 10, 10);
   }
   /////////////////////////////////////////////////////////////////
   move() {
+    // console.log("x,y: " + this.x + " " + this.y);
+    // console.log("boundaries: " + this.boundaryXLeft + " " + this.boundaryXRight);
     this.x += this.dx;
-    if (this.x + this.w > platformXFar || this.x < platformX) {
+    if (this.x + this.w > this.boundaryXRight || this.x < this.boundaryXLeft) {
       this.dx = -1 * this.dx;
     }
   }
