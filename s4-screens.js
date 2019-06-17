@@ -80,7 +80,7 @@ function displayStartScreen() {
   /////////////////////////////////////////////////////////////////////currently fixing///////////////////////////////
   function showTiles(location, x, y) {
     if (location === "C") {
-      // animation(coinAnimation, x*tileWidth, y*tileHeight);
+      animation(coinAnimation, x*tileWidth, y*tileHeight);
       // theCoin = new Coin(x, y);
       // theCoin.show();
     }

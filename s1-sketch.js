@@ -51,6 +51,7 @@ let rockImage;
 let koopaImage;
 
 let koopa1, crab1;
+let resizedCoin;
 
 function preload() {
   // Backgorund environment:
@@ -78,7 +79,7 @@ function preload() {
   coinImage = loadImage("assets/coin.png");
 
   // Game elements:
-  //coinAnimation = loadAnimation("assets/coins/coin0.png", "assets/coins/coin1.png", "assets/coins/coin2.png", "assets/coins/coin3.png", "assets/coins/coin4.png", "assets/coins/coin5.png");
+  coinAnimation = loadAnimation("assets/coins/coin0.png", "assets/coins/coin1.png", "assets/coins/coin2.png", "assets/coins/coin3.png", "assets/coins/coin4.png", "assets/coins/coin5.png");
 
 }
 
