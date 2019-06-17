@@ -1,5 +1,8 @@
 // Sprite objects:
 let player;
+let koopa;
+let crab;
+let rock;
 let foe;
 
 
@@ -48,6 +51,39 @@ class Sprites {
 //     }
 //   }
 }
+
+
+
+
+class Koopa extends Sprites {
+  constructor(spriteX, spriteY) {
+    super(spriteX, spriteY);
+  }
+  updateShow(x, y) {
+    image(koopaImage, x*tileWidth, y*tileHeight-(this.h/4), this.w/1.1, this.h/1.1);
+  }
+}
+
+
+
+
+class Crab extends Sprites {
+  constructor(spriteX, spriteY) {
+    super(spriteX, spriteY);
+  }
+  updateShow(x, y) {
+    image(crabLeftImage, x*tileWidth, y*tileHeight, this.w*1.4, this.h/1.5);
+  }
+}
+
+
+
+
+// class rock {
+//   constructor() {
+
+//   }
+// }
 
 
 
@@ -127,25 +163,6 @@ class Player extends Sprites {
   }
 
   collisionLeft(platformX, platformY, platformXFar, platformYBottom) {
-    // // // if (this.x+this.w >= objectX && this.x+this.w < objectX + tileWidth) {
-    // // //   if (this.yLoc+this.h < objectY) {
-    // // //     console.log("DONE!");
-    // // //     // this.yVel = 0;
-    // // //     // this.yLoc = objectY - 1;
-    // // //   }
-    // // // }
-    // // else {
-    //   this.isColliding = collideRectRect(objectX, objectY, tileWidth, tileHeight, this.x, this.yLoc, this.w, this.h);
-    //   if (this.isColliding) {
-    //     this.dx = 0;            // restrict player's movement in the x direction (until done falling).
-    //     this.yVel = 0;
-    //     this.yAccel = +5;
-    //     playerLives -= 1;
-    //   }
-    //   if (this.yLoc === ground) {
-    //     this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
-    //   }
-    // //}
     this.isColliding = collideLineRect(platformX, platformY, platformX, platformYBottom, this.x, this.yLoc, this.w, this.h);
     if (this.isColliding) {
         this.dx = 0;            // restrict player's movement in the x direction (until done falling).
@@ -153,10 +170,6 @@ class Player extends Sprites {
         this.yAccel = +1;      //////////change to 5
         playerLives -= 1;
     }
-    // else if (this.isColliding) {
-    //   this.yVel = 0;
-    //   this.yLoc = platformY - 1;
-    // }
     if (this.yLoc === ground) {
       this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
     }
@@ -189,7 +202,7 @@ class Player extends Sprites {
   }
 
   collisionTop(platformX, platformY, platformXFar, platformYBottom) {
-    this.isColliding = collideLineRect(platformX, platformY, platformXFar, platformY, this.x, this.yLoc + this.h/2, this.w, this.h); // beta testing change of this.x values
+    this.isColliding = collideLineRect(platformX, platformY, platformXFar, platformY, this.x, this.yLoc + this.h/3, this.w, this.h); // beta testing change of this.x values
     if (this.isColliding) {
       this.yVel = 0;
       this.yLoc = platformY - this.h;

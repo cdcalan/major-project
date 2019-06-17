@@ -1,4 +1,5 @@
 let nextLocation; 
+let platformConstant; 
 
 function displayStartScreen() {
     background(50, 100, 150);
@@ -68,21 +69,26 @@ function displayStartScreen() {
 
   /////////////////////////////////////////////////////////////////////currently fixing///////////////////////////////
   function showTiles(location, x, y) {
+    if (location === "C") {
+      // animation(coinAnimation, x*tileWidth, y*tileHeight);
+      // theCoin = new Coin(x, y);
+      // theCoin.show();
+    }
     if (location === "G") {
       image(groundImage, x * tileWidth, y * tileHeight, tileWidth, tileHeight);
     }
     if (location  === "#") {
       strokeWeight(10);
       let platformX = x * tileWidth;
-      let platformY = y * tileWidth;
+      let platformY = y * tileHeight;
 
       let platformYBottom = platformY+tileHeight;
       let platformXFar = platformX+tileWidth;
 
-      let platformLeft = line(platformX, platformY, platformX, platformYBottom);
-      let platformRight = line(platformXFar, platformY, platformXFar, platformYBottom);
-      let platformTop = line(platformX, platformY, platformXFar, platformY);
-      let platformBottom = line(platformX, platformYBottom, platformXFar, platformYBottom);
+      // let platformLeft = line(platformX, platformY, platformX, platformYBottom);
+      // let platformRight = line(platformXFar, platformY, platformXFar, platformYBottom);
+      // let platformTop = line(platformX, platformY, platformXFar, platformY);
+      // let platformBottom = line(platformX, platformYBottom, platformXFar, platformYBottom);
 
       image(platformImage, platformX, platformY, tileWidth, tileHeight);
       
@@ -103,6 +109,13 @@ function displayStartScreen() {
         //    subtract 1 life.
         // }
       //}
+    }
+    if (location === "B") {
+      console.log(x, y);
+      crab1.updateShow(x, y);
+    }
+    if (location === "K") {
+      koopa1.updateShow(x, y);
     }
   }
   /////////////////////////////////////////////////////////////////////currently fixing///////////////////////////////

@@ -34,11 +34,21 @@ let lettersHigh, lettersWide, tileHeight, tileWidth;
 let gravity, yLocation, ground, yVelocity, yAcceleration;
 
 // Scrolling
-let imageX1 = 0, imageX2, scrollImage, scrollSpeed = 1.5, stationaryObject;
+let imageX1 = 0, imageX2, scrollImage, scrollSpeed = 1.2, stationaryObject;
 
 let collision;
 let isJumping;
 let fall;
+
+let theCoin;
+
+
+let coinAnimation;
+
+let crabLeftImage;
+let crabRightImage;
+let rockImage;
+let koopaImage;
 
 function preload() {
   // Backgorund environment:
@@ -58,15 +68,21 @@ function preload() {
   marioJump = loadImage("assets/marios/marioJump.png");
   marioDuck = loadImage("assets/marios/marioDuck.png");
 
-  // Game elements:
+  // Enemies:
+  koopaImage = loadImage("assets/enemies/koopa.png");
+  crabLeftImage = loadImage("assets/enemies/crabLeft.png");
+  rockImage = loadImage("assets/enemies/rock.png");
+
   coinImage = loadImage("assets/coin.png");
+
+  // Game elements:
+  //coinAnimation = loadAnimation("assets/coins/coin0.png", "assets/coins/coin1.png", "assets/coins/coin2.png", "assets/coins/coin3.png", "assets/coins/coin4.png", "assets/coins/coin5.png");
+
 }
-
-
-
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+
   let camera = 20;   // Letters wide
 
   lettersHigh = lines.length;
@@ -107,6 +123,19 @@ function setup() {
   // Demo Sprite Object:
   player = new Player(300, yLocation);
   foe = new Sprites(300, yLocation - 400);
+  crab1 = new Crab(29, 2);
+  koopa1 = new Koopa(40, 4);   //apparently works with just one now?
+  // koopa2 = new Koopa(58, 4);
+  // koopa3 = new Koopa(16, 9);
+  // koopa4 = new Koopa(23, 9);
+  // koopa5 = new Koopa(43, 9);
+  // koopa6 = new Koopa(56, 9);
+  //(19, 4);
+  //(2, 9);
+  //(19, 13);
+  //(32, 13); 
+  //(52, 13);
+  
   playerAvatar = marioDuck;
   collision = false;
   isJumping = false;

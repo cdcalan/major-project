@@ -1,13 +1,9 @@
-let totalPlatforms = [];
-
-
-
 // Button:
 class Button {
   constructor(x, y, z) {
     this.w = (menuWidth/10)*8;
     this.h = 50;
-    this.x = x;
+    this.x = x + (menuWidth/10);
     this.y = y;
     this.message = z;
     this.color;
@@ -33,9 +29,9 @@ class Button {
   }
   show(){
     fill(this.color);
-    rect(this.x + (menuWidth/10), this.y, this.w, this.h, 50);
+    rect(this.x, this.y, this.w, this.h, 50);
     fill(255);
-    text(this.message, this.x + (this.w/2), this.y + this.h/1.3);
+    text(this.message, this.x + (this.w/3), this.y + this.h/1.3);
   }
 }
 
@@ -49,9 +45,9 @@ class Constant {
     this.height = 70;
 
     // Controls the scroll speed of the game screen:
-    this.acceleration += 1;
+    this.acceleration += 5;
     // Gives the "screen" a velocity:
-    this.velocity = createVector(1, 0);
+    this.velocity = createVector(1.8, 0);   // Beta-test: made game scroll faster than background image.
   }
   // Makes stationary-object "move" horizontally:
   move() {
@@ -66,12 +62,17 @@ class Constant {
 
 
 
-
-class Platform {
-  contructor() {
-
+class Coin {
+  constructor(x, y) {
+    this.x = x * tileWidth;
+    this.y = y * tileHeight;
+    this.w = tileWidth;
+    this.h = tileHeight;
   }
   show() {
-    image(platformImage, i * tileWidth, y * tileHeight, tileWidth, tileHeight);
+    for (let i = 0; i < coinImages.length; i++) {
+      this.coinAvatar = coinImages[i];
+    }
+    image(this.coinAvatar, this.x, this.y, this.w, this.h);
   }
 }
