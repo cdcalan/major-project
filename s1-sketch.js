@@ -51,7 +51,7 @@ let rockImage;
 let koopaImage;
 
 let koopa1, crab1;
-let resizedCoin;
+
 
 function preload() {
   // Backgorund environment:
@@ -79,12 +79,13 @@ function preload() {
   coinImage = loadImage("assets/coin.png");
 
   // Game elements:
-  coinAnimation = loadAnimation("assets/coins/coin0.png", "assets/coins/coin1.png", "assets/coins/coin2.png", "assets/coins/coin3.png", "assets/coins/coin4.png", "assets/coins/coin5.png");
-
+  coinAnimation = loadAnimation("assets/coins/coin1.png", "assets/coins/coin2.png", "assets/coins/coin3.png", "assets/coins/coin4.png", "assets/coins/coin5.png", "assets/coins/coin6.png");
+  //"assets/coins/coin3.png", "assets/coins/coin4.png", );
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  coinAnimation.frameDelay = 3;
 
   let camera = 20;   // Letters wide
 
@@ -118,7 +119,7 @@ function setup() {
   //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   yVelocity = 0;
   yAcceleration = 0;
-  gravity = 0.068;
+  gravity = 0.056;
   ground = windowHeight- 2.4*tileHeight;
   yLocation = ground;
   //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
@@ -200,7 +201,7 @@ function mousePressed() {
 function keyPressed() {
   if (screenState === "Game Screen") {
     if (keyCode === UP_ARROW) {
-      if (player.yLoc === ground) {
+      if (player.yLoc === ground || player.yVel === 0) {
         isJumping = true;  ///
          if (isJumping === true) {
           playerAvatar = marioJump;

@@ -240,12 +240,12 @@ class Player extends Sprites {
   }
 
   collisionTop(platformX, platformY, platformXFar, platformYBottom) {
-    this.isColliding = collideLineRect(platformX, platformY, platformXFar, platformY, this.x, this.yLoc + this.h/3, this.w, this.h); // beta testing change of this.x values
+    this.isColliding = collideLineRect(platformX, platformY, platformXFar, platformY, this.x, this.yLoc + this.h/1.01, this.w, this.h); // beta testing change of this.x values
     if (this.isColliding) {
-      this.yVel = 0;
-      this.yLoc = platformY - this.h;
+      this.yAccel = 0;
+      //this.yLoc = platformY - this.h;
     }
-    if (this.yLoc === ground || this.yLoc === platformY - this.h) {
+    if (this.yAccel === 0) {
       this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
     }
   }

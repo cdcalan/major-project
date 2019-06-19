@@ -1,6 +1,6 @@
 let nextLocation; 
 let platformConstant; 
-let platformX, platformXFar;
+let platformX, platformY, platformYBottom, platformXFar;
 
 // let platformLeft, platformRight;
 // let platformCoordinates = new Map();
