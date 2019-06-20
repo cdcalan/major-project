@@ -52,6 +52,9 @@ let koopaImage;
 
 let koopa1, crab1;
 
+let coinCloud = [[19, 4], [21, 4], [22, 4], [23, 4], [37, 4], [38, 4], [39, 4], [40, 4], [26, 5], [54, 5], [74, 5], [28, 6], [52, 6], [71, 6], [73, 6],[75, 6], [20, 7], [30, 7], [50, 7], [68, 7], [70, 7], [72, 7], [74, 7], [19, 8], [20, 8], [21, 8], [32, 8], [48, 8], [67, 8], [69, 8], [71, 8], [73, 8], [18, 9], [19, 9], [20, 9], [21, 9], [22, 9], [34, 9], [36, 9], [37, 9], [38, 9], [39, 9], [40, 9], [41, 9]];
+let cloud = [];
+let coinArray = [];
 
 function preload() {
   // Backgorund environment:
@@ -86,7 +89,7 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
   collideDebug(true);
-  coinAnimation.frameDelay = 3;
+  coinAnimation.frameDelay = 6;
 
   enemyColliding = false;
 
@@ -106,7 +109,19 @@ function setup() {
       tiles[x][y] = theTile;     // assigns/ puts a letter of the string (line) of the text file to a spot in the empty array.
     }
   }
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+  for (let y = 0; y < lettersHigh; y++) {
+    for (let x = 0; x < lettersWide; x++) {
+      if (tiles[x][y] === "C") {
+        cloud.push([x, y]);
+      }
+    }
+  }
+  for (let i = cloud.length - 1; i > -1; i--) {
+    let coinCoord = cloud[i];
+    coinArray[i] = new Coin(coinCoord[0]*tileWidth, coinCoord[1]*tileHeight);
+  }
+//////////////////////////////////////////////////////////////////////////////////////////////////////
   stationaryObject = new Constant(0, 0);   ///??? might change this into mario himself.
 
   imageX2 = windowWidth;
@@ -205,6 +220,9 @@ function mousePressed() {
 
 
 function keyPressed(platformY) {
+  if (keyCode === DOWN_ARROW) {
+    console.log("coin cloud " + coinCloud);
+  }
   if (screenState === "Game Screen") {
     if (keyCode === UP_ARROW) {
       if (player.yLoc === ground || player.yAccel === 0 || player.yLoc === platformY) {

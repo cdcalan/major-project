@@ -41,8 +41,9 @@ class Sprites {
     this.enemyColliding = collideRectRect(this.x, this.y, this.w, this.h, player.x, player.yLoc, player.w, player.h);
     if (this.enemyColliding === true) {
       enemyColliding = true;
-      console.log("enemy " + enemyColliding);
+      // console.log("enemy " + enemyColliding);
       //player.x < this.x; //////////////////////////////////////////////////////////
+      // fix this so that player cant go through the sprite enemies but still be able to move away from them.
       player.dx = 0;            // restrict player's movement in the x direction (until done falling).
       player.yVel = 0;
       if (player.x < this.x - this.w) {
@@ -51,23 +52,10 @@ class Sprites {
       else if (player.x > this.x + 2*this.w) {
         player.x > this.x;
       }
-      console.log("YAAAAA" + this.enemyColliding);
+      // console.log("YAAAAA" + this.enemyColliding);
     }
     enemyColliding = false;
   }
-
-// //   // Checks if sprite has collided with player:
-//   hasCollided(player) {
-//     // return (if this sprite is touching the player); then, in another function, add if hasCollided, this.life -= 1; and display the life co7unter.
-//     if (player.x + player.w > this.x && player.x < this.x + this.w && player.yLoc + player.h > this.Y && player.yLoc < this.y +this.h) {
-//       //collision = true;
-//       return true;
-//     }
-//     else {
-//       //collision = false;
-//       return false;
-//     }
-//   }
 }
 
 
@@ -86,8 +74,6 @@ class Crab extends Sprites {
 }
 
 
-
-
 // class rock {
 //   constructor() {
 
@@ -100,27 +86,6 @@ class Koopa extends Sprites {
     super();
     this.x = x * tileWidth;
     this.y = y * tileHeight-(this.h/4);
-
-    // this.identifier = identifier;
-
-    // if (this.identifier === 1) {
-    //   this.color = (255, 0, 0);
-    // }
-    // else if (this.identifier === 2) {
-    //   this.color = (0, 0, 255);
-    // }
-    // else if (this.identifier === 3) {
-    //   this.color = (0, 255, 0);
-    // }
-    // else if (this.identifier === 4) {
-    //   this.color = (15, 100, 50);
-    // }
-    // else if (this.identifier === 5) {
-    //   this.color = (100, 75, 25);
-    // }
-    // else {
-    //   this.color = (60, 100, 255);
-    // }
   }
   updateShow() {
     image(koopaImage, this.x, this.y, this.w/1.1, this.h/1.1);
@@ -140,7 +105,6 @@ class Koopa extends Sprites {
     }
     translate(-stationaryObject.position.x, 0);
   }
-  // put this collision code in the original sprites one and call it for crab too:
 }
 
 

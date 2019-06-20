@@ -61,6 +61,12 @@ function displayStartScreen() {
     koopa4.enemyCollision();
     koopa5.enemyCollision();
     koopa6.enemyCollision();
+    crab1.enemyCollision();
+    crab2.enemyCollision();
+    crab3.enemyCollision();
+    crab4.enemyCollision();
+    crab5.enemyCollision();
+    crab6.enemyCollision();
 
     // For Scroll:
     translate(-stationaryObject.position.x, 0);
@@ -75,20 +81,34 @@ function displayStartScreen() {
     
     for (let y = 0; y < lettersHigh; y++) {
       for (let x = 0; x < lettersWide; x++) {
-        //let b = x + 1;
-        // platformLeft = tiles[x-1][y];
-        // platformRight = tiles[x+1][y];
         showTiles(tiles[x][y], x, y); //////???????????????????????????????????????????implement 2 d array and grid generation
+      }
+    }
+
+    for (let index = coinArray.length -1; index > -1; index--) {
+      let coin = coinArray[index];
+      coin.show();
+      if (coin.colliding(player) === true) {
+        coinArray.splice(coinArray.indexOf(coin), 1);
+        console.log(coinArray.length);
+        coins ++;
       }
     }
   }
 
   /////////////////////////////////////////////////////////////////////currently fixing///////////////////////////////
   function showTiles(location, x, y) {
-    if (location === "C") {
-      animation(coinAnimation, x*tileWidth, y*tileHeight);
-      // theCoin = new Coin(x, y);
-      // theCoin.show();
+    // if (location === "C") {
+
+    //   // for (let i = cloud.length - 1; i > -1; i--) {
+    //   //   let coinCoord = cloud[i];
+    //   //   coinArray[i] = new Coin(coinCoord[0]*tileWidth, coinCoord[1]*tileHeight);
+    //   // }
+    //   //animation(coinAnimation, x*tileWidth, y*tileHeight);
+    //   //coinArray[i].show();
+    // }
+    if (location === "W") {
+      
     }
     if (location === "G") {
       image(groundImage, x * tileWidth, y * tileHeight, tileWidth, tileHeight);

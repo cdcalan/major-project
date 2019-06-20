@@ -61,17 +61,19 @@ class Constant {
 }
 
 
-
 class Coin {
   constructor(x, y) {
-    this.x = x * tileWidth;
-    this.y = y * tileHeight;
+    this.x = x;
+    this.y = y;
     this.w = tileWidth;
     this.h = tileHeight;
+    this.coinPickUp = false
   }
-  collide() {
-    
+  colliding(player) {
+    this.coinPickUp = collideRectRect(this.x, this.y, this.w, this.h, player.x, player.yLoc, player.w, player.h);
+    return this.coinPickUp;
   }
   show() {
+    animation(coinAnimation, this.x, this.y);
   }
 }
