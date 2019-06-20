@@ -55,6 +55,12 @@ function displayStartScreen() {
     koopa4.move(43, 9, 1815, 2190);
     koopa5.move(56, 9, 2830, 3200);
     koopa6.move(58, 4, 2900, 3200);
+    koopa1.enemyCollision();
+    koopa2.enemyCollision();
+    koopa3.enemyCollision();
+    koopa4.enemyCollision();
+    koopa5.enemyCollision();
+    koopa6.enemyCollision();
 
     // For Scroll:
     translate(-stationaryObject.position.x, 0);

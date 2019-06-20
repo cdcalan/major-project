@@ -1,9 +1,7 @@
+let enemyColliding;
+
 // Sprite objects:
-let player;
-let koopa;
-let crab;
-let rock;
-let foe;
+let player, koopa, crab, rock, foe;
 
 
 
@@ -22,6 +20,8 @@ class Sprites {
     ////this.dy = 1;
 
     this.life = 3;
+
+    this.enemyColliding = false;
   }
   // Displays sprites:
   show() {
@@ -35,6 +35,25 @@ class Sprites {
     if (this.x + this.w >= windowWidth || this.x <= 0) {
       this.dx = -1 * this.dx;
     }
+  }
+
+  enemyCollision() {
+    this.enemyColliding = collideRectRect(this.x, this.y, this.w, this.h, player.x, player.yLoc, player.w, player.h);
+    if (this.enemyColliding === true) {
+      enemyColliding = true;
+      console.log("enemy " + enemyColliding);
+      //player.x < this.x; //////////////////////////////////////////////////////////
+      player.dx = 0;            // restrict player's movement in the x direction (until done falling).
+      player.yVel = 0;
+      if (player.x < this.x - this.w) {
+        player.x < this.x;
+      }
+      else if (player.x > this.x + 2*this.w) {
+        player.x > this.x;
+      }
+      console.log("YAAAAA" + this.enemyColliding);
+    }
+    enemyColliding = false;
   }
 
 // //   // Checks if sprite has collided with player:
@@ -53,12 +72,35 @@ class Sprites {
 
 
 
+class Crab extends Sprites {
+  constructor(x, y) {
+    super();
+    this.x = x*tileWidth;
+    this.y = y*tileHeight;
+    this.w = 70;
+    this.h = 50;
+  }
+  updateShow() {
+    image(crabLeftImage, this.x, this.y, this.w, this.h);
+  }
+}
+
+
+
+
+// class rock {
+//   constructor() {
+
+//   }
+// }
+
 
 class Koopa extends Sprites {
-  constructor(x, y, boundaryLeft, boundaryRight) {
+  constructor(x, y, boundaryLeft, boundaryRight, enemyColliding) {
     super();
     this.x = x * tileWidth;
     this.y = y * tileHeight-(this.h/4);
+
     // this.identifier = identifier;
 
     // if (this.identifier === 1) {
@@ -98,31 +140,8 @@ class Koopa extends Sprites {
     }
     translate(-stationaryObject.position.x, 0);
   }
+  // put this collision code in the original sprites one and call it for crab too:
 }
-
-
-
-
-class Crab extends Sprites {
-  constructor(x, y) {
-    super();
-    this.x = x*tileWidth;
-    this.y = y*tileHeight;
-  }
-  updateShow() {
-    image(crabLeftImage, this.x, this.y, this.w*1.4, this.h/1.5);
-  }
-}
-
-
-
-
-// class rock {
-//   constructor() {
-
-//   }
-// }
-
 
 
 
@@ -158,21 +177,13 @@ class Player extends Sprites {
       this.yLoc = ground;
       this.yVel = 0;
     }
-    else if (this.yLoc < 0) {   // if it is going past the roof make it fall 
+    else if (this.yLoc < stationaryObject.height) {   // if it is going past the roof make it fall 
       this.yVel = 0;
       this.yAccel = +5;
     }
 
-    // // Response to collision: 
-    // if (collision === true) {
-    //   console.log("done");
-    //   this.yVel = 0;
-    //   this.yAccel = +5;
-    //   playerLives -= 1;
-    // }
-
     if (keyIsPressed && keyCode === RIGHT_ARROW) {
-      if (fall === false) {
+      if (enemyColliding === false) {
         if (this.x < (stationaryObject.position.x + stationaryObject.width) - this.w) {                          
           // show run:
           playerAvatar = marioRun; 
@@ -182,14 +193,16 @@ class Player extends Sprites {
       }
     }
     else if (keyIsPressed && keyCode === LEFT_ARROW) {
-      if (this.x > (stationaryObject.position.x)) {                                      
-        // show run:
-        playerAvatar = marioRunBack; 
-        this.x -= this.dx;
-      }
-      else {
-        this.x = stationaryObject.position.x;             // keep mario from moving off left screen. 
+      if (enemyColliding === false) {
+        if (this.x > (stationaryObject.position.x)) {                                      
+          // show run:
+          playerAvatar = marioRunBack; 
+          this.x -= this.dx;
+        }
+        else {
+          this.x = stationaryObject.position.x;             // keep mario from moving off left screen. 
 
+        }
       }
     }
     else {
@@ -198,16 +211,14 @@ class Player extends Sprites {
     }
     // show user:
     image(playerAvatar, this.x, this.yLoc, this.w, this.h);
-
-    //console.log(this.yAccel, this.yVel, this.yLoc);
   }
 
   collisionTop(platformX, platformY, platformXFar, platformYBottom) {
     this.isColliding = collideLineRect(platformX, platformY, platformXFar, platformY, this.x, this.yLoc + this.h/1.01, this.w, this.h, true); // beta testing change of this.x values
     //if (this.x+this.w >= platformX && this.x+this.w <= platformXFar && this.y+this.h === platformY) {
     if (this.isColliding === true) {
+      this.yLoc = platformY - this.h;
       this.yAccel = 0;
-      //this.yLoc = platformY - this.h;
     }
     if (this.yAccel === 0) {
       this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
@@ -218,8 +229,9 @@ class Player extends Sprites {
     this.isColliding = collideLineRect(platformX, platformY, platformX, platformYBottom, this.x, this.yLoc, this.w, this.h);
     if (this.hit === false) {
       if (this.isColliding === true) {
-        playerLives -= 1;
         this.hit = true;
+        playerLives -= 1;
+        this.hit = false;
         this.dx = 0;            // restrict player's movement in the x direction (until done falling).
         this.yVel = 0;
         this.yAccel = +5;      //////////change to 5
@@ -237,8 +249,9 @@ class Player extends Sprites {
     this.isColliding = collideLineRect(platformXFar, platformY, platformXFar, platformYBottom, this.x, this.yLoc, this.w, this.h);
     if (this.hit === false) {
       if (this.isColliding === true) {
-        playerLives -= 1;
         this.hit = true;
+        playerLives -= 1;
+        this.hit = false;
         this.dx = 0;            // restrict player's movement in the x direction (until done falling).
         this.yVel = 0;
         this.yAccel = +1;      //////////change to 5
@@ -256,8 +269,9 @@ class Player extends Sprites {
     this.isColliding = collideLineRect(platformX, platformYBottom, platformXFar, platformYBottom, this.x, this.yLoc, this.w, this.h);
     if (this.hit === false) {
       if (this.isColliding === true) {
-        playerLives -= 1;
         this.hit = true;
+        playerLives -= 1;
+        this.hit = false;
         this.dx = 0;            // restrict player's movement in the x direction (until done falling).
         this.yVel = 0;
         this.yAccel = +1;      //////////change to 5

@@ -73,7 +73,7 @@ function preload() {
 
   // Enemies:
   koopaImage = loadImage("assets/enemies/koopa.png");
-  crabLeftImage = loadImage("assets/enemies/crabLeft.png");
+  crabLeftImage = loadImage("assets/enemies/crab.png");
   rockImage = loadImage("assets/enemies/rock.png");
 
   coinImage = loadImage("assets/coin.png");
@@ -87,6 +87,8 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   collideDebug(true);
   coinAnimation.frameDelay = 3;
+
+  enemyColliding = false;
 
   let camera = 20;   // Letters wide
 
@@ -205,7 +207,7 @@ function mousePressed() {
 function keyPressed(platformY) {
   if (screenState === "Game Screen") {
     if (keyCode === UP_ARROW) {
-      if (player.yLoc === ground || player.yLoc === platformY) {
+      if (player.yLoc === ground || player.yAccel === 0 || player.yLoc === platformY) {
         isJumping = true;  ///
          if (isJumping === true) {
           playerAvatar = marioJump;
