@@ -85,27 +85,7 @@ class Koopa extends Sprites {
     fill(255);
     ellipse(this.x, this.y, 10, 10);
   }
-  /////////////////////////////////////////////////////////////////
   move(x, y, boundaryLeft, boundaryRight) {
-    // console.log("boundaries: " + this.boundaryXLeft + " " + this.boundaryXRight);
-    // console.log(this.x, this.x+this.w, this.boundaryXLeft, this.boundaryXRight);
-    
-    // if (tiles[y][x] === "S") {
-    //   this.dx = 0.71;
-    //   this.dx = -1 *  this.dx;
-    // }
-    // else if (tiles[y][x] ==! "S") {
-    //   this.x += this.dx;
-    // }
-    // this.x += this.dx;
-    // if (tiles[y][x+1] ==! "S") {
-    //   this.dx = 0.71;
-    //   this.x += this.dx;
-    // }
-    // if (tiles[y][x+1] === "S") {
-    //   this.dx = 0.71;
-    //   this.dx = -1 *  this.dx;
-    // }
     translate(stationaryObject.position.x, 0);
     this.boundaryXLeft = boundaryLeft;
     this.boundaryXRight = boundaryRight;
@@ -118,7 +98,6 @@ class Koopa extends Sprites {
     }
     translate(-stationaryObject.position.x, 0);
   }
-  /////////////////////////////////////////////////////////////////
 }
 
 

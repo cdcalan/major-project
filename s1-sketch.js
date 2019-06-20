@@ -134,7 +134,7 @@ function setup() {
   crab5 = new Crab(32, 13); 
   crab6 = new Crab(52, 13);
   koopa1 = new Koopa(16, 9, 810.4, 1150);
-  koopa2 = new Koopa(23, 9, 1164.95, 1364.95, 4);
+  koopa2 = new Koopa(23, 9, 810.4, 1164.95, 4);
   koopa3 = new Koopa(40, 4, 2026, 2428.6, 1);   //apparently works with just one now?
   koopa4 = new Koopa(43, 9, 2177.95, 2377.95, 5);
   koopa5 = new Koopa(56, 9, 2836.4, 3036.4, 6);
