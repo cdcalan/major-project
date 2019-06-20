@@ -48,18 +48,18 @@ function displayStartScreen() {
       imageX2 = windowWidth;
     }
     ////////////////// E N D ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    koopa1.move(16, 9, 810.4, 1150);
+    koopa2.move(23, 9, 1164.95, 1364.95);
+    koopa3.move(40, 4, 2026, 2228.6);
+    koopa4.move(43, 9, 2177.95, 2377.95);
+    koopa5.move(56, 9, 2836.4, 1036.4);
+    koopa6.move(58, 4, 2937.7, 3140.3);
+
     // For Scroll:
     translate(-stationaryObject.position.x, 0);
     stationaryObject.move();
     stationaryObject.show();
-  
-    koopa1.move(40, 4, 2026, 2228.6);
-    koopa2.move(58, 4, 2937.7, 3140.3);
-    koopa3.move(16, 9, 810.4, 1000);
-    koopa4.move(23, 9, 1164.95, 1364.95);
-    koopa5.move(43, 9, 2177.95, 2377.95);
-    koopa6.move(56, 9, 2836.4, 1036.4);
-
     
     player.updateShow(playerAvatar);
   
@@ -96,10 +96,12 @@ function displayStartScreen() {
       // }
       strokeWeight(10);
       platformX = x * tileWidth;
-      let platformY = y * tileHeight;
+      platformY = y * tileHeight;
 
-      let platformYBottom = platformY+tileHeight;
+      platformYBottom = platformY+tileHeight;
       platformXFar = platformX+tileWidth;
+
+      // console.log(platformX, platformXFar);
 
       // let platformLeft = line(platformX, platformY, platformX, platformYBottom);
       // let platformRight = line(platformXFar, platformY, platformXFar, platformYBottom);
@@ -108,10 +110,12 @@ function displayStartScreen() {
 
       image(platformImage, platformX, platformY, tileWidth, tileHeight);
       
+      player.collisionTop(platformX, platformY, platformXFar, platformYBottom);
       player.collisionLeft(platformX, platformY, platformXFar, platformYBottom);
       player.collisionRight(platformX, platformY, platformXFar, platformYBottom);
       player.collisionBottom(platformX, platformY, platformXFar, platformYBottom);
-      player.collisionTop(platformX, platformY, platformXFar, platformYBottom); //, platformTop, platformBottom);
+
+     //, platformTop, platformBottom);
       // totalPlatforms.push(new Platform());
       // console.log(totalPlatforms);
       //for (let i = x; i < windowWidth; i += 300) {
@@ -125,7 +129,7 @@ function displayStartScreen() {
         //    subtract 1 life.
         // }
       //}
-    }
+    } 
     if (location === "B") {
       crab1.updateShow();
       crab2.updateShow();

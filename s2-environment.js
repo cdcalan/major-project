@@ -62,17 +62,16 @@ class Constant {
 
 
 
-// class Coin {
-//   constructor(x, y) {
-//     this.x = x * tileWidth;
-//     this.y = y * tileHeight;
-//     this.w = tileWidth;
-//     this.h = tileHeight;
-//   }
-//   show() {
-//     // for (let i = 0; i < coinImages.length; i++) {
-//     //   this.coinAvatar = coinImages[i];
-//     // }
-//     image(this.coinAvatar, this.x, this.y, this.w, this.h);
-//   }
-// }
+class Coin {
+  constructor(x, y) {
+    this.x = x * tileWidth;
+    this.y = y * tileHeight;
+    this.w = tileWidth;
+    this.h = tileHeight;
+  }
+  collide() {
+    
+  }
+  show() {
+  }
+}

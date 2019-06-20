@@ -8,7 +8,6 @@ let foe;
 
 
 
-
 // All sprites:
 class Sprites {
   constructor(spriteX, spriteY) {
@@ -56,46 +55,68 @@ class Sprites {
 
 
 class Koopa extends Sprites {
-  constructor(x, y, boundaryLeft, boundaryRight, identifier) {
+  constructor(x, y, boundaryLeft, boundaryRight) {
     super();
     this.x = x * tileWidth;
     this.y = y * tileHeight-(this.h/4);
-    this.boundaryXLeft = boundaryLeft;
-    this.boundaryXRight = boundaryRight;
-    this.identifier = identifier;
+    // this.identifier = identifier;
 
-    if (this.identifier === 1) {
-      this.color = (255, 0, 0);
-    }
-    else if (this.identifier === 2) {
-      this.color = (0, 0, 255);
-    }
-    else if (this.identifier === 3) {
-      this.color = (0, 255, 0);
-    }
-    else if (this.identifier === 4) {
-      this.color = (15, 100, 50);
-    }
-    else if (this.identifier === 5) {
-      this.color = (100, 75, 25);
-    }
-    else {
-      this.color = (60, 100, 255);
-    }
+    // if (this.identifier === 1) {
+    //   this.color = (255, 0, 0);
+    // }
+    // else if (this.identifier === 2) {
+    //   this.color = (0, 0, 255);
+    // }
+    // else if (this.identifier === 3) {
+    //   this.color = (0, 255, 0);
+    // }
+    // else if (this.identifier === 4) {
+    //   this.color = (15, 100, 50);
+    // }
+    // else if (this.identifier === 5) {
+    //   this.color = (100, 75, 25);
+    // }
+    // else {
+    //   this.color = (60, 100, 255);
+    // }
   }
   updateShow() {
     image(koopaImage, this.x, this.y, this.w/1.1, this.h/1.1);
-    fill(this.color);
+    fill(255);
     ellipse(this.x, this.y, 10, 10);
   }
   /////////////////////////////////////////////////////////////////
-  move() {
-    // console.log("x,y: " + this.x + " " + this.y);
+  move(x, y, boundaryLeft, boundaryRight) {
     // console.log("boundaries: " + this.boundaryXLeft + " " + this.boundaryXRight);
-    this.x += this.dx;
-    if (this.x + this.w > this.boundaryXRight || this.x < this.boundaryXLeft) {
-      this.dx = -1 * this.dx;
+    // console.log(this.x, this.x+this.w, this.boundaryXLeft, this.boundaryXRight);
+    
+    // if (tiles[y][x] === "S") {
+    //   this.dx = 0.71;
+    //   this.dx = -1 *  this.dx;
+    // }
+    // else if (tiles[y][x] ==! "S") {
+    //   this.x += this.dx;
+    // }
+    // this.x += this.dx;
+    // if (tiles[y][x+1] ==! "S") {
+    //   this.dx = 0.71;
+    //   this.x += this.dx;
+    // }
+    // if (tiles[y][x+1] === "S") {
+    //   this.dx = 0.71;
+    //   this.dx = -1 *  this.dx;
+    // }
+    translate(stationaryObject.position.x, 0);
+    this.boundaryXLeft = boundaryLeft;
+    this.boundaryXRight = boundaryRight;
+    if (this.x >= this.boundaryXLeft && this.x <= this.boundaryXRight) {
+      this.x += this.dx;
     }
+    else if (this.x < this.boundaryXLeft || this.x > this.boundaryXRight) {
+      this.dx = -1 *  this.dx;
+      this.x += this.dx;
+    }
+    translate(-stationaryObject.position.x, 0);
   }
   /////////////////////////////////////////////////////////////////
 }
@@ -141,6 +162,8 @@ class Player extends Sprites {
     this.rightEdge = line (this.x+this.w, this.yLoc, this.x+this.w, this.yLoc+this.h);
     this.leftEdge = line (this.x, this.yLoc, this.x, this.yLoc+this.h);
     this.bottomEdge = line (this.x, this.yLoc+this.h, this.x+this.w, this.yLoc+this.h);
+
+    this.hit = false;
   }
 
   // Implement gravity!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -200,53 +223,72 @@ class Player extends Sprites {
     //console.log(this.yAccel, this.yVel, this.yLoc);
   }
 
-  collisionLeft(platformX, platformY, platformXFar, platformYBottom) {
-    this.isColliding = collideLineRect(platformX, platformY, platformX, platformYBottom, this.x, this.yLoc, this.w, this.h);
-    if (this.isColliding) {
-        this.dx = 0;            // restrict player's movement in the x direction (until done falling).
-        this.yVel = 0;
-        this.yAccel = +5;      //////////change to 5
-        playerLives -= 1;
-    }
-    if (this.yLoc === ground) {
-      this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
-    }
-  }
-
-  collisionRight(platformX, platformY, platformXFar, platformYBottom) {
-    this.isColliding = collideLineRect(platformXFar, platformY, platformXFar, platformYBottom, this.x, this.yLoc, this.w, this.h);
-    if (this.isColliding) {
-        this.dx = 0;            // restrict player's movement in the x direction (until done falling).
-        this.yVel = 0;
-        this.yAccel = +1;      //////////change to 5
-        playerLives -= 1;
-    }
-    if (this.yLoc === ground) {
-      this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
-    }
-  }
-
-  collisionBottom(platformX, platformY, platformXFar, platformYBottom) {
-    this.isColliding = collideLineRect(platformX, platformYBottom, platformXFar, platformYBottom, this.x, this.yLoc, this.w, this.h);
-    if (this.isColliding) {
-        this.dx = 0;            // restrict player's movement in the x direction (until done falling).
-        this.yVel = 0;
-        this.yAccel = +1;      //////////change to 5
-        playerLives -= 1;
-    }
-    if (this.yLoc === ground) {
-      this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
-    }
-  }
-
   collisionTop(platformX, platformY, platformXFar, platformYBottom) {
-    this.isColliding = collideLineRect(platformX, platformY, platformXFar, platformY, this.x, this.yLoc + this.h/1.01, this.w, this.h); // beta testing change of this.x values
-    if (this.isColliding) {
+    this.isColliding = collideLineRect(platformX, platformY, platformXFar, platformY, this.x, this.yLoc + this.h/1.01, this.w, this.h, true); // beta testing change of this.x values
+    //if (this.x+this.w >= platformX && this.x+this.w <= platformXFar && this.y+this.h === platformY) {
+    if (this.isColliding === true) {
       this.yAccel = 0;
       //this.yLoc = platformY - this.h;
     }
     if (this.yAccel === 0) {
       this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
+    }
+  }
+
+  collisionLeft(platformX, platformY, platformXFar, platformYBottom) {
+    this.isColliding = collideLineRect(platformX, platformY, platformX, platformYBottom, this.x, this.yLoc, this.w, this.h);
+    if (this.hit === false) {
+      if (this.isColliding === true) {
+        playerLives -= 1;
+        this.hit = true;
+        this.dx = 0;            // restrict player's movement in the x direction (until done falling).
+        this.yVel = 0;
+        this.yAccel = +5;      //////////change to 5
+      }
+      if (this.yLoc === ground) {
+        this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
+      }
+    }
+    if (this.isColliding === false) {
+      this.hit = false;
+    }
+  }
+
+  collisionRight(platformX, platformY, platformXFar, platformYBottom) {
+    this.isColliding = collideLineRect(platformXFar, platformY, platformXFar, platformYBottom, this.x, this.yLoc, this.w, this.h);
+    if (this.hit === false) {
+      if (this.isColliding === true) {
+        playerLives -= 1;
+        this.hit = true;
+        this.dx = 0;            // restrict player's movement in the x direction (until done falling).
+        this.yVel = 0;
+        this.yAccel = +1;      //////////change to 5
+      }
+      if (this.yLoc === ground) {
+        this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
+      }
+    }
+    if (this.isColliding === false) {
+      this.hit = false;
+    }
+  }
+
+  collisionBottom(platformX, platformY, platformXFar, platformYBottom) {
+    this.isColliding = collideLineRect(platformX, platformYBottom, platformXFar, platformYBottom, this.x, this.yLoc, this.w, this.h);
+    if (this.hit === false) {
+      if (this.isColliding === true) {
+        playerLives -= 1;
+        this.hit = true;
+        this.dx = 0;            // restrict player's movement in the x direction (until done falling).
+        this.yVel = 0;
+        this.yAccel = +1;      //////////change to 5
+      }
+      if (this.yLoc === ground) {
+        this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
+      }
+    }
+    if (this.isColliding === false) {
+      this.hit = false;
     }
   }
 

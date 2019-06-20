@@ -85,6 +85,7 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  collideDebug(true);
   coinAnimation.frameDelay = 3;
 
   let camera = 20;   // Letters wide
@@ -119,7 +120,7 @@ function setup() {
   //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   yVelocity = 0;
   yAcceleration = 0;
-  gravity = 0.056;
+  gravity = 0.05;
   ground = windowHeight- 2.4*tileHeight;
   yLocation = ground;
   //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
@@ -132,12 +133,12 @@ function setup() {
   crab4 = new Crab(19, 13);
   crab5 = new Crab(32, 13); 
   crab6 = new Crab(52, 13);
-  koopa1 = new Koopa(40, 4, 2026, 2428.6, 1);   //apparently works with just one now?
-  koopa2 = new Koopa(58, 4, 2937.7, 3140.3, 2);
-  koopa3 = new Koopa(16, 9, 810.4, 1000, 3);
-  koopa4 = new Koopa(23, 9, 1164.95, 1364.95, 4);
-  koopa5 = new Koopa(43, 9, 2177.95, 2377.95, 5);
-  koopa6 = new Koopa(56, 9, 2836.4, 3036.4, 6);
+  koopa1 = new Koopa(16, 9, 810.4, 1150);
+  koopa2 = new Koopa(23, 9, 1164.95, 1364.95, 4);
+  koopa3 = new Koopa(40, 4, 2026, 2428.6, 1);   //apparently works with just one now?
+  koopa4 = new Koopa(43, 9, 2177.95, 2377.95, 5);
+  koopa5 = new Koopa(56, 9, 2836.4, 3036.4, 6);
+  koopa6 = new Koopa(58, 4, 2937.7, 3140.3, 2);
   
   playerAvatar = marioDuck;
   collision = false;
@@ -166,7 +167,6 @@ function draw() {
     displayStartScreen();
   }
   else if (screenState === "Game Screen") {
-    console.log("jumping? " + isJumping);
     displayGameScreen();
   }
 
@@ -183,6 +183,10 @@ function mouseClicked(mouseX, mouseY) {
   console.log(mouseX, mouseY);
 }
 
+// function timestamp() {
+
+// }
+
 
 
 
@@ -198,10 +202,10 @@ function mousePressed() {
 }
 
 
-function keyPressed() {
+function keyPressed(platformY) {
   if (screenState === "Game Screen") {
     if (keyCode === UP_ARROW) {
-      if (player.yLoc === ground || player.yVel === 0) {
+      if (player.yLoc === ground || player.yLoc === platformY) {
         isJumping = true;  ///
          if (isJumping === true) {
           playerAvatar = marioJump;
