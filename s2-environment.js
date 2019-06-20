@@ -42,7 +42,7 @@ class Constant {
   constructor(x, y) {
     this.position = createVector(x, y);
     this.width = windowWidth;
-    this.height = 70;
+    this.height = 55;
 
     // Controls the scroll speed of the game screen:
     this.acceleration += 5;

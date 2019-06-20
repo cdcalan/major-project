@@ -23,7 +23,7 @@ let menuX, menuY, menuWidth = 350, menuHeight = 250;
 let playerLives, coins, score;
 
 // Image holders:
-let playerAvatar, marioRun, marioRunBack, marioJump, marioDuck, coinImage;
+let playerAvatar, marioRun, marioRunBack, marioJump, marioDuck, marioAttack, coinImage;
 
 let level, lines;
 let platformImage;
@@ -50,11 +50,20 @@ let crabRightImage;
 let rockImage;
 let koopaImage;
 
+let marioFlagImage;
+let marioCastleImage;
+
 let koopa1, crab1;
 
-let coinCloud = [[19, 4], [21, 4], [22, 4], [23, 4], [37, 4], [38, 4], [39, 4], [40, 4], [26, 5], [54, 5], [74, 5], [28, 6], [52, 6], [71, 6], [73, 6],[75, 6], [20, 7], [30, 7], [50, 7], [68, 7], [70, 7], [72, 7], [74, 7], [19, 8], [20, 8], [21, 8], [32, 8], [48, 8], [67, 8], [69, 8], [71, 8], [73, 8], [18, 9], [19, 9], [20, 9], [21, 9], [22, 9], [34, 9], [36, 9], [37, 9], [38, 9], [39, 9], [40, 9], [41, 9]];
 let cloud = [];
 let coinArray = [];
+
+let playerState;
+
+// let crabArray = [new Crab(29, 2), new Crab(19, 4), new Crab(2, 9), new Crab(19, 13), new Crab(32, 13), new Crab(52, 13)];
+// let koopaArray = [new Koopa(16, 9, 810.4, 1150), new Koopa(23, 9, 810.4, 1164.95, 4), new Koopa(40, 4, 2026, 2428.6, 1), new Koopa(43, 9, 2177.95, 2377.95, 5), new Koopa(43, 9, 2177.95, 2377.95, 5), new Koopa(56, 9, 2836.4, 3036.4, 6), new Koopa(58, 4, 2937.7, 3140.3, 2)];
+let crabArray = [];
+let koopaArray = [];
 
 function preload() {
   // Backgorund environment:
@@ -64,6 +73,8 @@ function preload() {
   // Tiles:
   groundImage = loadImage("assets/environment/groundArt.png");
   platformImage = loadImage("assets/environment/platform.png");
+  marioFlagImage = loadImage("assets/environment/marioFlag.png");
+  marioCastleImage = loadImage("assets/environment/marioCastle.gif");
 
   // BG screen:
   scrollImage = loadImage("assets/environment/marioBg1.jpg");
@@ -73,11 +84,14 @@ function preload() {
   marioRunBack = loadImage("assets/marios/marioRunInverted.png");
   marioJump = loadImage("assets/marios/marioJump.png");
   marioDuck = loadImage("assets/marios/marioDuck.png");
+  marioAttack = loadImage("assets/marios/marioAttack.png");
 
   // Enemies:
   koopaImage = loadImage("assets/enemies/koopa.png");
   crabLeftImage = loadImage("assets/enemies/crab.png");
   rockImage = loadImage("assets/enemies/rock.png");
+  squishedKoopa = loadImage("assets/enemies/squished_koopa.png");
+  squishedCrab = loadImage("assets/enemies/squished_crab.png");
 
   coinImage = loadImage("assets/coin.png");
 
@@ -90,6 +104,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   collideDebug(true);
   coinAnimation.frameDelay = 6;
+  playerState = 0;  //normal
 
   enemyColliding = false;
 
@@ -104,7 +119,7 @@ function setup() {
   tiles = twoDArray(lettersWide, lettersHigh);
 
   for (let y = 0; y < lettersHigh; y++) {     /////////////add the scrp;ll text file by looking at the first 30 
-    for (let x = 0; x < 80; x++) {
+    for (let x = 0; x < 100; x++) {
       let theTile = lines[y][x];
       tiles[x][y] = theTile;     // assigns/ puts a letter of the string (line) of the text file to a spot in the empty array.
     }
@@ -156,7 +171,10 @@ function setup() {
   koopa4 = new Koopa(43, 9, 2177.95, 2377.95, 5);
   koopa5 = new Koopa(56, 9, 2836.4, 3036.4, 6);
   koopa6 = new Koopa(58, 4, 2937.7, 3140.3, 2);
-  
+
+  crabArray = [crab1, crab2, crab3, crab4, crab5, crab6];
+  koopaArray = [koopa1, koopa2, koopa3, koopa4, koopa5, koopa6];
+
   playerAvatar = marioDuck;
   collision = false;
   isJumping = false;
@@ -193,6 +211,9 @@ function draw() {
   else if (screenState === "Game Over") {
     displayGameOverScreen();
   }
+  else if (screenState === "Completed") {
+    displayCompletedScreen();
+  }
 
 }
 
@@ -220,9 +241,6 @@ function mousePressed() {
 
 
 function keyPressed(platformY) {
-  if (keyCode === DOWN_ARROW) {
-    console.log("coin cloud " + coinCloud);
-  }
   if (screenState === "Game Screen") {
     if (keyCode === UP_ARROW) {
       if (player.yLoc === ground || player.yAccel === 0 || player.yLoc === platformY) {
@@ -245,24 +263,24 @@ function keyPressed(platformY) {
 // Displays player lives:                  
 function playerLifeCounter() {
   fill(190);
-  rect(stationaryObject.position.x+25, 20, 125, 40, 5);   // offsets the x position of counter displayed on screen by the scroll screen rate, thereby, making the counter "stationary" on screen while the rest of the game moves.
+  rect(stationaryObject.position.x+25, 15, 125, 37, 5);   // offsets the x position of counter displayed on screen by the scroll screen rate, thereby, making the counter "stationary" on screen while the rest of the game moves.
   
   fill(0);
   textSize(25);
-  text("Life : " + playerLives, stationaryObject.position.x+30, 50);
+  text("Life : " + playerLives, stationaryObject.position.x+30, 45);
 }
 
 
 // Displays coins earned:
 function coinCounter() {
   fill(190);
-  rect(stationaryObject.position.x+175, 20, 125, 40, 5);
+  rect(stationaryObject.position.x+175, 15, 125, 37, 5);
   
-  image(coinImage, stationaryObject.position.x+260, 22, 38, 38);
+  image(coinImage, stationaryObject.position.x+260, 17, 38, 35);
 
   fill(0);
   textSize(25);
-  text("Coins : " + coins, stationaryObject.position.x+180, 50);
+  text("Coins : " + coins, stationaryObject.position.x+180, 45);
 }
 
 

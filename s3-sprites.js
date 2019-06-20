@@ -19,7 +19,7 @@ class Sprites {
     this.dx = random(2, 6);
     ////this.dy = 1;
 
-    this.life = 3;
+    this.lifeArray = [0, 0, 0];
 
     this.enemyColliding = false;
   }
@@ -40,19 +40,22 @@ class Sprites {
   enemyCollision() {
     this.enemyColliding = collideRectRect(this.x, this.y, this.w, this.h, player.x, player.yLoc, player.w, player.h);
     if (this.enemyColliding === true) {
-      enemyColliding = true;
-      // console.log("enemy " + enemyColliding);
-      //player.x < this.x; //////////////////////////////////////////////////////////
-      // fix this so that player cant go through the sprite enemies but still be able to move away from them.
-      player.dx = 0;            // restrict player's movement in the x direction (until done falling).
-      player.yVel = 0;
-      if (player.x < this.x - this.w) {
-        player.x < this.x;
-      }
-      else if (player.x > this.x + 2*this.w) {
-        player.x > this.x;
-      }
-      // console.log("YAAAAA" + this.enemyColliding);
+        enemyColliding = true;
+        // console.log("enemy " + enemyColliding);
+        //player.x < this.x; //////////////////////////////////////////////////////////
+        // fix this so that player cant go through the sprite enemies but still be able to move away from them.
+        player.dx = 0;            // restrict player's movement in the x direction (until done falling).
+        player.yVel = 0;
+        if (player.x < this.x - this.w) {
+          player.x < this.x;
+        }
+        else if (player.x > this.x + 2*this.w) {
+          player.x > this.x;
+        }
+        // console.log("YAAAAA" + this.enemyColliding);
+        this.lifeArray.splice(this.lifeArray.indexOf(this.lifeArray.length-playerState), 1);
+        console.log("life " + this.lifeArray.length);
+        playerState = 0;
     }
     enemyColliding = false;
   }
@@ -86,16 +89,24 @@ class Koopa extends Sprites {
     super();
     this.x = x * tileWidth;
     this.y = y * tileHeight-(this.h/4);
+    this.boundaryXLeft = boundaryLeft;
+    this.boundaryXRight = boundaryRight;
   }
   updateShow() {
     image(koopaImage, this.x, this.y, this.w/1.1, this.h/1.1);
-    fill(255);
-    ellipse(this.x, this.y, 10, 10);
+    if (this.lifeArray.length === 1) {
+      fill(200, 10, 10);
+    }
+    if (this.lifeArray.length === 2) {
+      fill(50, 200, 200);
+    }
+    if (this.lifeArray.length === 3) {
+      fill(50, 50, 100);
+    }
+      ellipse(this.x, this.y, 10, 10);
   }
   move(x, y, boundaryLeft, boundaryRight) {
     translate(stationaryObject.position.x, 0);
-    this.boundaryXLeft = boundaryLeft;
-    this.boundaryXRight = boundaryRight;
     if (this.x >= this.boundaryXLeft && this.x <= this.boundaryXRight) {
       this.x += this.dx;
     }
@@ -167,6 +178,12 @@ class Player extends Sprites {
           this.x = stationaryObject.position.x;             // keep mario from moving off left screen. 
 
         }
+      }
+    }
+    else if(keyIsPressed && keyCode === DOWN_ARROW) {
+      playerState = 1;
+      if (playerState === 1) {
+        playerAvatar = marioAttack; 
       }
     }
     else {

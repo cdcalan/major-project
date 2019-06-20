@@ -49,24 +49,24 @@ function displayStartScreen() {
     }
     ////////////////// E N D ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    koopa1.move(16, 9, 810.4, 1150);
-    koopa2.move(23, 9, 810.4, 1164.95);
-    koopa3.move(40, 4, 1880, 2200);
-    koopa4.move(43, 9, 1815, 2190);
-    koopa5.move(56, 9, 2830, 3200);
-    koopa6.move(58, 4, 2900, 3200);
-    koopa1.enemyCollision();
-    koopa2.enemyCollision();
-    koopa3.enemyCollision();
-    koopa4.enemyCollision();
-    koopa5.enemyCollision();
-    koopa6.enemyCollision();
-    crab1.enemyCollision();
-    crab2.enemyCollision();
-    crab3.enemyCollision();
-    crab4.enemyCollision();
-    crab5.enemyCollision();
-    crab6.enemyCollision();
+    // koopa1.move(16, 9, 810.4, 1150);
+    // koopa2.move(23, 9, 810.4, 1164.95);
+    // koopa3.move(40, 4, 1880, 2200);
+    // koopa4.move(43, 9, 1815, 2190);
+    // koopa5.move(56, 9, 2830, 3200);
+    // koopa6.move(58, 4, 2900, 3200);
+    // koopa1.enemyCollision();
+    // koopa2.enemyCollision();
+    // koopa3.enemyCollision();
+    // koopa4.enemyCollision();
+    // koopa5.enemyCollision();
+    // koopa6.enemyCollision();
+    // crab1.enemyCollision();
+    // crab2.enemyCollision();
+    // crab3.enemyCollision();
+    // crab4.enemyCollision();
+    // crab5.enemyCollision();
+    // crab6.enemyCollision();
 
     // For Scroll:
     translate(-stationaryObject.position.x, 0);
@@ -85,12 +85,31 @@ function displayStartScreen() {
       }
     }
 
+    for (let index = koopaArray.length -1; index > -1; index--) {
+      let thisKoopa = koopaArray[index];
+      thisKoopa.updateShow();
+      thisKoopa.move();
+      thisKoopa.enemyCollision();
+      // if (thisKoopa.lifeArray.length === 0) {
+      //   koopaArray.splice(koopaArray.indexOf(thisKoopa), 1);
+      // }
+    }
+    for (let index = crabArray.length -1; index > -1; index--) {
+      let thisCrab = crabArray[index];
+      thisCrab.updateShow();
+      // thisCrab.move();
+      thisCrab.enemyCollision();
+      if (thisCrab.lifeArray.length === 0) {
+        crabArray.splice(crabArray.indexOf(thisCrab), 1);
+      }
+    }
+
+
     for (let index = coinArray.length -1; index > -1; index--) {
       let coin = coinArray[index];
       coin.show();
       if (coin.colliding(player) === true) {
         coinArray.splice(coinArray.indexOf(coin), 1);
-        console.log(coinArray.length);
         coins ++;
       }
     }
@@ -108,7 +127,13 @@ function displayStartScreen() {
     //   //coinArray[i].show();
     // }
     if (location === "W") {
-      
+      image(marioCastleImage, x * tileWidth, (y * tileHeight) - tileHeight*3.7, tileWidth*5, tileHeight*5);
+      if (player.x > (x*tileWidth) + (tileWidth/2) && player.yLoc < platformY) {
+        screenState = "Completed";
+      }
+    }
+    if (location === "T") {
+      image(marioFlagImage, x * tileWidth, y * tileHeight, tileWidth, tileHeight*3);
     }
     if (location === "G") {
       image(groundImage, x * tileWidth, y * tileHeight, tileWidth, tileHeight);
@@ -120,7 +145,6 @@ function displayStartScreen() {
       // if (platformRight ==! "#") {
       //   platformCoordinates.set("coorX1Right", platformRight);
       // }
-      strokeWeight(10);
       platformX = x * tileWidth;
       platformY = y * tileHeight;
 
@@ -157,20 +181,20 @@ function displayStartScreen() {
       //}
     } 
     if (location === "B") {
-      crab1.updateShow();
-      crab2.updateShow();
-      crab3.updateShow();
-      crab4.updateShow();
-      crab5.updateShow();
-      crab6.updateShow();
+      // crab1.updateShow();
+      // crab2.updateShow();
+      // crab3.updateShow();
+      // crab4.updateShow();
+      // crab5.updateShow();
+      // crab6.updateShow();
     }
     if (location === "K") {
-      koopa1.updateShow();
-      koopa2.updateShow();
-      koopa3.updateShow();
-      koopa4.updateShow();
-      koopa5.updateShow();
-      koopa6.updateShow();
+      // koopa1.updateShow();
+      // koopa2.updateShow();
+      // koopa3.updateShow();
+      // koopa4.updateShow();
+      // koopa5.updateShow();
+      // koopa6.updateShow();
     }
   }
   /////////////////////////////////////////////////////////////////////currently fixing///////////////////////////////
@@ -186,5 +210,16 @@ function displayGameOverScreen() {
     text("GAME OVER", windowWidth/2, windowHeight/2);
     textSize(50);
     fill(255);
-    text("Score " + score, windowWidth/2, windowHeight/2);
+    text("Score " + score, windowWidth/2, windowHeight/1.5);
   }
+
+function displayCompletedScreen() {
+  background(80);
+  textAlign(CENTER);
+  textSize(80);
+  fill(0, 0, 255);
+  text("Mission Complete!", windowWidth/2, windowHeight/2);
+  textSize(50);
+  fill(255);
+  text("Score " + score, windowWidth/2, windowHeight/1.5);
+}
