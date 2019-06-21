@@ -120,7 +120,7 @@ function setup() {
   tiles = twoDArray(lettersWide, lettersHigh);
 
   for (let y = 0; y < lettersHigh; y++) {     /////////////add the scrp;ll text file by looking at the first 30 
-    for (let x = 0; x < 100; x++) {
+    for (let x = 0; x < 105; x++) {
       let theTile = lines[y][x];
       tiles[x][y] = theTile;     // assigns/ puts a letter of the string (line) of the text file to a spot in the empty array.
     }
@@ -249,12 +249,10 @@ function mousePressed() {
 function keyPressed(platformY) {
   if (screenState === "Game Screen") {
     if (keyCode === UP_ARROW) {
+      playerAvatar = marioJump;
       if (player.yLoc === ground || player.yAccel === 0 || player.yLoc === platformY) {
         isJumping = true;  ///
-         if (isJumping === true) {
-          playerAvatar = marioJump;
-          player.yAccel = -5;
-        }
+        player.yAccel = -5;
       }
       else {
         isJumping = false;
@@ -269,24 +267,24 @@ function keyPressed(platformY) {
 // Displays player lives:                  
 function playerLifeCounter() {
   fill(190);
-  rect(stationaryObject.position.x+25, 15, 125, 37, 5);   // offsets the x position of counter displayed on screen by the scroll screen rate, thereby, making the counter "stationary" on screen while the rest of the game moves.
+  rect(player.position.x+25, 15, 125, 37, 5);   // offsets the x position of counter displayed on screen by the scroll screen rate, thereby, making the counter "stationary" on screen while the rest of the game moves.
   
   fill(0);
   textSize(25);
-  text("Life : " + playerLives, stationaryObject.position.x+30, 45);
+  text("Life : " + playerLives, player.position.x+30, 45);
 }
 
 
 // Displays coins earned:
 function coinCounter() {
   fill(190);
-  rect(stationaryObject.position.x+175, 15, 125, 37, 5);
+  rect(player.position.x+175, 15, 125, 37, 5);
   
-  image(coinImage, stationaryObject.position.x+260, 17, 38, 35);
+  image(coinImage, player.position.x+260, 17, 38, 35);
 
   fill(0);
   textSize(25);
-  text("Coins : " + coins, stationaryObject.position.x+180, 45);
+  text("Coins : " + coins, player.position.x+180, 45);
 }
 
 

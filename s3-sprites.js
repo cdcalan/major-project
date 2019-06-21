@@ -16,7 +16,7 @@ class Sprites {
     this.h = 75;
     this.w = 50;
     // Speed variables:
-    this.dx = random(2, 6);
+    this.dx = 3;
     ////this.dy = 1;
 
     this.lifeArray = [0, 0, 0];
@@ -165,6 +165,12 @@ class Koopa extends Sprites {
 class Player extends Sprites {
   constructor(spriteX, spriteY) {                            
     super(spriteX, spriteY);
+
+    this.position = createVector(0, spriteY);
+    // Controls the scroll speed of the game screen:
+    this.scrollAcceleration += 5;
+    // Gives the "screen" a velocity:
+    this.scrollVelocity = createVector(3, spriteY);   // Beta-test: made game scroll faster than background image.
     
     this.yVel = yVelocity;
     this.yAccel = yAcceleration;
@@ -180,7 +186,7 @@ class Player extends Sprites {
   }
 
   // Implement gravity!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  updateShow(playerAvatar) {
+  updateShow(playerAvatar) { 
 
     this.yVel += this.yAccel;
     this.yLoc += this.yVel;
@@ -199,25 +205,39 @@ class Player extends Sprites {
 
     if (keyIsPressed && keyCode === RIGHT_ARROW) {
       if (enemyColliding === false) {
-        if (this.x < (stationaryObject.position.x + stationaryObject.width) - this.w) {                          
-          // show run:
+        if (this.position.x < 80*tileWidth) {
           playerAvatar = marioRun; 
-          // Sprite horizontal movement:
+          this.scrollVelocity.add(this.scrollAcceleration);
+          this.position.add(this.scrollVelocity); 
+        }                                               
+        // show run:
+        if (this.x < this.position.x + 500) {
           this.x += this.dx;
+        }
+        else {
+          this.x = this.position.x + 500+3;
+          // Sprite horizontal movement:
+          //this.x += this.dx;
         }
       }
     }
     else if (keyIsPressed && keyCode === LEFT_ARROW) {
-      if (enemyColliding === false) {
-        if (this.x > (stationaryObject.position.x)) {                                      
-          // show run:
-          playerAvatar = marioRunBack; 
-          this.x -= this.dx;
+      if (enemyColliding === false) {    
+        playerAvatar = marioRunBack;                                 
+        // show run:
+        this.x -= this.dx;
+        if (this.x < this.position.x) {
+          this.x = this.position.x;
         }
-        else {
-          this.x = stationaryObject.position.x;             // keep mario from moving off left screen. 
-
-        }
+        // if (this.x = this.position.x + 300) {
+        //   this.x -= this.dx;
+        // }
+        // if (this.x === windowWidth-windowWidth) {
+        //   this.x = this.position.x;
+        //   playerAvatar = marioRun; 
+        //   // Sprite horizontal movement:
+        //   //this.x += this.dx;
+        // }
       }
     }
     else if(keyIsPressed && keyCode === DOWN_ARROW) {

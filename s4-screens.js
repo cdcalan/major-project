@@ -70,14 +70,15 @@ function displayStartScreen() {
     // crab6.enemyCollision();
 
     // For Scroll:
-    translate(-stationaryObject.position.x, 0);
-    stationaryObject.move();
+    translate(-player.position.x, 0);
+    //translate(-player.x, 0);
+    // stationaryObject.move();              //delete if works out with player
     stationaryObject.show();
     
     player.updateShow(playerAvatar);
     
     fill(0);
-    text(timer%60, stationaryObject.position.x+175, 15);
+    text(timer%60, stationaryObject.position.x+700, 15);
 
     playerLifeCounter();
   
