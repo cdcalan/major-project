@@ -40,22 +40,20 @@ class Sprites {
   enemyCollision() {
     this.enemyColliding = collideRectRect(this.x, this.y, this.w, this.h, player.x, player.yLoc, player.w, player.h);
     if (this.enemyColliding === true) {
-        enemyColliding = true;
-        // console.log("enemy " + enemyColliding);
-        //player.x < this.x; //////////////////////////////////////////////////////////
-        // fix this so that player cant go through the sprite enemies but still be able to move away from them.
-        player.dx = 0;            // restrict player's movement in the x direction (until done falling).
-        player.yVel = 0;
-        if (player.x < this.x - this.w) {
-          player.x < this.x;
-        }
-        else if (player.x > this.x + 2*this.w) {
-          player.x > this.x;
-        }
-        // console.log("YAAAAA" + this.enemyColliding);
-        this.lifeArray.splice(this.lifeArray.indexOf(this.lifeArray.length-playerState), 1);
-        console.log("life " + this.lifeArray.length);
-        playerState = 0;
+      enemyColliding = true;
+      // console.log("enemy " + enemyColliding);
+      //player.x < this.x; //////////////////////////////////////////////////////////
+      // fix this so that player cant go through the sprite enemies but still be able to move away from them.
+      player.dx = 0;            // restrict player's movement in the x direction (until done falling).
+      player.yVel = 0;
+      if (player.x < this.x - this.w) {
+        player.x < this.x;
+      }
+      else if (player.x > this.x + 2*this.w) {
+        player.x > this.x;
+      }
+      // console.log("YAAAAA" + this.enemyColliding);
+      return this.enemyColliding;
     }
     enemyColliding = false;
   }
@@ -74,14 +72,56 @@ class Crab extends Sprites {
   updateShow() {
     image(crabLeftImage, this.x, this.y, this.w, this.h);
   }
+  attack() {
+    for (let i = 0; i < ballArray.length; i++) {
+      ballArray[i].update(this.x, this.y);
+    }
+    // if (abs(this.x - player.x) <= 100) {
+    //   ballArray.push(rock1, rock2, rock3);
+    // }
+    
+      // ballArray[i].update(this.x, this.y);
+      // ballArray[i].show(this.x, this.y);
+  }
 }
 
 
-// class rock {
-//   constructor() {
+class Rock {
+  constructor() {
+    this.dx = random(-5, 5);
+    this.dy = random(-5, 5);
+    this.radius = 25;
+    this. color = color(random(255), random(255), random(255), random(255));
+  }
+  update(x, y) {
+    // move ball
+    this.x = x + this.dx;
+    this.y = y + this.dy;
 
-//   }
-// }
+    // display ball
+    fill(this.color);
+    noStroke();
+    ellipse(this.x, this.y, this.radius*2, this.radius*2);
+  }
+  // update(x, y) {
+  //   this.x = x;
+  //   this.y = y;
+    
+  //   if (abs(this.x - player.x) <= 100) { //If player is close to the crab, initiate attack:
+  //     // move ball
+  //     this.dx += 6;
+  //     this.x += this.dx;
+  //     this.y += this.dy;
+  //   }
+  // }
+  // show() {
+  //   // display ball
+  //   fill(this.color);
+  //   noStroke();
+  //   ellipse(this.x, this.y, this.radius*2, this.radius*2);  
+  // }
+}
+
 
 
 class Koopa extends Sprites {
@@ -95,10 +135,10 @@ class Koopa extends Sprites {
   updateShow() {
     image(koopaImage, this.x, this.y, this.w/1.1, this.h/1.1);
     if (this.lifeArray.length === 1) {
-      fill(200, 10, 10);
+      fill(200, 50, 50);
     }
     if (this.lifeArray.length === 2) {
-      fill(50, 200, 200);
+      fill(50, 200, 50);
     }
     if (this.lifeArray.length === 3) {
       fill(50, 50, 100);
@@ -198,7 +238,7 @@ class Player extends Sprites {
     this.isColliding = collideLineRect(platformX, platformY, platformXFar, platformY, this.x, this.yLoc + this.h/1.01, this.w, this.h, true); // beta testing change of this.x values
     //if (this.x+this.w >= platformX && this.x+this.w <= platformXFar && this.y+this.h === platformY) {
     if (this.isColliding === true) {
-      this.yLoc = platformY - this.h;
+      this.yLoc = platformY;
       this.yAccel = 0;
     }
     if (this.yAccel === 0) {
@@ -215,7 +255,7 @@ class Player extends Sprites {
         this.hit = false;
         this.dx = 0;            // restrict player's movement in the x direction (until done falling).
         this.yVel = 0;
-        this.yAccel = +5;      //////////change to 5
+        this.yAccel = +1;      //////////change to 5
       }
       if (this.yLoc === ground) {
         this.dx = random(3, 10);  //once player reaches ground, allow full movement again.

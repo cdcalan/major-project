@@ -1,6 +1,7 @@
 let nextLocation; 
 let platformConstant; 
 let platformX, platformY, platformYBottom, platformXFar;
+let hats; //tester
 
 // let platformLeft, platformRight;
 // let platformCoordinates = new Map();
@@ -30,7 +31,7 @@ function displayStartScreen() {
 
   function displayGameScreen() {
     //background(70, 150, 100);
-  
+    
     //////////////////SCROLL SCREEN//////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Creates two identical copies of the preloaded background image, and positions them side by side. 
     image(scrollImage, imageX1, 0, windowWidth, windowHeight);
@@ -74,10 +75,24 @@ function displayStartScreen() {
     stationaryObject.show();
     
     player.updateShow(playerAvatar);
-  
+    
+    fill(0);
+    text(timer%60, stationaryObject.position.x+175, 15);
+
     playerLifeCounter();
   
     coinCounter();
+
+    // for (let i = 0; i < ballArray.length; i++) {
+    //   // move ball
+    //   ballArray[i].x += ballArray[i].dx;
+    //   ballArray[i].y += ballArray[i].dy;
+
+    //   // display ball
+    //   fill(ballArray[i].color);
+    //   noStroke();
+    //   ellipse(ballArray[i].x, ballArray[i].y, ballArray[i].radius*2, ballArray[i].radius*2);
+    // }
     
     for (let y = 0; y < lettersHigh; y++) {
       for (let x = 0; x < lettersWide; x++) {
@@ -94,13 +109,29 @@ function displayStartScreen() {
       //   koopaArray.splice(koopaArray.indexOf(thisKoopa), 1);
       // }
     }
+  
+
     for (let index = crabArray.length -1; index > -1; index--) {
       let thisCrab = crabArray[index];
       thisCrab.updateShow();
-      // thisCrab.move();
-      thisCrab.enemyCollision();
-      if (thisCrab.lifeArray.length === 0) {
-        crabArray.splice(crabArray.indexOf(thisCrab), 1);
+
+      thisCrab.attack();
+
+      thisCrab.enemyCollision(player);
+      if (thisCrab.enemyCollision(player) === true) {
+        if (playerState === 1) {
+          if (thisCrab.lifeArray.length >=1) {
+            thisCrab.lifeArray.splice(thisCrab.lifeArray.indexOf(thisCrab.lifeArray.length-1), 1);
+            hats++;
+            playerState = 0;
+          }
+          else {
+            crabArray.splice(crabArray.indexOf(thisCrab), 1);
+          }
+        }
+        else if (playerState === 0) {
+          console.log("hit");
+        }
       }
     }
 
@@ -133,7 +164,7 @@ function displayStartScreen() {
       }
     }
     if (location === "T") {
-      image(marioFlagImage, x * tileWidth, y * tileHeight, tileWidth, tileHeight*3);
+      image(marioFlagImage, x * tileWidth, (y * tileHeight) - tileWidth, tileWidth, tileHeight*2.2);
     }
     if (location === "G") {
       image(groundImage, x * tileWidth, y * tileHeight, tileWidth, tileHeight);

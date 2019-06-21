@@ -7,8 +7,9 @@
 /////////////////COLORS//////////////////////
 // grass = (70, 150, 10)
 
+let timer = 100; // 1 minute
 
-
+let ballArray = [];
 
 // Screen state variable:
 let screenState;
@@ -172,6 +173,11 @@ function setup() {
   koopa5 = new Koopa(56, 9, 2836.4, 3036.4, 6);
   koopa6 = new Koopa(58, 4, 2937.7, 3140.3, 2);
 
+  rock1 = new Rock();
+  rock2 = new Rock();
+  rock3 = new Rock();
+  ballArray.push(rock1, rock2, rock3);
+
   crabArray = [crab1, crab2, crab3, crab4, crab5, crab6];
   koopaArray = [koopa1, koopa2, koopa3, koopa4, koopa5, koopa6];
 
@@ -283,6 +289,18 @@ function coinCounter() {
   text("Coins : " + coins, stationaryObject.position.x+180, 45);
 }
 
+
+function countDown() {
+  // frameCount --> this keeps track of the number of times the program has gone throught the code, 60 = 1 second
+  // % ---> this is the Modulo operator, it divides numbers and evaluates to the remainder: 17 % 5 evaluates to 2 remainder
+  // this can be used to determine if the number on the left is divisible by the number on the right
+  if (frameCount % 60 == 0 && timer > 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
+    timer --;
+  }
+  if (timer == 0) {
+    text("GAME OVER", width/2, height*0.7);
+  }
+}
 
 // Displays the time left in the round (resets at each level/game):
 function countdownTimer() {
