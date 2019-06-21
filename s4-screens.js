@@ -73,16 +73,15 @@ function displayStartScreen() {
     translate(-player.position.x, 0);
     //translate(-player.x, 0);
     // stationaryObject.move();              //delete if works out with player
-    stationaryObject.show();
+    //stationaryObject.show();
     
     player.updateShow(playerAvatar);
     
     fill(0);
-    text(timer%60, stationaryObject.position.x+700, 15);
+    text(timer%60, player.position.x+700, 15);
 
-    playerLifeCounter();
-  
-    coinCounter();
+    
+    counters()
 
     // for (let i = 0; i < ballArray.length; i++) {
     //   // move ball

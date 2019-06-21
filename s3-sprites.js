@@ -192,6 +192,7 @@ class Player extends Sprites {
     this.yLoc += this.yVel;
     this.yAccel = 0;   // after moving each time, turn the acceleration back to 0
     this.yVel += gravity;
+    this.xSmooth = this.x + 3;
 
     // if it is going past the ground make it stay on the ground and stop it from moving 
     if (this.yLoc > ground) {
@@ -211,11 +212,11 @@ class Player extends Sprites {
           this.position.add(this.scrollVelocity); 
         }                                               
         // show run:
-        if (this.x < this.position.x + 500) {
+        if (this.xSmooth < this.position.x + 500) {
           this.x += this.dx;
         }
         else {
-          this.x = this.position.x + 500+3;
+          this.xSmooth = this.position.x + 500;
           // Sprite horizontal movement:
           //this.x += this.dx;
         }

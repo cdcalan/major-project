@@ -138,7 +138,6 @@ function setup() {
     coinArray[i] = new Coin(coinCoord[0]*tileWidth, coinCoord[1]*tileHeight);
   }
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-  stationaryObject = new Constant(0, 0);   ///??? might change this into mario himself.
 
   imageX2 = windowWidth;
 
@@ -157,7 +156,7 @@ function setup() {
   ground = windowHeight- 2.4*tileHeight;
   yLocation = ground;
   //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
+  stationaryObject = new Constant(0, 0);   ///??? might change this into mario himself.
   // Demo Sprite Object:
   player = new Player(300, yLocation);
   crab1 = new Crab(29, 2);
@@ -265,18 +264,17 @@ function keyPressed(platformY) {
 
 
 // Displays player lives:                  
-function playerLifeCounter() {
+function counters() {
+  fill(0);
+  rect(player.position.x, 0, windowWidth, 55);
+
   fill(190);
   rect(player.position.x+25, 15, 125, 37, 5);   // offsets the x position of counter displayed on screen by the scroll screen rate, thereby, making the counter "stationary" on screen while the rest of the game moves.
   
   fill(0);
   textSize(25);
   text("Life : " + playerLives, player.position.x+30, 45);
-}
 
-
-// Displays coins earned:
-function coinCounter() {
   fill(190);
   rect(player.position.x+175, 15, 125, 37, 5);
   

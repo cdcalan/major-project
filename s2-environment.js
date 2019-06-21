@@ -40,9 +40,10 @@ class Button {
 
 class Constant {
   constructor(x, y) {
-    this.position = createVector(x, y);
+    this.position = createVector(0, y);
     this.width = windowWidth;
     this.height = 55;
+    
 
     // Controls the scroll speed of the game screen:
     this.acceleration += 5;
@@ -51,8 +52,8 @@ class Constant {
   }
   // Makes stationary-object "move" horizontally:
   move() {
-    this.velocity.add(this.acceleration);
-    this.position.add(this.velocity);
+    // this.velocity.add(this.acceleration);
+    // this.position.add(this.velocity);
   }
   show() {
     fill(0);
