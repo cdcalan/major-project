@@ -5,12 +5,11 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 /////////////////COLORS//////////////////////
-// grass = (70, 150, 10)
 
 
 
 
-let timer = 100; // 1 minute
+let timer = 1000; // 1 minute
 let isJumping;
 
 // Screen-state and player-state variable:
@@ -41,6 +40,7 @@ let playerLives, coins;
 
 // Player jump physics variables:
 let gravity, yLocation, ground, yVelocity, yAcceleration;
+
 
 
 
@@ -81,17 +81,39 @@ function preload() {
 
 
 
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
-  // Slow down the rate of frame-by-frame animation for coin pick-ups:
-  coinAnimation.frameDelay = 6;
+  stationaryObject = new Constant(0, 0);                   ///??? might change this into mario himself.
   
   // Set player state to normal mode:
   playerState = 0;  
 
+  // Start Screen: 
+  screenState = "Start Screen";
+  menuX = (windowWidth/2) - (menuWidth/2);
+  menuY = (windowHeight/2) - (menuHeight/2);
+  textSize(40);
+  textStyle(BOLD);
+  startButton = new Button(menuX, menuY + menuHeight/5, "Start");
+  infoButton = new Button(menuX, menuY + menuHeight/5 + 80, "Info");
+
+  imageX2 = windowWidth;
+
+  // Slow down the rate of frame-by-frame animation for coin pick-ups:
+  coinAnimation.frameDelay = 6;
+
+  // Initializing gameplay variables:
+  playerLives = 4;
+  coins = 0;
+  score = 0;
+  playerAvatar = marioDuck;
+  isJumping = false;
   enemyColliding = false;
 
+  /////////////////////////////////////////INITIALIZING GRID/////////////////////////////////////////////////
+  
   // Looks the level-text-file at a rate of 20 columns per screen length:
   let camera = 20; 
   // In text file:
@@ -110,7 +132,10 @@ function setup() {
       tiles[x][y] = theTile;    
     }
   }
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////COIN GENERATION////////////////////////////////////////////////
+  
+// Reads text file for number of coins and pushes their coordinate location into an empty array:
   for (let y = 0; y < lettersHigh; y++) {
     for (let x = 0; x < lettersWide; x++) {
       if (tiles[x][y] === "C") {
@@ -118,82 +143,52 @@ function setup() {
       }
     }
   }
+  // For each coin in "cloud" array, create a new Coin object with its location, and push it into the coinArray:
   for (let i = cloud.length - 1; i > -1; i--) {
     let coinCoord = cloud[i];
     coinArray[i] = new Coin(coinCoord[0]*tileWidth, coinCoord[1]*tileHeight);
   }
-//////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  imageX2 = windowWidth;
-
-  textSize(40);
-
-  // Start Screen: 
-  screenState = "Start Screen";
-
-  menuX = (windowWidth/2) - (menuWidth/2);
-  menuY = (windowHeight/2) - (menuHeight/2);
-
-  //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+////////////////////////////////////INITIALIZING JUMP PHYSICS VARIABLES//////////////////////////////////////
+  
   yVelocity = 0;
   yAcceleration = 0;
   gravity = 0.05;
   ground = windowHeight- 2.4*tileHeight;
   yLocation = ground;
-  //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-  stationaryObject = new Constant(0, 0);   ///??? might change this into mario himself.
-  // Demo Sprite Object:
+
+  //////////////////////////////////////////////////SPRITES//////////////////////////////////////////////////
+
+  // Create player and enemy Sprite Objects:
   player = new Player(300, yLocation);
   crab1 = new Crab(29, 2);
   crab2 = new Crab(19, 4);
   crab3 = new Crab(2, 9);
   crab4 = new Crab(19, 13);
   crab5 = new Crab(32, 13); 
-  crab6 = new Crab(52, 13);
   koopa1 = new Koopa(16, 9, 810.4, 1150);
-  koopa2 = new Koopa(23, 9, 810.4, 1164.95, 4);
-  koopa3 = new Koopa(40, 4, 2026, 2428.6, 1);   //apparently works with just one now?
-  koopa4 = new Koopa(43, 9, 2177.95, 2377.95, 5);
-  koopa5 = new Koopa(56, 9, 2836.4, 3036.4, 6);
-  koopa6 = new Koopa(58, 4, 2937.7, 3140.3, 2);
-
+  koopa2 = new Koopa(23, 9, 810.4, 1164.95);
+  koopa3 = new Koopa(40, 4, 2026, 2428.6);   //apparently works with just one now?
+  koopa4 = new Koopa(43, 9, 2177.95, 2377.95);
+  koopa5 = new Koopa(56, 9, 2836.4, 3036.4);
+  koopa6 = new Koopa(58, 4, 2937.7, 3140.3);
   rock1 = new Rock(29, 2);
   rock2 = new Rock(19, 4);
   rock3 = new Rock(2, 9);
   rock4 = new Rock(19, 13);
   rock5 = new Rock(32, 13);
-  rock6 = new Rock(52, 13);
 
-  rockArray = [rock1, rock2, rock3, rock4, rock5, rock6];
-
-  // rock1 = new Rock();
-  // rock2 = new Rock();
-  // rock3 = new Rock();
-  // ballArray.push(rock1, rock2, rock3);
-
-  crabArray = [crab1, crab2, crab3, crab4, crab5, crab6];
+  // Put each enemy object into an empty array to be called/deleted from:
+  crabArray = [crab1, crab2, crab3, crab4, crab5];
   koopaArray = [koopa1, koopa2, koopa3, koopa4, koopa5, koopa6];
-
-  playerAvatar = marioDuck;
-  isJumping = false;
-
-  // Menu Button Objects:
-  textStyle(BOLD);
-  startButton = new Button(menuX, menuY + menuHeight/5, "Start");
-  infoButton = new Button(menuX, menuY + menuHeight/5 + 80, "Info");
-
-  // Gameplay stuff ----------------------------------------------should i be declaring these in setup or the gamescreen?
-  playerLives = 4;
-  coins = 0;
-  score = 0;
+  rockArray = [rock1, rock2, rock3, rock4, rock5];
 }
 
 
 
 
+
 function draw() {
-  background(220);
-  //console.log(tileHeight, ground, windowHeight, yLocation);
 
   if (screenState === "Start Screen") {
     displayStartScreen();
@@ -201,7 +196,6 @@ function draw() {
   else if (screenState === "Game Screen") {
     displayGameScreen();
   }
-
   else if (screenState === "Info Screen") {
     displayInfoScreen();
   }
@@ -211,21 +205,13 @@ function draw() {
   else if (screenState === "Completed") {
     displayCompletedScreen();
   }
-
 }
-
-function mouseClicked(mouseX, mouseY) {
-  console.log(mouseX, mouseY);
-}
-
-// function timestamp() {
-
-// }
 
 
 
 
 function mousePressed() {
+  // Detect mouse press on menu buttons:
   if (screenState === "Start Screen") {
     if (startButton.clickedOn(mouseX, mouseY)) {
       screenState = "Game Screen";
@@ -237,6 +223,9 @@ function mousePressed() {
 }
 
 
+
+
+// Seperate fuction for detecting up arrow key presses (jumps) in game screen mode:
 function keyPressed(platformY) {
   if (screenState === "Game Screen") {
     if (keyCode === UP_ARROW) {
@@ -244,7 +233,7 @@ function keyPressed(platformY) {
       if (player.yLoc === ground || player.yAccel === 0 || player.yLoc === platformY) {
         player.yAccel = -5;
         if (player.yAccel <= 0) {
-          isJumping = true;  ///
+          isJumping = true;                                                                  ///
         }
       }
       else {
@@ -257,50 +246,51 @@ function keyPressed(platformY) {
 
 
 
-// Displays player lives:                  
+// Counters are displayed on-screen and keep track of player lives and coin pickups:                  
 function counters() {
+  // Banner (offset by player position for scrolling screen):
   fill(0);
   rect(player.position.x-5, 0, windowWidth+5, 55);
 
+  // Player lives:
   fill(190);
-  rect(player.position.x+25, 15, 125, 37, 5);   // offsets the x position of counter displayed on screen by the scroll screen rate, thereby, making the counter "stationary" on screen while the rest of the game moves.
-  
+  rect(player.position.x+25, 15, 125, 37, 5);   
   fill(0);
   textSize(25);
   text("Life : " + playerLives, player.position.x+30, 45);
-
+  
+  // Coin pickups:
   fill(190);
   rect(player.position.x+175, 15, 125, 37, 5);
-  
   image(coinImage, player.position.x+260, 17, 38, 35);
-
   fill(0);
   textSize(25);
   text("Coins : " + coins, player.position.x+180, 45);
 }
 
 
-function countDown() {
-  // frameCount --> this keeps track of the number of times the program has gone throught the code, 60 = 1 second
-  // % ---> this is the Modulo operator, it divides numbers and evaluates to the remainder: 17 % 5 evaluates to 2 remainder
-  // this can be used to determine if the number on the left is divisible by the number on the right
-  if (frameCount % 60 == 0 && timer > 0) { // if the frameCount is divisible by 60, then a second has passed. it will stop at 0
+
+
+// A count-down "timer" that displays the time left in the game: 
+function countDown(timer) {
+
+  // Subtract one second from timer each time frameCount is divisible by 60 (60 = 1 second):
+  if (frameCount % 60 === 0 && timer > 0) { 
     timer --;
   }
-  if (timer == 0) {
-    text("GAME OVER", width/2, height*0.7);
+
+  // If timer has run out and game is still unfinished, trigger game over:
+  if (timer === 0) {
+    if (screenState === "Game Screen") {
+      text("GAME OVER", width/2, height*0.7);
+    }
   }
 }
 
-// Displays the time left in the round (resets at each level/game):
-function countdownTimer() {
-
-}
 
 
 
-
-// Empty 2-D Array:
+// Empty 2-D Array the length of the game text file (framework for grid the game is displayed on):
 function twoDArray(columns, rows) {
   let thegrid = [];
   for (let c = 0; c < columns; c++) {

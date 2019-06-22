@@ -1,12 +1,13 @@
+// Sprite objects:
+let player;
+
+// Global boolean variable that turns true if player collides with any enemy.
 let enemyColliding;
 
-// Sprite objects:
-let player, koopa, crab, rock, foe;
 
 
 
-
-// All sprites:
+// Skeleton sprites class for basing all sprites off of:
 class Sprites {
   constructor(spriteX, spriteY) {
     // Coordinates:
@@ -17,43 +18,30 @@ class Sprites {
     this.w = 50;
     // Speed variables:
     this.dx = 3;
-    ////this.dy = 1;
 
+    // Number of lives:
     this.lifeArray = [0, 0, 0];
 
+    // Local variable to check if player is colliding with a particular enemy:
     this.enemyColliding = false;
-  }
-  // Displays sprites:
-  show() {
-    fill(100, 200, 150);
-    rect(this.x, this.y, this.w, this.h);
-  }
-
-  // Sprite horizontal movement:
-  glide() {
-    this.x += this.dx;
-    if (this.x + this.w >= windowWidth || this.x <= 0) {
-      this.dx = -1 * this.dx;
-    }
   }
 
   enemyCollision() {
+    // Checks if player is colliding with enemy sprites:
     this.enemyColliding = collideRectRect(this.x, this.y, this.w, this.h, player.x, player.yLoc, player.w, player.h);
     if (this.enemyColliding === true) {
-      enemyColliding = true;
-      // console.log("enemy " + enemyColliding);
-      //player.x < this.x; //////////////////////////////////////////////////////////
-      // fix this so that player cant go through the sprite enemies but still be able to move away from them.
-      player.dx = 0;            // restrict player's movement in the x direction (until done falling).
-      player.yVel = 0;
-      if (player.x < this.x - this.w) {
-        player.x < this.x;
+      enemyColliding = true;         
+
+      // Resists player by trying to push player back away from enemy upon impact (makes it harder for player to hit crabs):
+      if (player.x < this.x) {
+        player.x -= 1.1*this.dx;
+        console.log("before");
       }
-      else if (player.x > this.x + 2*this.w) {
-        player.x > this.x;
+      if (player.x > this.x) {
+        player.x += 1.1*this.dx;
+        console.log("finally");
       }
-      // console.log("YAAAAA" + this.enemyColliding);
-      return this.enemyColliding;
+    return this.enemyColliding;
     }
     enemyColliding = false;
   }
@@ -61,6 +49,8 @@ class Sprites {
 
 
 
+
+// Crab-enemy sub-class of Sprites:
 class Crab extends Sprites {
   constructor(x, y) {
     super();
@@ -69,11 +59,14 @@ class Crab extends Sprites {
     this.w = 70;
     this.h = 50;
   }
+
   updateShow() {
+    // Display Crab:
     image(crabLeftImage, this.x, this.y, this.w, this.h);
   }
-
 }
+
+
 
 
 class Rock {
@@ -104,6 +97,8 @@ class Rock {
 
 
 
+
+// Koopa-enemy sub-class of Sprites:
 class Koopa extends Sprites {
   constructor(x, y, boundaryLeft, boundaryRight, enemyColliding) {
     super();
@@ -141,7 +136,7 @@ class Koopa extends Sprites {
 
 
 
-// Mario:                                 //resdtrict marios' x velocity so that it stays within the screen:
+// Player / Mario class:                        
 class Player extends Sprites {
   constructor(spriteX, spriteY) {                            
     super(spriteX, spriteY);
@@ -191,7 +186,7 @@ class Player extends Sprites {
       this.yLoc = ground;
       this.yVel = 0;
     }
-    else if (this.yLoc < stationaryObject.height) {   // if it is going past the roof make it fall 
+    else if (this.yLoc < 55) {   // if it is going past the roof make it fall 
       this.yVel = 0;
       this.yAccel = +5;
     }
