@@ -8,8 +8,10 @@
 
 
 
+let timer; // 1 minute
+let countUp = 76;
+let seconds, minutes;
 
-let timer = 1000; // 1 minute
 let isJumping;
 
 // Screen-state and player-state variable:
@@ -29,11 +31,12 @@ let imageX1 = 0, imageX2, scrollImage, scrollSpeed = 1.2, stationaryObject;
 
 // Image holders:
 let playerAvatar, marioRun, marioRunBack, marioJump, marioDuck, marioAttack, coinImage, platformImage;
-let crabLeftImage, crabRightImage, rockImage, koopaImage, marioFlagImage, marioCastleImage;
+let crabLeftImage, crabRightImage, rockImage, koopaImage, marioFlagImage, marioCastleImage, mysteryBox;
 let coinAnimation;
 
 // Arrays to store object classes:
-let koopaArray = [], cabArray = [], rockArray = [], coinArray = [], cloud = [];
+let koopaArray = [], koopaCloud = [], crabArray = [], crabCloud = [], rockArray = [];
+let coinArray = [], cloud = [], boxArray = [], boxCloud = [];
 
 // Player points counters:
 let playerLives, coins;
@@ -62,6 +65,7 @@ function preload() {
   platformImage = loadImage("assets/environment/platform.png");
   marioFlagImage = loadImage("assets/environment/marioFlag.png");
   marioCastleImage = loadImage("assets/environment/marioCastle.gif");
+  mysteryBox = loadImage("assets/environment/mysteryBox.jpg");
 
   // Player Avatars:
   marioRun = loadImage("assets/marios/marioRun.png");
@@ -84,6 +88,8 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+
+  setInterval(timeIt, 1000);
 
   stationaryObject = new Constant(0, 0);                   ///??? might change this into mario himself.
   
@@ -149,6 +155,22 @@ function setup() {
     coinArray[i] = new Coin(coinCoord[0]*tileWidth, coinCoord[1]*tileHeight);
   }
 
+  ///////////////////////////////////////////// MYSTERY BOX GENERATION ///////////////////////////////////////
+  
+  // Reads text file for number of coins and pushes their coordinate location into an empty array:
+  for (let y = 0; y < lettersHigh; y++) {
+    for (let x = 0; x < lettersWide; x++) {
+      if (tiles[x][y] === "M") {
+        boxCloud.push([x, y]);
+      }
+    }
+  }
+  // For each coin in "cloud" array, create a new Coin object with its location, and push it into the coinArray:
+  for (let i = boxCloud.length - 1; i > -1; i--) {
+    let boxCoord = boxCloud[i];
+    boxArray[i] = new Box(boxCoord[0]*tileWidth, boxCoord[1]*tileHeight);
+  }
+
 ////////////////////////////////////INITIALIZING JUMP PHYSICS VARIABLES//////////////////////////////////////
   
   yVelocity = 0;
@@ -161,27 +183,78 @@ function setup() {
 
   // Create player and enemy Sprite Objects:
   player = new Player(300, yLocation);
-  crab1 = new Crab(29, 2);
-  crab2 = new Crab(19, 4);
-  crab3 = new Crab(2, 9);
-  crab4 = new Crab(19, 13);
-  crab5 = new Crab(32, 13); 
-  koopa1 = new Koopa(16, 9, 810.4, 1150);
-  koopa2 = new Koopa(23, 9, 810.4, 1164.95);
-  koopa3 = new Koopa(40, 4, 2026, 2428.6);   //apparently works with just one now?
-  koopa4 = new Koopa(43, 9, 2177.95, 2377.95);
-  koopa5 = new Koopa(56, 9, 2836.4, 3036.4);
-  koopa6 = new Koopa(58, 4, 2937.7, 3140.3);
-  rock1 = new Rock(29, 2);
-  rock2 = new Rock(19, 4);
-  rock3 = new Rock(2, 9);
-  rock4 = new Rock(19, 13);
-  rock5 = new Rock(32, 13);
 
-  // Put each enemy object into an empty array to be called/deleted from:
-  crabArray = [crab1, crab2, crab3, crab4, crab5];
+  //////////////////////////////////////////////KOOPA GENERATION////////////////////////////////////////////////
+  
+  // Reads text file for number of coins and pushes their coordinate location into an empty array:
+  // for (let y = 0; y < lettersHigh; y++) {
+  //   for (let x = 0; x < lettersWide; x++) {
+  //     if (tiles[x][y] === "K") {
+  //       koopaCloud.push([x, y]);
+  //     }
+  //   }
+  // }
+  // // For each coin in "cloud" array, create a new Coin object with its location, and push it into the coinArray:
+  // for (let i = koopaCloud.length - 1; i > -1; i--) {
+  //   let coordinates = koopaCloud[i];
+  //   koopaArray[i] = new Koopa(coordinates[0]*tileWidth, coordinates[1]*tileHeight, (coordinates[0]*tileWidth)-10, (coordinates[0]*tileWidth)+400);
+  // }
+
+  // ////////////////////////////////// CRAB AND ROCKS GENERATION ////////////////////////////////////////////
+  
+  // // Reads text file for number of coins and pushes their coordinate location into an empty array:
+  // for (let y = 0; y < lettersHigh; y++) {
+  //   for (let x = 0; x < lettersWide; x++) {
+  //     if (tiles[x][y] === "B") {
+  //       crabCloud.push([x, y]);
+  //     }
+  //   }
+  // }
+  // // For each coin in "cloud" array, create a new Coin object with its location, and push it into the coinArray:
+  // for (let i = crabCloud.length - 1; i > -1; i--) {
+  //   let coordinates = crabCloud[i];
+  //   crabArray[i] = new Crab(coordinates[0]*tileWidth, coordinates[1]*tileHeight);
+  //   rockArray[i] = new Rock(coordinates[0]*tileWidth, coordinates[1]*tileHeight);
+  // }
+
+  // crab1 = new Crab(29, 2);
+  // crab2 = new Crab(19, 4);
+  // crab3 = new Crab(2, 9);
+  // crab4 = new Crab(19, 13);
+  // crab5 = new Crab(32, 13); 
+  koopa1 = new Koopa(37, 4, 1864.05, 2274.05);
+  koopa2 = new Koopa(57, 4, 2877.0499999999997, 3287.0499999999997);
+  koopa3 = new Koopa(76, 4, 3839.4, 4249.4);   //apparently works with just one now?
+  koopa4 = new Koopa(17, 9, 851.05, 1261.05);
+  koopa5 = new Koopa(36, 9, 1813.3999999999998, 2223.3999999999996);
+  koopa6 = new Koopa(57, 9, 2877.0499999999997, 3287.0499999999997);
+  // rock1 = new Rock(29, 2);
+  // rock2 = new Rock(19, 4);
+  // rock3 = new Rock(2, 9);
+  // rock4 = new Rock(19, 13);
+  // rock5 = new Rock(32, 13);
+  
+  // crab1 = new Crab(29, 2);
+  // crab2 = new Crab(19, 4);
+  // crab3 = new Crab(2, 9);
+  // crab4 = new Crab(19, 13);
+  // crab5 = new Crab(32, 13); 
+  // koopa1 = new Koopa(16, 9, 810.4, 1150);
+  // koopa2 = new Koopa(23, 9, 810.4, 1164.95);
+  // koopa3 = new Koopa(40, 4, 2026, 2428.6);   //apparently works with just one now?
+  // koopa4 = new Koopa(43, 9, 2177.95, 2377.95);
+  // koopa5 = new Koopa(56, 9, 2836.4, 3036.4);
+  // koopa6 = new Koopa(58, 4, 2937.7, 3140.3);
+  // rock1 = new Rock(29, 2);
+  // rock2 = new Rock(19, 4);
+  // rock3 = new Rock(2, 9);
+  // rock4 = new Rock(19, 13);
+  // rock5 = new Rock(32, 13);
+
+  // // Put each enemy object into an empty array to be called/deleted from:
+  // crabArray = [crab1, crab2, crab3, crab4, crab5];
   koopaArray = [koopa1, koopa2, koopa3, koopa4, koopa5, koopa6];
-  rockArray = [rock1, rock2, rock3, rock4, rock5];
+  // rockArray = [rock1, rock2, rock3, rock4, rock5];
 }
 
 
@@ -195,6 +268,7 @@ function draw() {
   }
   else if (screenState === "Game Screen") {
     displayGameScreen();
+    
   }
   else if (screenState === "Info Screen") {
     displayInfoScreen();
@@ -230,14 +304,17 @@ function keyPressed(platformY) {
   if (screenState === "Game Screen") {
     if (keyCode === UP_ARROW) {
       playerAvatar = marioJump;
-      if (player.yLoc === ground || player.yAccel === 0 || player.yLoc === platformY) {
+      if (isJumping === false) { //(player.yLoc === ground || player.yAccel === 0 || player.yLoc === platformY) {
         player.yAccel = -5;
-        if (player.yAccel <= 0) {
+        if (player.yAccel < 0) {
           isJumping = true;                                                                  ///
         }
+        else if (player.yAccel = 0) {
+          isJumping = fasle;
+        }
       }
-      else {
-        isJumping = false;
+      else if (isJumping === true) {
+        player.yAccel = 0;
       }
     }
   }
@@ -271,19 +348,39 @@ function counters() {
 
 
 
-// A count-down "timer" that displays the time left in the game: 
-function countDown(timer) {
+// // A count-down "timer" that displays the time left in the game: 
+// function countDown(timer) {
 
-  // Subtract one second from timer each time frameCount is divisible by 60 (60 = 1 second):
-  if (frameCount % 60 === 0 && timer > 0) { 
-    timer --;
-  }
+//   // Subtract one second from timer each time frameCount is divisible by 60 (60 = 1 second):
+//   if (frameCount % 60 === 0 && timer > 0) { 
+//     timer --;
+//   }
 
-  // If timer has run out and game is still unfinished, trigger game over:
-  if (timer === 0) {
-    if (screenState === "Game Screen") {
-      text("GAME OVER", width/2, height*0.7);
+//   // If timer has run out and game is still unfinished, trigger game over:
+//   if (timer === 0) {
+//     if (screenState === "Game Screen") {
+//       text("GAME OVER", width/2, height*0.7);
+//     }
+//   }
+// }
+
+
+
+function timeIt() {
+  // Timer begins only when game begins:
+  if (screenState === "Game Screen") {
+    // If timer has accumulated more than 1 second, show timer (1 countUp = 1 second):
+    if (countUp > 0) {
+      countUp--;
     }
+    else if (countUp === 0) {
+      screenState = "Game Over";
+    }
+    
+    minutes = floor(countUp/60);
+    seconds = countUp % 60;
+
+    return minutes, seconds;
   }
 }
 

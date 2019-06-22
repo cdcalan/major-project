@@ -35,11 +35,9 @@ class Sprites {
       // Resists player by trying to push player back away from enemy upon impact (makes it harder for player to hit crabs):
       if (player.x < this.x) {
         player.x -= 1.1*this.dx;
-        console.log("before");
       }
       if (player.x > this.x) {
         player.x += 1.1*this.dx;
-        console.log("finally");
       }
     return this.enemyColliding;
     }
@@ -81,16 +79,18 @@ class Rock {
   update() {
 
     // move ball
-    this.x += this.dx;
+    this.x -= this.dx;
 
     // display ball
     fill(this.color);
     noStroke();
     ellipse(this.x, this.y, this.radius*2, this.radius*2);
   }
+
   collision(player) {
-    if (abs(this.x - player.x + player.h) >= this.radius) {
-      console.log("yoyoyyo");
+    if (abs((player.x + player.w) - this.x) <= this.radius) {
+      enemyColliding = true;
+      console.log("yes");
     }
   }
 }
@@ -100,7 +100,7 @@ class Rock {
 
 // Koopa-enemy sub-class of Sprites:
 class Koopa extends Sprites {
-  constructor(x, y, boundaryLeft, boundaryRight, enemyColliding) {
+  constructor(x, y, boundaryLeft, boundaryRight) {
     super();
     this.x = x * tileWidth;
     this.y = y * tileHeight-(this.h/4);
@@ -116,12 +116,12 @@ class Koopa extends Sprites {
       fill(50, 200, 50);
     }
     if (this.lifeArray.length === 3) {
-      fill(50, 50, 100);
+      fill(50, 50, 200);
     }
       ellipse(this.x, this.y, 10, 10);
   }
   move(x, y, boundaryLeft, boundaryRight) {
-    translate(stationaryObject.position.x, 0);
+    translate(player.position.x, 0);
     if (this.x >= this.boundaryXLeft && this.x <= this.boundaryXRight) {
       this.x += this.dx;
     }
@@ -129,7 +129,7 @@ class Koopa extends Sprites {
       this.dx = -1 *  this.dx;
       this.x += this.dx;
     }
-    translate(-stationaryObject.position.x, 0);
+    translate(-player.position.x, 0);
   }
 }
 
@@ -162,19 +162,6 @@ class Player extends Sprites {
 
   // Implement gravity!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   updateShow(playerAvatar) { 
-    // this.marioTileX = ceil(this.x / tileHeight);
-    // this.marioTileY = floor(this.yLoc / tileHeight);
-    // if (this.yAccel >= 0 && this.yVel >= 0) {
-    //   if (tiles[this.marioTileX][this.marioTileY+2] !== "#") {
-    //     console.log("not #")
-    //     this.yVel = 0;
-    //     this.yAccel = +3;
-    //   }
-    //   else if (tiles[this.marioTileX][this.marioTileY+2] === "#") {
-    //     console.log("found #");
-    //   }
-    // }
-    //|| tiles[a][b+1] ==! "G"
     this.yVel += this.yAccel;
     this.yLoc += this.yVel;
     this.yAccel = 0;   // after moving each time, turn the acceleration back to 0
@@ -185,6 +172,7 @@ class Player extends Sprites {
     if (this.yLoc > ground) {
       this.yLoc = ground;
       this.yVel = 0;
+      isJumping = false;
     }
     else if (this.yLoc < 55) {   // if it is going past the roof make it fall 
       this.yVel = 0;
@@ -212,15 +200,6 @@ class Player extends Sprites {
         if (this.x < this.position.x) {
           this.x = this.position.x;
         }
-        // if (this.x = this.position.x + 300) {
-        //   this.x -= this.dx;
-        // }
-        // if (this.x === windowWidth-windowWidth) {
-        //   this.x = this.position.x;
-        //   playerAvatar = marioRun; 
-        //   // Sprite horizontal movement:
-        //   //this.x += this.dx;
-        // }
       }
     }
     else if(keyIsPressed && keyCode === DOWN_ARROW) {
@@ -242,11 +221,10 @@ class Player extends Sprites {
     this.isColliding = collideLineRect(platformX, platformY, platformXFar, platformY, this.x, this.yLoc, this.w, this.h); // beta testing change of this.x values
     //if (this.x+this.w >= platformX && this.x+this.w <= platformXFar && this.y+this.h === platformY) {
     if ((this.isColliding === true) || (player.yLoc >= platformY && player.yLoc + player.h < platformYBottom/2 && player.x >= platformX && player.x <= platformXFar)) {
-      console.log("yes");
       this.yLoc = platformY - (this.h+0.01);
       //this.yAccel = 0;
       this.yVel = 0;
-      //isJumping = false;
+      isJumping = false;
       return true;
     }
     else {

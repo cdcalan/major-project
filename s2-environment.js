@@ -91,3 +91,28 @@ class Coin {
     animation(coinAnimation, this.x, this.y);
   }
 }
+
+
+
+
+// Mystery Box class:
+class Box {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.w = tileWidth;
+    this.h = tileHeight;
+    this.boxPickUp = false;
+  }
+
+  colliding(player) {
+    // Uses the p5.collide2d library to detect player collision with box (boxPickUp):
+    this.boxPickUp = collideRectRect(this.x, this.y, this.w, this.h, player.x, player.yLoc, player.w, player.h);
+    return this.boxPickUp;
+  }
+  
+  show() {
+    image(mysteryBox, this.x, this.y, this.w, this.h);
+
+  }
+}

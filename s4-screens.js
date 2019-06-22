@@ -78,18 +78,18 @@ function displayStartScreen() {
 
     // Displays player life and coins counters:
     counters()
-    // Displays timer:
-    fill(0);
-    text(timer%60, player.position.x+700, 15);
+    // Displays timer as long as seconds elapsed is more than 1:
+    fill(255);
+    text("Time Left: ", player.position.x + 800, 22)
+    if (seconds >= 10) {
+      text(minutes + ":" + seconds, player.position.x + 800, 50);
+    }
+    else if (seconds < 10) {
+      text(minutes + ":" + "0" + seconds, player.position.x + 800, 50);
+    }
 
     // Shows and updates player:
     player.updateShow(playerAvatar);
-
-    // Subtract 1 from playerLives if player collides with any enemy:                    //???
-    if (enemyColliding === true) {
-      playerLives -= 1;
-      enemyColliding = false;
-    }
 
     // // Trigger Game Over if player dies:
     // if (playerLives === 0) {
@@ -135,7 +135,7 @@ function displayStartScreen() {
 
         // If playerState is normal (0), subract 1 from player life:
         else if (playerState === 0) {
-          console.log("hit");
+          enemyColliding = true;
         }
       }
     }
@@ -154,6 +154,7 @@ function displayStartScreen() {
       if (abs(thisCrab.y-player.yLoc) <= 50) {
         if (abs(thisCrab.x-player.x) <= 400) {
           thisRock.update();
+          thisRock.collision(player);
         }
       }
 
@@ -179,9 +180,19 @@ function displayStartScreen() {
 
         // If playerState is normal (0), subract 1 from player life:
         else if (playerState === 0) {
-          console.log("hit");
+          enemyColliding = true;
         }
       }
+    }
+
+
+
+
+    // Subtract 1 from playerLives if player collides with any enemy:                    //???
+    if (enemyColliding === true) {
+      console.log("enemyColliding");
+      playerLives -= 1;
+      enemyColliding = false;
     }
 
     ////////////////////////////////////////////// COINS ////////////////////////////////////////////////////
@@ -194,6 +205,22 @@ function displayStartScreen() {
       if (coin.colliding(player) === true) {
         coinArray.splice(coinArray.indexOf(coin), 1);
         coins ++;
+      }
+    }
+
+    //////////////////////////////////////////// MYSTERY BOXES ///////////////////////////////////////////////
+
+    // For every box object in boxArray, show the box and detect collision with player:
+    for (let index = boxArray.length -1; index > -1; index--) {
+      let box = boxArray[index];
+      box.show();
+      // If player is colliding with box, collect the box by splicing it from boxArray. 
+      if (box.colliding(player) === true) {
+        boxArray.splice(boxArray.indexOf(box), 1);
+        // Augment player coins counter by 3 times the normal amount, and power up by reducing gravity, and increase player x velocity (to beat the timer faster):
+        coins = coins+3;
+        gravity -= 0.015;
+        player.scrollVelocity = createVector(5, player.yLoc);
       }
     }
   }
@@ -253,19 +280,21 @@ function displayGameOverScreen() {
   // Game-Over Screen (displayed when player runs out of lives or timer runs out):
   background(80);
   textAlign(CENTER);
-  textSize(80);
-    
+  
+  // If game over is triggered by timer, display message:
+  textSize(40);
+  fill(255);
+  if (countUp === 0) {
+    text("You ran out of time!", windowWidth/2, windowHeight/5);
+  }
+
+  textSize(80);  
   fill(255, 0, 0);
   text("GAME OVER", windowWidth/2, windowHeight/2);
     
   textSize(50);
   fill(255);
   text("Coins earned: " + coins, windowWidth/2, windowHeight/1.5);
-  
-  // Offers option of restarting the game:
-  setTimeout(alert("Play Again?"), 2000);
-  // If window button clicked, reloads the game:
-  document.location.reload();
 }
 
 
@@ -285,7 +314,7 @@ function displayCompletedScreen() {
   text("Coins earned: " + coins, windowWidth/2, windowHeight/1.5);
   
   // Offers option of restarting the game:
-  setTimeout(alert("Play Again?"), 2000);
+  setTimeout(alert("Play Again?"), timeElapsed);
   // If window button clicked, reloads the game:
   document.location.reload();
 }
