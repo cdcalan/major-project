@@ -72,46 +72,34 @@ class Crab extends Sprites {
   updateShow() {
     image(crabLeftImage, this.x, this.y, this.w, this.h);
   }
-  attack() {
-    
-  }
+
 }
 
 
 class Rock {
-  constructor() {
+  constructor(x, y) {
+    this.x = x*tileWidth;
+    this.y = y*tileHeight;
     this.dx = random(-5, 5);
-    this.dy = random(-5, 5);
+    this.dy = 5;
     this.radius = 25;
-    this. color = color(random(255), random(255), random(255), random(255));
+    this.color = color(random(255), random(255), random(255), random(150, 255));
   }
-  update(x, y) {
+  update() {
+
     // move ball
-    this.x = x + this.dx;
-    this.y = y + this.dy;
+    this.x += this.dx;
 
     // display ball
     fill(this.color);
     noStroke();
     ellipse(this.x, this.y, this.radius*2, this.radius*2);
   }
-  // update(x, y) {
-  //   this.x = x;
-  //   this.y = y;
-    
-  //   if (abs(this.x - player.x) <= 100) { //If player is close to the crab, initiate attack:
-  //     // move ball
-  //     this.dx += 6;
-  //     this.x += this.dx;
-  //     this.y += this.dy;
-  //   }
-  // }
-  // show() {
-  //   // display ball
-  //   fill(this.color);
-  //   noStroke();
-  //   ellipse(this.x, this.y, this.radius*2, this.radius*2);  
-  // }
+  collision(player) {
+    if (abs(this.x - player.x + player.h) >= this.radius) {
+      console.log("yoyoyyo");
+    }
+  }
 }
 
 
@@ -258,16 +246,19 @@ class Player extends Sprites {
     this.previousY = this.yLoc;
     this.isColliding = collideLineRect(platformX, platformY, platformXFar, platformY, this.x, this.yLoc, this.w, this.h); // beta testing change of this.x values
     //if (this.x+this.w >= platformX && this.x+this.w <= platformXFar && this.y+this.h === platformY) {
-    if ((this.isColliding === true) || (player.yLoc >= platformY && player.yLoc < platformYBottom && player.x >= platformX && player.x <= platformXFar)) {
+    if ((this.isColliding === true) || (player.yLoc >= platformY && player.yLoc + player.h < platformYBottom/2 && player.x >= platformX && player.x <= platformXFar)) {
       console.log("yes");
-      this.yLoc = platformY - (this.h + 1);
-      this.yAccel = 0;
+      this.yLoc = platformY - (this.h+0.01);
+      //this.yAccel = 0;
+      this.yVel = 0;
       //isJumping = false;
-      //return true;
+      return true;
     }
-    //return false;
-    if (this.yAccel === 0) {
-      this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
+    else {
+      if (this.yAccel === 0) {
+        this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
+      }
+      return false;
     }
   }
 
@@ -276,7 +267,6 @@ class Player extends Sprites {
     if (this.hit === false) {
       if (this.isColliding === true) {
         this.hit = true;
-        playerLives -= 1;
         this.hit = false;
         this.dx = 0;            // restrict player's movement in the x direction (until done falling).
         this.yVel = 0;
@@ -296,7 +286,6 @@ class Player extends Sprites {
     if (this.hit === false) {
       if (this.isColliding === true) {
         this.hit = true;
-        playerLives -= 1;
         this.hit = false;
         this.dx = 0;            // restrict player's movement in the x direction (until done falling).
         this.yVel = 0;
@@ -316,7 +305,6 @@ class Player extends Sprites {
     if (this.hit === false) {
       if (this.isColliding === true) {
         this.hit = true;
-        playerLives -= 1;
         this.hit = false;
         this.dx = 0;            // restrict player's movement in the x direction (until done falling).
         this.yVel = 0;

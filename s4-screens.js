@@ -56,18 +56,6 @@ function displayStartScreen() {
     // koopa4.move(43, 9, 1815, 2190);
     // koopa5.move(56, 9, 2830, 3200);
     // koopa6.move(58, 4, 2900, 3200);
-    // koopa1.enemyCollision();
-    // koopa2.enemyCollision();
-    // koopa3.enemyCollision();
-    // koopa4.enemyCollision();
-    // koopa5.enemyCollision();
-    // koopa6.enemyCollision();
-    // crab1.enemyCollision();
-    // crab2.enemyCollision();
-    // crab3.enemyCollision();
-    // crab4.enemyCollision();
-    // crab5.enemyCollision();
-    // crab6.enemyCollision();
 
     // For Scroll:
     translate(-player.position.x, 0);
@@ -75,13 +63,23 @@ function displayStartScreen() {
     // stationaryObject.move();              //delete if works out with player
     //stationaryObject.show();
     
-    player.updateShow(playerAvatar);
-    
     fill(0);
     text(timer%60, player.position.x+700, 15);
 
-    
     counters()
+
+    for (let y = 0; y < lettersHigh; y++) {
+      for (let x = 0; x < lettersWide; x++) {
+        if (tiles[x][y] === "W") {
+          image(marioCastleImage, x * tileWidth, (y * tileHeight) - tileHeight*3.7, tileWidth*5, tileHeight*5);
+          if (player.x > (x*tileWidth) + (tileWidth/2) && player.yLoc <= platformY -100) {
+            screenState = "Completed";
+          }
+        }
+      }
+    }
+
+    player.updateShow(playerAvatar);
 
     // for (let i = 0; i < ballArray.length; i++) {
     //   // move ball
@@ -99,15 +97,28 @@ function displayStartScreen() {
         showTiles(tiles[x][y], x, y); //////???????????????????????????????????????????implement 2 d array and grid generation
       }
     }
-
+    
     for (let index = koopaArray.length -1; index > -1; index--) {
       let thisKoopa = koopaArray[index];
       thisKoopa.updateShow();
       thisKoopa.move();
       thisKoopa.enemyCollision();
-      // if (thisKoopa.lifeArray.length === 0) {
-      //   koopaArray.splice(koopaArray.indexOf(thisKoopa), 1);
-      // }
+
+      if (thisKoopa.enemyCollision(player) === true) {
+        if (playerState === 1) {
+          if (thisKoopa.lifeArray.length >=1) {
+            thisKoopa.lifeArray.splice(thisKoopa.lifeArray.indexOf(thisKoopa.lifeArray.length-1), 1);
+            hats++;
+            playerState = 0;
+          }
+          else {
+            koopaArray.splice(koopaArray.indexOf(thisKoopa), 1);
+          }
+        }
+        else if (playerState === 0) {
+          console.log("hit");
+        }
+      }
     }
   
 
@@ -115,9 +126,13 @@ function displayStartScreen() {
       let thisCrab = crabArray[index];
       thisCrab.updateShow();
 
-      //thisCrab.attack();
-
+      let thisRock = rockArray[index];
+      if (abs(thisCrab.x-player.x) <=1000) {
+        thisRock.update();
+      }
+      
       thisCrab.enemyCollision(player);
+
       if (thisCrab.enemyCollision(player) === true) {
         if (playerState === 1) {
           if (thisCrab.lifeArray.length >=1) {
@@ -133,6 +148,16 @@ function displayStartScreen() {
           console.log("hit");
         }
       }
+    }
+
+
+    if (enemyColliding === true) {
+      playerLives -= 1;
+      enemyColliding = false;
+    }
+
+    if (playerLives === 0) {
+      screenState = "Game Over";
     }
 
 
@@ -157,12 +182,6 @@ function displayStartScreen() {
     //   //animation(coinAnimation, x*tileWidth, y*tileHeight);
     //   //coinArray[i].show();
     // }
-    if (location === "W") {
-      image(marioCastleImage, x * tileWidth, (y * tileHeight) - tileHeight*3.7, tileWidth*5, tileHeight*5);
-      if (player.x > (x*tileWidth) + (tileWidth/2) && player.yLoc < platformY) {
-        screenState = "Completed";
-      }
-    }
     if (location === "T") {
       image(marioFlagImage, x * tileWidth, (y * tileHeight) - tileWidth, tileWidth, tileHeight*2.2);
     }
@@ -195,6 +214,8 @@ function displayStartScreen() {
       player.collisionLeft(platformX, platformY, platformXFar, platformYBottom);
       player.collisionRight(platformX, platformY, platformXFar, platformYBottom);
       player.collisionBottom(platformX, platformY, platformXFar, platformYBottom);
+      
+      
 
      //, platformTop, platformBottom);
       // totalPlatforms.push(new Platform());
@@ -241,7 +262,10 @@ function displayGameOverScreen() {
     text("GAME OVER", windowWidth/2, windowHeight/2);
     textSize(50);
     fill(255);
-    text("Score " + score, windowWidth/2, windowHeight/1.5);
+    text("Coins earned: " + coins, windowWidth/2, windowHeight/1.5);
+
+    alert("Play Again?");
+    document.location.reload();
   }
 
 function displayCompletedScreen() {
@@ -252,5 +276,5 @@ function displayCompletedScreen() {
   text("Mission Complete!", windowWidth/2, windowHeight/2);
   textSize(50);
   fill(255);
-  text("Score " + score, windowWidth/2, windowHeight/1.5);
+  text("Coins earned: " + coins, windowWidth/2, windowHeight/1.5);
 }

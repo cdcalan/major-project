@@ -7,69 +7,55 @@
 /////////////////COLORS//////////////////////
 // grass = (70, 150, 10)
 
+
+
+
 let timer = 100; // 1 minute
+let isJumping;
 
-let ballArray = [];
+// Screen-state and player-state variable:
+let screenState, playerState;;
 
-// Screen state variable:
-let screenState;
+// Menu-button objects, coordinates and dimensions:
+let startButton, infoButton, menuX, menuY, menuWidth = 350, menuHeight = 250;
 
-// Button objects:
-let startButton, infoButton;
+// Text file elements:
+let level, lines, lettersHigh, lettersWide;
 
-// Menu coordinates and dimensions:
-let menuX, menuY, menuWidth = 350, menuHeight = 250;
+// Dimensions of each square in grid:
+let tileHeight, tileWidth;
 
-// Player variables:
-let playerLives, coins, score;
-
-// Image holders:
-let playerAvatar, marioRun, marioRunBack, marioJump, marioDuck, marioAttack, coinImage;
-
-let level, lines;
-let platformImage;
-let lettersHigh, lettersWide, tileHeight, tileWidth;
-
-
-// Jump physics
-let gravity, yLocation, ground, yVelocity, yAcceleration;
-
-// Scrolling
+// Scrolling background:
 let imageX1 = 0, imageX2, scrollImage, scrollSpeed = 1.2, stationaryObject;
 
-let collision;
-let isJumping;
-let fall;
-
-let theCoin;
-
-
+// Image holders:
+let playerAvatar, marioRun, marioRunBack, marioJump, marioDuck, marioAttack, coinImage, platformImage;
+let crabLeftImage, crabRightImage, rockImage, koopaImage, marioFlagImage, marioCastleImage;
 let coinAnimation;
 
-let crabLeftImage;
-let crabRightImage;
-let rockImage;
-let koopaImage;
+// Arrays to store object classes:
+let koopaArray = [], cabArray = [], rockArray = [], coinArray = [], cloud = [];
 
-let marioFlagImage;
-let marioCastleImage;
+// Player points counters:
+let playerLives, coins;
 
-let koopa1, crab1;
+// Player jump physics variables:
+let gravity, yLocation, ground, yVelocity, yAcceleration;
 
-let cloud = [];
-let coinArray = [];
 
-let playerState;
 
-// let crabArray = [new Crab(29, 2), new Crab(19, 4), new Crab(2, 9), new Crab(19, 13), new Crab(32, 13), new Crab(52, 13)];
-// let koopaArray = [new Koopa(16, 9, 810.4, 1150), new Koopa(23, 9, 810.4, 1164.95, 4), new Koopa(40, 4, 2026, 2428.6, 1), new Koopa(43, 9, 2177.95, 2377.95, 5), new Koopa(43, 9, 2177.95, 2377.95, 5), new Koopa(56, 9, 2836.4, 3036.4, 6), new Koopa(58, 4, 2937.7, 3140.3, 2)];
-let crabArray = [];
-let koopaArray = [];
 
 function preload() {
-  // Backgorund environment:
+  // Loading structure of game environment from text file:
   level = "assets/textFiles/1.txt";
   lines = loadStrings(level);
+
+  // Background scenery:
+  scrollImage = loadImage("assets/environment/marioBg1.jpg");
+  coinImage = loadImage("assets/coin.png");
+  
+  // Animating coin pick-up images:
+  coinAnimation = loadAnimation("assets/coins/coin1.png", "assets/coins/coin2.png", "assets/coins/coin3.png", "assets/coins/coin4.png", "assets/coins/coin5.png", "assets/coins/coin6.png");
 
   // Tiles:
   groundImage = loadImage("assets/environment/groundArt.png");
@@ -77,52 +63,51 @@ function preload() {
   marioFlagImage = loadImage("assets/environment/marioFlag.png");
   marioCastleImage = loadImage("assets/environment/marioCastle.gif");
 
-  // BG screen:
-  scrollImage = loadImage("assets/environment/marioBg1.jpg");
-
   // Player Avatars:
   marioRun = loadImage("assets/marios/marioRun.png");
   marioRunBack = loadImage("assets/marios/marioRunInverted.png");
   marioJump = loadImage("assets/marios/marioJump.png");
-  marioDuck = loadImage("assets/marios/marioDuck.png");
+  marioDuck = loadImage("assets/marios/marioDuck.png");                        //find and fix
   marioAttack = loadImage("assets/marios/marioAttack.png");
 
   // Enemies:
   koopaImage = loadImage("assets/enemies/koopa.png");
   crabLeftImage = loadImage("assets/enemies/crab.png");
   rockImage = loadImage("assets/enemies/rock.png");
-  squishedKoopa = loadImage("assets/enemies/squished_koopa.png");
-  squishedCrab = loadImage("assets/enemies/squished_crab.png");
-
-  coinImage = loadImage("assets/coin.png");
-
-  // Game elements:
-  coinAnimation = loadAnimation("assets/coins/coin1.png", "assets/coins/coin2.png", "assets/coins/coin3.png", "assets/coins/coin4.png", "assets/coins/coin5.png", "assets/coins/coin6.png");
-  //"assets/coins/coin3.png", "assets/coins/coin4.png", );
+  squishedKoopa = loadImage("assets/enemies/squished_koopa.png");                      //may delete
+  squishedCrab = loadImage("assets/enemies/squished_crab.png");                        //may delete  
 }
+
+
+
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  collideDebug(true);
+
+  // Slow down the rate of frame-by-frame animation for coin pick-ups:
   coinAnimation.frameDelay = 6;
-  playerState = 0;  //normal
+  
+  // Set player state to normal mode:
+  playerState = 0;  
 
   enemyColliding = false;
 
-  let camera = 20;   // Letters wide
-
+  // Looks the level-text-file at a rate of 20 columns per screen length:
+  let camera = 20; 
+  // In text file:
   lettersHigh = lines.length;
   lettersWide = lines[0].length;
-
+  // On Game Screen:
   tileHeight = height/lettersHigh;
-  tileWidth = width/camera;   // bc i dont watn to display the entire text file at once; only a section of it.
-
+  tileWidth = width/camera;             // Only displays a portion of the entire text length. 
+  
+  // Creates an empty array with dimensions of the text file:
   tiles = twoDArray(lettersWide, lettersHigh);
-
-  for (let y = 0; y < lettersHigh; y++) {     /////////////add the scrp;ll text file by looking at the first 30 
+  // Assigns a letter from each line of text file to a spot in the empty array:
+  for (let y = 0; y < lettersHigh; y++) {      
     for (let x = 0; x < 105; x++) {
       let theTile = lines[y][x];
-      tiles[x][y] = theTile;     // assigns/ puts a letter of the string (line) of the text file to a spot in the empty array.
+      tiles[x][y] = theTile;    
     }
   }
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -172,6 +157,15 @@ function setup() {
   koopa5 = new Koopa(56, 9, 2836.4, 3036.4, 6);
   koopa6 = new Koopa(58, 4, 2937.7, 3140.3, 2);
 
+  rock1 = new Rock(29, 2);
+  rock2 = new Rock(19, 4);
+  rock3 = new Rock(2, 9);
+  rock4 = new Rock(19, 13);
+  rock5 = new Rock(32, 13);
+  rock6 = new Rock(52, 13);
+
+  rockArray = [rock1, rock2, rock3, rock4, rock5, rock6];
+
   // rock1 = new Rock();
   // rock2 = new Rock();
   // rock3 = new Rock();
@@ -181,9 +175,7 @@ function setup() {
   koopaArray = [koopa1, koopa2, koopa3, koopa4, koopa5, koopa6];
 
   playerAvatar = marioDuck;
-  collision = false;
   isJumping = false;
-  fall = false;
 
   // Menu Button Objects:
   textStyle(BOLD);
@@ -319,10 +311,3 @@ function twoDArray(columns, rows) {
   }
   return thegrid;
 }
-
-
-// NEXT:
-// - jump with gravity
-// - collision detection
-// - timer
-// - other sprites
