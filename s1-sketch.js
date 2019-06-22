@@ -172,10 +172,10 @@ function setup() {
   koopa5 = new Koopa(56, 9, 2836.4, 3036.4, 6);
   koopa6 = new Koopa(58, 4, 2937.7, 3140.3, 2);
 
-  rock1 = new Rock();
-  rock2 = new Rock();
-  rock3 = new Rock();
-  ballArray.push(rock1, rock2, rock3);
+  // rock1 = new Rock();
+  // rock2 = new Rock();
+  // rock3 = new Rock();
+  // ballArray.push(rock1, rock2, rock3);
 
   crabArray = [crab1, crab2, crab3, crab4, crab5, crab6];
   koopaArray = [koopa1, koopa2, koopa3, koopa4, koopa5, koopa6];
@@ -250,8 +250,10 @@ function keyPressed(platformY) {
     if (keyCode === UP_ARROW) {
       playerAvatar = marioJump;
       if (player.yLoc === ground || player.yAccel === 0 || player.yLoc === platformY) {
-        isJumping = true;  ///
         player.yAccel = -5;
+        if (player.yAccel <= 0) {
+          isJumping = true;  ///
+        }
       }
       else {
         isJumping = false;
@@ -266,7 +268,7 @@ function keyPressed(platformY) {
 // Displays player lives:                  
 function counters() {
   fill(0);
-  rect(player.position.x, 0, windowWidth, 55);
+  rect(player.position.x-5, 0, windowWidth+5, 55);
 
   fill(190);
   rect(player.position.x+25, 15, 125, 37, 5);   // offsets the x position of counter displayed on screen by the scroll screen rate, thereby, making the counter "stationary" on screen while the rest of the game moves.

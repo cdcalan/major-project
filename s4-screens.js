@@ -115,7 +115,7 @@ function displayStartScreen() {
       let thisCrab = crabArray[index];
       thisCrab.updateShow();
 
-      thisCrab.attack();
+      //thisCrab.attack();
 
       thisCrab.enemyCollision(player);
       if (thisCrab.enemyCollision(player) === true) {

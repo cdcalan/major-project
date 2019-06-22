@@ -73,15 +73,7 @@ class Crab extends Sprites {
     image(crabLeftImage, this.x, this.y, this.w, this.h);
   }
   attack() {
-    for (let i = 0; i < ballArray.length; i++) {
-      ballArray[i].update(this.x, this.y);
-    }
-    // if (abs(this.x - player.x) <= 100) {
-    //   ballArray.push(rock1, rock2, rock3);
-    // }
     
-      // ballArray[i].update(this.x, this.y);
-      // ballArray[i].show(this.x, this.y);
   }
 }
 
@@ -187,12 +179,24 @@ class Player extends Sprites {
 
   // Implement gravity!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   updateShow(playerAvatar) { 
-
+    // this.marioTileX = ceil(this.x / tileHeight);
+    // this.marioTileY = floor(this.yLoc / tileHeight);
+    // if (this.yAccel >= 0 && this.yVel >= 0) {
+    //   if (tiles[this.marioTileX][this.marioTileY+2] !== "#") {
+    //     console.log("not #")
+    //     this.yVel = 0;
+    //     this.yAccel = +3;
+    //   }
+    //   else if (tiles[this.marioTileX][this.marioTileY+2] === "#") {
+    //     console.log("found #");
+    //   }
+    // }
+    //|| tiles[a][b+1] ==! "G"
     this.yVel += this.yAccel;
     this.yLoc += this.yVel;
     this.yAccel = 0;   // after moving each time, turn the acceleration back to 0
     this.yVel += gravity;
-    this.xSmooth = this.x + 3;
+    this.xSmooth = this.x + tileWidth;
 
     // if it is going past the ground make it stay on the ground and stop it from moving 
     if (this.yLoc > ground) {
@@ -212,13 +216,8 @@ class Player extends Sprites {
           this.position.add(this.scrollVelocity); 
         }                                               
         // show run:
-        if (this.xSmooth < this.position.x + 500) {
+        if (this.xSmooth <= this.position.x + 500) {
           this.x += this.dx;
-        }
-        else {
-          this.xSmooth = this.position.x + 500;
-          // Sprite horizontal movement:
-          //this.x += this.dx;
         }
       }
     }
@@ -256,12 +255,17 @@ class Player extends Sprites {
   }
 
   collisionTop(platformX, platformY, platformXFar, platformYBottom) {
-    this.isColliding = collideLineRect(platformX, platformY, platformXFar, platformY, this.x, this.yLoc + this.h/1.01, this.w, this.h, true); // beta testing change of this.x values
+    this.previousY = this.yLoc;
+    this.isColliding = collideLineRect(platformX, platformY, platformXFar, platformY, this.x, this.yLoc, this.w, this.h); // beta testing change of this.x values
     //if (this.x+this.w >= platformX && this.x+this.w <= platformXFar && this.y+this.h === platformY) {
-    if (this.isColliding === true) {
-      this.yLoc = platformY;
+    if ((this.isColliding === true) || (player.yLoc >= platformY && player.yLoc < platformYBottom && player.x >= platformX && player.x <= platformXFar)) {
+      console.log("yes");
+      this.yLoc = platformY - (this.h + 1);
       this.yAccel = 0;
+      //isJumping = false;
+      //return true;
     }
+    //return false;
     if (this.yAccel === 0) {
       this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
     }
