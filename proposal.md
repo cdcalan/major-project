@@ -21,7 +21,7 @@ I chose this project because I have always been interested in creating this type
  - A Mario/Player character that has key-controlled movements (ex: forward, backward, jump, kick).
  - Implement gravity as part of jumping, or falling after collisions. 
  - Collision detection (to detect whether coins or boosters have been picked up, or whether player has bumped into dangerous sprites, or failed to avoid obstacles). 
- - Multiple counters to keep track of different objects picked up by player during the game. Counters add when more similar objects are gained, and subtract when they are used. Include a points counter. 
+ - Multiple counters to keep track of different objects picked up by player during the game. Counters add when more similar objects are gained, and subtract when they are used. Include a points counter. (Update: The coins counter is the points counter, as collecting coints is the objective of the game).
  - Player-"Life" counter that adds/subtracts the number of lives the player has according to player-performance. 
  - Enemy-Life counter (specific to each different type of enemy) that subtracts the number of lives the enemy sprite has according to the number of blows it receives from Player. 
  - 'Animate' player avatar by changing its image according to whether its running, jumping, flying, etc.

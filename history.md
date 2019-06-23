@@ -1,1 +1,32 @@
-- May:
+History Log
+
+- April 16: Initial Comment and proposal started.
+- April 18: Proposal updated. 
+- May 1: Merged major project work done in old repository into this one.
+- May 3: Created initial variables and menu.
+- May 6: Found and loaded game images.
+- May 8: Planned out approach to program.
+- May 9: Worked on player avatars.
+- May 10: Worked on menu buttons.
+- May 15: Worked on background tiles, and loading/displaying them.
+- May 16: Began workign on player jump physics.
+- May 21: gravity and acceleration.
+- May 22: learned about sub-class syntax and fixed super().
+- May 28: Background image, created platforms, and worked on scrolling background screen.
+- June 3: key-controlled movements, textfiles of game environment, deciphering text files.
+- June 4: 2-D grid generation, devised text file idea for the game environemt.
+- June 5: Began foreground scroller. Researched about jump physics.
+- June 6: scrolling platforms and player x-position offsetting.
+- June 7: Finished fixing jumping. Created subclasses of enemies from my original sprite class, specialized the enemies, and figured out their position and movement.
+- June 8: Began collision work.
+- June 10: Researched about collision. 
+- June 11: Worked on collision in my own game.
+- June 12: Organized code, worked on different screen states and menu buttons.
+- June 13: Restricted player movement to stay inside the four corners of the screen, updated player falling, and added collide2d library. After struggling with collideRectRect(), adapted code to work with collideRectLine() instead. Fixed platform collision. Began working on coding my own coin animation. Added more graphics. Worked on fixing koopa movement, and debugging. 
+- June 14: Reflection added to major project file. Since writing my own animation code became a long process, I added the p5.play library.
+- June 15: Fixed a platform jump bug, and fixed overlapping of objects in different layers. Worked on sprite automatic movement. 
+- June 16: Worked on sprite collision. 
+- June 17: Fixed sizes of images loaded onto canvas, completed coding koopa, and worked on coin collision detection.
+- June 18: Worked on splicing coin objects form array, and augmenting coin counter. Began impelementing beta-testing changes.
+- June 21: Added game-completion portal (castle at the end of the game that player must pass through in order to trigger the game complete screen). Implemented more beta-testing changes, such as chaning scroller from "stationaryObject" to the player class itself by using player.position.x vector.
+- June 22: Solved life counters and propper splicing, spent most itme working on resolving bugs. Cleaned up the code and added finishing touches. 

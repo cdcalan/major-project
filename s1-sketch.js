@@ -3,16 +3,21 @@
 // Monday, April 29, 2019
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// - learned how to use the p5.play library for animations and graphics. 
+// - learned how the p5.collide2 library works, and how to use it in my program.
+// - Used sub-classes and parent-classes for the first time.
+// - devised collision and scoring code
+// Beta-Testing:
+// - switched from having an infinte scrolling game screen to one that moves right by the player position and speed.
+// - Made stylistic changes to the layers that tiles are displayed at/messages to user.
+// - Adjusted the speed of player.
 
-
-let lastPlayerX;                              ////////////////////////
 
 // Screen-state and player-state variable:
 let screenState, playerState;;
 
 // Menu-button objects, coordinates and dimensions:
-let startButton, infoButton, menuX, menuY, menuWidth = 350, menuHeight = 250;
+let startButton, infoButton, returnButton, menuX, menuY, menuWidth = 350, menuHeight = 250;
 
 // Timer elements:
 let timer, seconds, minutes;
@@ -37,7 +42,7 @@ let koopaArray = [], koopaCloud = [], crabArray = [], crabCloud = [], rockArray 
 let coinArray = [], cloud = [], boxArray = [], boxCloud = [];
 
 // Player points counters:
-let playerLives, coins;
+let playerLives, pLives, coins;
 
 // Player jump physics variables:
 let gravity, yLocation, ground, yVelocity, yAcceleration, isJumping;
@@ -67,7 +72,7 @@ function preload() {
   marioRun = loadImage("assets/marios/marioRun.png");
   marioRunBack = loadImage("assets/marios/marioRunInverted.png");
   marioJump = loadImage("assets/marios/marioJump.png");
-  marioDuck = loadImage("assets/marios/marioDuck.png");                        //find and fix
+  marioDuck = loadImage("assets/marios/marioNormal.png");                        //find and fix
   marioAttack = loadImage("assets/marios/marioAttack.png");
 
   // Enemies:
@@ -96,6 +101,7 @@ function setup() {
   textStyle(BOLD);
   startButton = new Button(menuX, menuY + menuHeight/5, "Start");
   infoButton = new Button(menuX, menuY + menuHeight/5 + 80, "Info");
+  returnButton = new Button(windowWidth-400, 50, "Restart");
 
   imageX2 = windowWidth;
 
@@ -241,6 +247,17 @@ function mousePressed() {
       screenState = "Info Screen";
     }
   }
+  if (screenState === "Info Screen") {
+    if (returnButton.clickedOn(mouseX, mouseY)) {
+      screenState = "Start Screen";
+    }
+  }
+
+  if (screenState === "Game Over" || screenState === "Completed") {
+    if (returnButton.clickedOn(mouseX, mouseY)) {
+      document.location.reload();
+    }
+  }
 }
 
 
@@ -250,8 +267,7 @@ function mousePressed() {
 function keyPressed(platformY) {
   if (screenState === "Game Screen") {
     if (keyCode === UP_ARROW) {
-      // Change the look of player:
-      playerAvatar = marioJump;
+      
       // Only allow jumping if player was not already in the air:
       if (isJumping === false) { 
         player.yAccel = -5;
@@ -281,12 +297,20 @@ function counters() {
   fill(0);
   rect(player.position.x-5, 0, windowWidth+5, 55);
 
-  // Player lives:
+  // Displaying Player lives:
   fill(190);
   rect(player.position.x+25, 15, 125, 37, 5);   
   fill(0);
   textSize(25);
-  text("Life : " + playerLives, player.position.x+30, 45);
+
+  if (playerLives > 1) {
+    pLives = playerLives-1;
+  }
+  else {
+    pLives = playerLives;
+  }
+
+  text("Life : " + pLives, player.position.x+30, 45);
   
   // Coin pickups:
   fill(190);

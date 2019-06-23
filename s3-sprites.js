@@ -57,38 +57,6 @@ class Sprites {
     }
     enemyColliding = false;
   }
-
-  // enemyState() {
-  //   // Determines what to do if collision is true:
-  //   if (this.enemyCollision(player) === true) {
-  //     // If playerState is attack mode (1), and thisKoopa has atleast 1 life: 
-  //     if (playerState === 1) {
-  //       if (this.lifeArray[2] === 0) {
-  //         for (let i = 0; i < 3; i++) {
-  //           // Remove a life from the koopaArray. 
-  //           if (this.lifeArray[1] === 0) {
-  //             this.lifeArray.splice(this.lifeArray[1], 1, 1);
-  //             //return this.lifeArray;
-  //           }
-  //           if (this.lifeArray[0] === 0) {
-  //             this.lifeArray.splice(this.lifeArray[0], 1, 1);
-  //             //return this.lifeArray;
-  //           }
-  //           else {
-  //             this.lifeArray.splice(this.lifeArray[2], 1, 1);
-              
-  //           }
-  //         }
-          
-  //       }
-  //       //return this.lifeArray;
-  //     }     
-  //     // If playerState is normal (0), subract 1 from player life:
-  //     else if (playerState === 0) {
-  //       enemyColliding = true;
-  //     }
-  //   }
-  // }
 }
 
 
@@ -137,7 +105,6 @@ class Rock {
   collision(player) {
     // Detect player collision, and increase the force of gravity on player if collision is true. 
     if (abs((player.x + player.w) - this.x) <= this.radius) {
-      enemyColliding = true;
       gravity += 0.0001;
     }
   }
@@ -159,18 +126,6 @@ class Koopa extends Sprites {
   }
   updateShow() {
     image(koopaImage, this.x, this.y, this.w/1.1, this.h/1.1);
-
-    // Display a colored dot that shows the number of koopa lives left:
-    if (this.lifeArray.length === 1) {
-      fill(200, 50, 50);
-    }
-    if (this.lifeArray.length === 2) {
-      fill(50, 200, 50);
-    }
-    if (this.lifeArray.length === 3) {
-      fill(50, 50, 200);
-    }
-      ellipse(this.x, this.y, 10, 10);
   }
 
   move(x, y, boundaryLeft, boundaryRight) {
@@ -195,12 +150,14 @@ class Player extends Sprites {
     super(spriteX, spriteY);
 
     //Screen Scrolling Elements:
+
     // The position of the screen that scrolls with player's movement (NOTE: this is not player's x position!):
     this.position = createVector(0, spriteY);
     // Controls the scroll speed of the game screen:
     this.scrollAcceleration += 5;
     // Gives the "screen" a velocity:
-    this.scrollVelocity = createVector(3, spriteY);   // Beta-test: made game scroll faster than background image.
+    // BETA TESTING: adjusted background and scrollVelocity speeds to make game scroll faster than background image.
+    this.scrollVelocity = createVector(3, spriteY); 
     
     // Player Elements:
     this.yVel = yVelocity;
@@ -273,6 +230,14 @@ class Player extends Sprites {
         playerAvatar = marioAttack; 
       }
     }
+
+
+    // Player attack key:
+    else if(keyIsPressed && keyCode === UP_ARROW) {
+      // Change the look of player:
+      playerAvatar = marioJump;
+    }
+
     else {
       // keep neutral player avatar:
       playerAvatar = marioDuck;
@@ -287,10 +252,10 @@ class Player extends Sprites {
   collisionTop(platformX, platformY, platformXFar, platformYBottom) {
     
     // Using p5.collide2d library to detect collision:
-    this.isColliding = collideLineRect(platformX, platformY, platformXFar, platformY, this.x, this.yLoc, this.w, this.h); // beta testing change of this.x values
+    this.isColliding = collideLineRect(platformX, platformY, platformXFar, platformY, this.x, this.yLoc, this.w, this.h);
     
     // If player is colliding directly with the top of platform, or is positioned within the 'range' of the top of the platform.
-    if ((this.isColliding === true) || (player.yLoc >= platformY && player.yLoc + player.h < platformYBottom/2 && player.x >= platformX && player.x <= platformXFar)) {
+    if ((this.isColliding === true) || (player.yLoc >= platformY && player.yLoc + player.h < platformYBottom/2 && player.x > platformX && player.x < platformXFar)) {
       // Position player just on top of the platform (offsetting it by 0.01 pixels to avoid getting trapped on platform):
       this.yLoc = platformY - (this.h+0.01);
       this.yVel = 0;

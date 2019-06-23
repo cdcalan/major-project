@@ -24,7 +24,7 @@ class Button {
 
   clickedOn(mX, mY) {
     // Takes in mouseX (mX) and mouseY (mY) values to check if button is clicked in start screen:
-    if (screenState === "Start Screen") {
+    if (screenState === "Start Screen" || screenState === "Info Screen" || screenState === "Game Over" || screenState === "Completed") {
       return (mX >= this.x &&
               mX <= this.x + this.w) &&
              (mY >= this.y && 

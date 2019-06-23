@@ -6,7 +6,6 @@ let pointToSubtract;
 
 
 
-
 function displayStartScreen() {
   // Start screen with menu:
   background(50, 100, 150);
@@ -27,7 +26,36 @@ function displayStartScreen() {
   function displayInfoScreen() {
     // Info-Button Screen with player instructions:
     background(200);
-    //text("To jump forwards or backwards, it is best if you hold down the jump key (UP ARROW) before you press the direction key (LEFT ARROW or RIGHT ARROW).")
+    
+    // Header:
+    textStyle(BOLD);
+    text("INSTRUCTIONS", 500, 50);
+
+    //Instructions:
+    textSize(30);
+    textStyle(NORMAL);
+    text("Objective of the game: complete the game under the alotted time while collecting", 20, 150); 
+    text("the most number of coins possible and avoiding the enemy sprites. The game is successfully", 20, 185);
+    text("complete when player passes through the mario castle at the end of the game. The time left to", 20, 215);
+    text("complete the mission is displayed in a count-down timer on the banner at the top of the screen,", 20, 245);
+    text("along with the number of coins earned. Picking up mystery boxes gives the player a power up by", 20, 275); 
+    text("increasing the right-scroll velocity; reducing the force of gravity on the player (leading to,", 20, 305);
+    text("higher jumps), and augmenting coins by 3 times as normal. Controls: Press right arrow key to move", 20, 340);
+    text("forward; press left arrow key to move back; press up arrow key to jump. You can also jump diagonally", 20, 375);
+    text("by pressing both the up arrow, and left/right arrow keys. Press bottom arrow key to attack (kick)", 20, 410);
+    text("enemies. Defeating Crabs typically require 2-3 blows, while defeating Koopas require only one.", 20, 445);
+    text("Similarly, 'lightly' bumping into Crabs while not in attack mode (i.e, while not pressing down", 20, 480);
+    text("arrow key), typically deals 1/3 blows to the player, while bumping into a koopa is fatal. Bumping,", 20, 515);
+    text("into any enemy with full force can be fatal. As player gets closer to crabs, crabs will release", 20, 550);
+    text("rocks' (on either side). Player should jump to avoid the rocks, as bumping into them increases the", 20, 585);
+    text("force of gravity (leading to smaller jumps). In order to run propperly, program must be in", 20, 620);
+    text("fullscreen. Player can't move past about half way of the screen, but the screen can scroll forward.", 20, 655);
+    text("Moving back will pause the scrolling, but player is not allowed to move farhter than the left", 20, 690);
+    text("edge of the screen.", 20, 722);
+
+    // Buttons to return to menu:
+    returnButton.hoveredOver();
+    returnButton.show();
   }
   
   
@@ -55,13 +83,14 @@ function displayStartScreen() {
     }
 
     // For Scrolling of all Game elements besides the background: offset everything by player position.x variable).
+    // Implemented after BETA-TESTING:
     translate(-player.position.x, 0);
 
   /////////////////////////////////////// END OF SCROLL SCREEN /////////////////////////////////////////////
 
 
     // Reads textfile for location of mario castle needed to complete the game:
-    // (Placed outside of the normal showTiles() function so that mario can 'layer' over top the castle):
+    // BETA-TESTING: (Placed outside of the normal showTiles() function so that mario can 'layer' over top the castle):
     for (let y = 0; y < lettersHigh; y++) {
       for (let x = 0; x < lettersWide; x++) {
         if (tiles[x][y] === "W") {
@@ -103,7 +132,6 @@ function displayStartScreen() {
       let thisKoopa = koopaArray[index];
       thisKoopa.updateShow();
       thisKoopa.move();
-      lastPlayerX = player.x;                                    //????????????????????????????
       thisKoopa.enemyCollision();
 
       // Determines what to do if collision is true:
@@ -128,15 +156,7 @@ function displayStartScreen() {
         // Instead, if playerState is already normal (0), subract 1 from player life:
         else if (playerState === 0) {
           enemyColliding = true;
-          // Only if the last and current player x position changed significantly, subtract player lives:  //??????????
-          if (abs(lastPlayerX-player.x) > 50) {
-            pointToSubtract = 1;
-          }
-          else {
-            pointToSubtract = 0;
-          }
-          
-          // player-class function that subtracts and returns the playerlives:
+          let pointToSubtract = 1;
           player.playerCollision(pointToSubtract);
         }
       }
@@ -260,7 +280,7 @@ function displayGameOverScreen() {
   background(80);
   textAlign(CENTER);
   
-  // If game over is triggered by timer, display message:
+  // Notify player if game over was triggered by timer. (Implemented after recommendation from BETA-TESTING)
   textSize(40);
   fill(255);
   if (countUp === 0) {
@@ -276,6 +296,11 @@ function displayGameOverScreen() {
   textSize(50);
   fill(255);
   text("Coins earned: " + coins, windowWidth/2, windowHeight/1.5);
+
+  textSize(30)
+  // Offers option of restarting the game:
+  returnButton.hoveredOver();
+  returnButton.show();
 }
 
 
@@ -295,7 +320,6 @@ function displayCompletedScreen() {
   text("Coins earned: " + coins, windowWidth/2, windowHeight/1.5);
   
   // Offers option of restarting the game:
-  setTimeout(alert("Play Again?"), frameCount + 2000);
-  // If window button clicked, reloads the game:
-  document.location.reload();
+  returnButton.hoveredOver();
+  returnButton.show();
 }

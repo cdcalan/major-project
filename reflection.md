@@ -1,27 +1,11 @@
 Problems:
 - 1) Collision Detection for platforms and sprite interaction:
-    Originally, I was trying to write a collision detection code that could work for any number or position of obstacles, by hand. I had planned to turn each "#" (platform) from the text file into a copy of a Platform class and gather them inside an array. After spending a significant amount of time troubleshooting for different sprites, I decided to learn how to use the more conceise p5.collide2d library to solve the problem. Unfortunately, I still ran into problems with using the collideRectRect() function, as it would only work for the bottom and one side of the rectangular platforms. I solved this issue by adding more code and breaking down my platforms boundaries into lines that used the collideLineRect() function instead. This made my code more efficient than before, as I did not have to use an array of multiple classes.
+    Originally, I was trying to write a collision detection code that could work for any number or position of obstacles, by hand. I had planned to turn each "#" (platform) from the text file into a copy of a Platform class and gather them inside an array. After spending a significant amount of time troubleshooting for different sprites, I decided to learn how to use the more conceise p5.collide2d library to solve the problem. Unfortunately, I still ran into problems with using the collideRectRect() function, as it would only work for the bottom and one side of the rectangular platforms. I solved this issue by editing some code and breaking down my platforms boundaries into lines that used the collideLineRect() function instead. This made my code more efficient than before, as I did not have to use an array of multiple classes. If the player detected the top platform collision, it would either still jump through the platform, or slowly sink down. If I restricted player location to the platform location, player would not be able to jump again. After lots of trial and error, I finally solved it by checking to for collision in the range of the platform (rather than line to line), and offset player postion by 0.01 pixels from the platform so that the player doesn't get trapped in an infinite loop of collision.
 
 
 - 2) Enemy Sprite Movement:
-    I had planned out the positions of my enemy sprites inside the text file for the game. However, unlike the platforms, it could not do much but read the position of the enemy sprite from the text sheet. So I made a class for each type of enemy, loaded each sprite in setup, and displayed/moved the sprites in the textfile function (which finds its position). But I could not declare my classes in setup without the x, y coordinates from the textfile function. So, in order to create the enemies, I had to do extra work to find out each sprite's position and input it directly when initializing the class in setup. Similarly, I had to find out the restrictions of the platforms on which each sprite stood (to restrict sprite movement)and input it directly when initializing (instead of having the program read it).
-    (Also, I am not sure why, but I noticed my program also started to run more slowly as I was fixing the issue. After I fixed the issue, it seemed to go back to normal speed.) 
+    The positions of enemy sprites were posiitoned in the text file for the game. However, unlike the platforms, it could not do much but read the position of the enemy sprite from the text sheet. So I made a class for each type of enemy, loaded each sprite in setup, and displayed/moved the sprites in the textfile function (which finds its position). But I could not declare my classes in setup without the x, y coordinates from the textfile function. So, in order to create the enemies, I wrote extra code to find the x,y coordinates and boundaries of the enemy sprites, and input it directly in setup (as I could not include the code itself in my program due to bugs). (Also, I am not sure why, but I noticed my program also started to run more slowly as I was fixing the issue. After I fixed the issue, it seemed to go back to normal speed.) 
     
 
-- 3) Animation:
-    As part of my "Nice to Have" list, I wanted to improve the game graphics by turning the coins and running avatars of each sprite into gifs in javascript by sequentially looping through their images. This was another learning curve for me because I had to learn how to work with the p5.play library for animations.  
-
-
-      //Reads text file for number of coins and pushes their coordinate location into an empty array:
-  // for (let y = 0; y < lettersHigh; y++) {
-  //   for (let x = 0; x < lettersWide; x++) {
-  //     if (tiles[x][y] === "K") {
-  //       koopaCloud.push([x, y]);
-  //     }
-  //   }
-  // }
-  // // For each coin in "cloud" array, create a new Coin object with its location, and push it into the coinArray:
-  // for (let i = koopaCloud.length - 1; i > -1; i--) {
-  //   let coordinates = koopaCloud[i];
-  //   koopaArray[i] = new Koopa(coordinates[0]*tileWidth, coordinates[1]*tileHeight, (coordinates[0]*tileWidth)-10, (coordinates[0]*tileWidth)+400);
-  // }
+- 3) Subtracting sprite lives upon collision:
+    Once the collision detection was working, I had to figure out how to display/delete sprites based on those collisions. If it was a collision without player attack, the sprite had to remain on screen, whereas if it was a collision with attack, the sprite had to lose some life points (based on the type of sprite it was) before dissapearing compeltely from the screen (koopas dissapear immideately, whereas crabs are more resilient). I realized it was not enough to simply remove the display() of each sprite; as it may still detect collision and other elements of the sprite at that spot. So I decided to place each sprite in an array, and loop through the array for its display, movement and collision. This way, if an enemy sprite was killed, it could be removed completely from the game by splicing the element from the array.
