@@ -43,32 +43,6 @@ class Button {
 
 
 
-//???????????????????????????????????????????????????????????????????????????????///
-class Constant {
-  constructor(x, y) {
-    this.position = createVector(0, y);
-    this.width = windowWidth;
-    this.height = 55;
-    
-
-    // Controls the scroll speed of the game screen:
-    this.acceleration += 5;
-    // Gives the "screen" a velocity:
-    this.velocity = createVector(1.8, 0);   // Beta-test: made game scroll faster than background image.
-  }
-  // Makes stationary-object "move" horizontally:
-  move() {
-    // this.velocity.add(this.acceleration);
-    // this.position.add(this.velocity);
-  }
-  show() {
-    fill(0);
-    rect(this.position.x, this.position.y, this.width, this.height);
-  }
-}
-
-
-
 
 // Coin class (used for all collectable coins):
 class Coin {
@@ -77,6 +51,7 @@ class Coin {
     this.y = y;
     this.w = tileWidth;
     this.h = tileHeight;
+    // Bool variable for detecting collision with player:
     this.coinPickUp = false
   }
 
@@ -95,13 +70,14 @@ class Coin {
 
 
 
-// Mystery Box class:
+// Mystery Box class (power up):
 class Box {
   constructor(x, y) {
     this.x = x;
     this.y = y;
     this.w = tileWidth;
     this.h = tileHeight;
+    // Bool variable for detecting collision with player:
     this.boxPickUp = false;
   }
 
@@ -112,7 +88,7 @@ class Box {
   }
   
   show() {
+    // Displays image of mystery box:
     image(mysteryBox, this.x, this.y, this.w, this.h);
-
   }
 }

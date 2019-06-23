@@ -4,22 +4,19 @@
 //
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
-/////////////////COLORS//////////////////////
 
 
-let flag = true;
-
-let timer; // 1 minute
-let countUp = 76;
-let seconds, minutes;
-
-let isJumping;
+let lastPlayerX;                              ////////////////////////
 
 // Screen-state and player-state variable:
 let screenState, playerState;;
 
 // Menu-button objects, coordinates and dimensions:
 let startButton, infoButton, menuX, menuY, menuWidth = 350, menuHeight = 250;
+
+// Timer elements:
+let timer, seconds, minutes;
+let countUp = 76; // Time in game.
 
 // Text file elements:
 let level, lines, lettersHigh, lettersWide;
@@ -28,7 +25,7 @@ let level, lines, lettersHigh, lettersWide;
 let tileHeight, tileWidth;
 
 // Scrolling background:
-let imageX1 = 0, imageX2, scrollImage, scrollSpeed = 1.2, stationaryObject;
+let imageX1 = 0, imageX2, scrollImage, scrollSpeed = 1.2;
 
 // Image holders:
 let playerAvatar, marioRun, marioRunBack, marioJump, marioDuck, marioAttack, coinImage, platformImage;
@@ -43,9 +40,7 @@ let coinArray = [], cloud = [], boxArray = [], boxCloud = [];
 let playerLives, coins;
 
 // Player jump physics variables:
-let gravity, yLocation, ground, yVelocity, yAcceleration;
-
-
+let gravity, yLocation, ground, yVelocity, yAcceleration, isJumping;
 
 
 
@@ -78,11 +73,8 @@ function preload() {
   // Enemies:
   koopaImage = loadImage("assets/enemies/koopa.png");
   crabLeftImage = loadImage("assets/enemies/crab.png");
-  rockImage = loadImage("assets/enemies/rock.png");
-  squishedKoopa = loadImage("assets/enemies/squished_koopa.png");                      //may delete
-  squishedCrab = loadImage("assets/enemies/squished_crab.png");                        //may delete  
+  rockImage = loadImage("assets/enemies/rock.png"); 
 }
-
 
 
 
@@ -90,11 +82,8 @@ function preload() {
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
-  poins = "none";
-
+  // Initializing timer:
   setInterval(timeIt, 1000);
-
-  stationaryObject = new Constant(0, 0);                   ///??? might change this into mario himself.
   
   // Set player state to normal mode:
   playerState = 0;  
@@ -130,7 +119,7 @@ function setup() {
   lettersWide = lines[0].length;
   // On Game Screen:
   tileHeight = height/lettersHigh;
-  tileWidth = width/camera;             // Only displays a portion of the entire text length. 
+  tileWidth = width/camera;     // Only displays a portion of the entire text length. 
   
   // Creates an empty array with dimensions of the text file:
   tiles = twoDArray(lettersWide, lettersHigh);
@@ -174,7 +163,7 @@ function setup() {
     boxArray[i] = new Box(boxCoord[0]*tileWidth, boxCoord[1]*tileHeight);
   }
 
-////////////////////////////////////INITIALIZING JUMP PHYSICS VARIABLES//////////////////////////////////////
+  ////////////////////////////////////INITIALIZING JUMP PHYSICS VARIABLES/////////////////////////////////////
   
   yVelocity = 0;
   yAcceleration = 0;
@@ -182,56 +171,20 @@ function setup() {
   ground = windowHeight- 2.4*tileHeight;
   yLocation = ground;
 
-  //////////////////////////////////////////////////SPRITES//////////////////////////////////////////////////
+  ///////////////////////////////////////////////// SPRITES ///////////////////////////////////////////////////
 
   // Create player and enemy Sprite Objects:
   player = new Player(300, yLocation);
 
-  //////////////////////////////////////////////KOOPA GENERATION////////////////////////////////////////////////
-  
-  //Reads text file for number of coins and pushes their coordinate location into an empty array:
-  // for (let y = 0; y < lettersHigh; y++) {
-  //   for (let x = 0; x < lettersWide; x++) {
-  //     if (tiles[x][y] === "K") {
-  //       koopaCloud.push([x, y]);
-  //     }
-  //   }
-  // }
-  // // For each coin in "cloud" array, create a new Coin object with its location, and push it into the coinArray:
-  // for (let i = koopaCloud.length - 1; i > -1; i--) {
-  //   let coordinates = koopaCloud[i];
-  //   koopaArray[i] = new Koopa(coordinates[0]*tileWidth, coordinates[1]*tileHeight, (coordinates[0]*tileWidth)-10, (coordinates[0]*tileWidth)+400);
-  // }
-
-  // ////////////////////////////////// CRAB AND ROCKS GENERATION ////////////////////////////////////////////
-  
-  // Reads text file for number of coins and pushes their coordinate location into an empty array:
-  // for (let y = 0; y < lettersHigh; y++) {
-  //   for (let x = 0; x < lettersWide; x++) {
-  //     if (tiles[x][y] === "B") {
-  //       crabCloud.push([x, y]);
-  //     }
-  //   }
-  // }
-  // // For each coin in "cloud" array, create a new Coin object with its location, and push it into the coinArray:
-  // for (let i = crabCloud.length - 1; i > -1; i--) {
-  //   let coordinates = crabCloud[i];
-  //   crabArray[i] = new Crab(coordinates[0]*tileWidth, coordinates[1]*tileHeight);
-  //   rockArray[i] = new Rock(coordinates[0]*tileWidth, coordinates[1]*tileHeight);
-  // }
-
+  // Enemy crabs:
   crab1 = new Crab(31, 2);
   crab2 = new Crab(20, 4);
   crab3 = new Crab(2, 9);
   crab4 = new Crab(78, 9);
   crab5 = new Crab(29, 13); 
   crab6 = new Crab(70, 13); 
-  koopa1 = new Koopa(37, 4, 2798.3, 3208.3);
-  koopa2 = new Koopa(57, 4, 4316.3, 4726.3);
-  koopa3 = new Koopa(76, 4, 5758.400000000001, 6168.400000000001);   
-  koopa4 = new Koopa(17, 9, 1280.3000000000001, 1690.3000000000001);
-  koopa5 = new Koopa(36, 9, 2722.4, 3132.4);
-  koopa6 = new Koopa(57, 9, 4316.3, 4726.3);
+  
+  // Rocks (part of crab's attack):
   rock1 = new Rock(31, 2);
   rock2 = new Rock(20, 4);
   rock3 = new Rock(2, 9);
@@ -239,29 +192,19 @@ function setup() {
   rock5 = new Rock(29, 13); 
   rock6 = new Rock(70, 13);
 
-  // crab1 = new Crab(29, 2);
-  // crab2 = new Crab(19, 4);
-  // crab3 = new Crab(2, 9);
-  // crab4 = new Crab(19, 13);
-  // crab5 = new Crab(32, 13); 
-  // koopa1 = new Koopa(16, 9, 810.4, 1150);
-  // koopa2 = new Koopa(23, 9, 810.4, 1164.95);
-  // koopa3 = new Koopa(40, 4, 2026, 2428.6);   //apparently works with just one now?
-  // koopa4 = new Koopa(43, 9, 2177.95, 2377.95);
-  // koopa5 = new Koopa(56, 9, 2836.4, 3036.4);
-  // koopa6 = new Koopa(58, 4, 2937.7, 3140.3);
-  // rock1 = new Rock(29, 2);
-  // rock2 = new Rock(19, 4);
-  // rock3 = new Rock(2, 9);
-  // rock4 = new Rock(19, 13);
-  // rock5 = new Rock(32, 13);
+  // Enemy Koopa:
+  koopa1 = new Koopa(37, 4, 2798.3, 3208.3);
+  koopa2 = new Koopa(57, 4, 4316.3, 4726.3);
+  koopa3 = new Koopa(76, 4, 5758.400000000001, 6168.400000000001);   
+  koopa4 = new Koopa(17, 9, 1280.3000000000001, 1690.3000000000001);
+  koopa5 = new Koopa(36, 9, 2722.4, 3132.4);
+  koopa6 = new Koopa(57, 9, 4316.3, 4726.3);
 
   // // Put each enemy object into an empty array to be called/deleted from:
   crabArray = [crab1, crab2, crab3, crab4, crab5, crab6];
   koopaArray = [koopa1, koopa2, koopa3, koopa4, koopa5, koopa6];
   rockArray = [rock1, rock2, rock3, rock4, rock5, rock6];
 }
-
 
 
 
@@ -273,7 +216,6 @@ function draw() {
   }
   else if (screenState === "Game Screen") {
     displayGameScreen();
-    
   }
   else if (screenState === "Info Screen") {
     displayInfoScreen();
@@ -290,7 +232,7 @@ function draw() {
 
 
 function mousePressed() {
-  // Detect mouse press on menu buttons:
+  // Detect mouse press on menu buttons to trigger the correct screen:
   if (screenState === "Start Screen") {
     if (startButton.clickedOn(mouseX, mouseY)) {
       screenState = "Game Screen";
@@ -308,16 +250,21 @@ function mousePressed() {
 function keyPressed(platformY) {
   if (screenState === "Game Screen") {
     if (keyCode === UP_ARROW) {
+      // Change the look of player:
       playerAvatar = marioJump;
-      if (isJumping === false) { //(player.yLoc === ground || player.yAccel === 0 || player.yLoc === platformY) {
+      // Only allow jumping if player was not already in the air:
+      if (isJumping === false) { 
         player.yAccel = -5;
+        // If player is accelerating upwards, calssify player as still jumping: 
         if (player.yAccel < 0) {
-          isJumping = true;                                                                  ///
+          isJumping = true;                                
         }
+        // When player descends, allow player to jump again.
         else if (player.yAccel = 0) {
           isJumping = fasle;
         }
       }
+      // If up arrow key is pressed while player is jumping, keep player yAcceleration to neutral.
       else if (isJumping === true) {
         player.yAccel = 0;
       }
@@ -353,24 +300,7 @@ function counters() {
 
 
 
-// // A count-down "timer" that displays the time left in the game: 
-// function countDown(timer) {
-
-//   // Subtract one second from timer each time frameCount is divisible by 60 (60 = 1 second):
-//   if (frameCount % 60 === 0 && timer > 0) { 
-//     timer --;
-//   }
-
-//   // If timer has run out and game is still unfinished, trigger game over:
-//   if (timer === 0) {
-//     if (screenState === "Game Screen") {
-//       text("GAME OVER", width/2, height*0.7);
-//     }
-//   }
-// }
-
-
-
+// Count down timer that keeps track of the time left in the game:
 function timeIt() {
   // Timer begins only when game begins:
   if (screenState === "Game Screen") {
@@ -378,6 +308,7 @@ function timeIt() {
     if (countUp > 0) {
       countUp--;
     }
+    // If game is still on when timer has reached zero, trigger game over screen:
     else if (countUp === 0) {
       screenState = "Game Over";
     }
@@ -392,7 +323,7 @@ function timeIt() {
 
 
 
-// Empty 2-D Array the length of the game text file (framework for grid the game is displayed on):
+// Generating empty 2-D Array the length of the game text file (framework for grid the game is displayed on):
 function twoDArray(columns, rows) {
   let thegrid = [];
   for (let c = 0; c < columns; c++) {

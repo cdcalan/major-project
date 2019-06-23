@@ -1,4 +1,4 @@
-// Sprite objects:
+// Player/ mario object:
 let player;
 
 // Global boolean variable that turns true if player collides with any enemy.
@@ -21,7 +21,6 @@ class Sprites {
 
     // Number of lives:
     this.lifeArray = [0, 0, 0];
-    this.lives = 3;
 
     // Local variable to check if player is colliding with a particular enemy:
     this.enemyColliding = false;
@@ -32,27 +31,30 @@ class Sprites {
     this.enemyColliding = collideRectRect(this.x, this.y, this.w, this.h, player.x, player.yLoc, player.w, player.h);
     if (this.enemyColliding === true) {
       console.log("hello " + "playerstate " + playerState);
-      if (playerState === 1) {
-        if (this.enemyColliding === true && flag === true) {
-          this.lives -= 1;
-          flag = false;
-        }
-      }
 
       enemyColliding = true;         
 
       // Resists player by trying to push player back away from enemy upon impact (makes it harder for player to hit crabs):
-      if (player.x < this.x) {
-        player.x -= 1*this.dx;
+      // If player is attacking, allow less resistance: 
+      if (playerState === 1) {
+        if (player.x < this.x) {
+          player.x -= 1*this.dx;
+        }
+        if (player.x > this.x) {
+          player.x += 1*this.dx;
+        }
       }
-      if (player.x > this.x) {
-        player.x += 1*this.dx;
+      // If player is not attacking, allow slightly more resisitance: 
+      else if (playerState === 0) {
+        if (player.x < this.x) {
+          player.x -= 1.3*this.dx;
+        }
+        if (player.x > this.x) {
+          player.x += 1.3*this.dx;
+        }
       }
       return this.enemyColliding;
-    }/////////////////////////////////////////////////////////////////////
-    if (this.enemyColliding === false) {
-      flag = true;
-    }////////////////////////////////////////////////////////////////////////
+    }
     enemyColliding = false;
   }
 
@@ -111,6 +113,7 @@ class Crab extends Sprites {
 
 
 
+// Crab enemy's weapon:
 class Rock {
   constructor(x, y) {
     this.x = x*tileWidth;
@@ -132,9 +135,10 @@ class Rock {
   }
 
   collision(player) {
+    // Detect player collision, and increase the force of gravity on player if collision is true. 
     if (abs((player.x + player.w) - this.x) <= this.radius) {
       enemyColliding = true;
-      console.log("yes");
+      gravity += 0.0001;
     }
   }
 }
@@ -148,11 +152,15 @@ class Koopa extends Sprites {
     super();
     this.x = x * tileWidth;
     this.y = y * tileHeight-(this.h/4);
+
+    // Boundaries for koopa's routine movement along the x-axis:
     this.boundaryXLeft = boundaryLeft;
     this.boundaryXRight = boundaryRight;
   }
   updateShow() {
     image(koopaImage, this.x, this.y, this.w/1.1, this.h/1.1);
+
+    // Display a colored dot that shows the number of koopa lives left:
     if (this.lifeArray.length === 1) {
       fill(200, 50, 50);
     }
@@ -164,16 +172,17 @@ class Koopa extends Sprites {
     }
       ellipse(this.x, this.y, 10, 10);
   }
+
   move(x, y, boundaryLeft, boundaryRight) {
-    //translate(player.position.x, 0);
+    // if moving at the end of the left boundary, continue right:
     if (this.x >= this.boundaryXLeft && this.x <= this.boundaryXRight) {
       this.x += this.dx;
     }
+    // if moving at the end of the right boundary, turn around and move left:
     else if (this.x < this.boundaryXLeft || this.x > this.boundaryXRight) {
       this.dx = -1 *  this.dx;
       this.x += this.dx;
     }
-    //translate(-player.position.x, 0);
   }
 }
 
@@ -182,165 +191,194 @@ class Koopa extends Sprites {
 
 // Player / Mario class:                        
 class Player extends Sprites {
-  constructor(spriteX, spriteY) {                            
+  constructor(spriteX, spriteY, lifeArray) {                            
     super(spriteX, spriteY);
 
+    //Screen Scrolling Elements:
+    // The position of the screen that scrolls with player's movement (NOTE: this is not player's x position!):
     this.position = createVector(0, spriteY);
     // Controls the scroll speed of the game screen:
     this.scrollAcceleration += 5;
     // Gives the "screen" a velocity:
     this.scrollVelocity = createVector(3, spriteY);   // Beta-test: made game scroll faster than background image.
     
+    // Player Elements:
     this.yVel = yVelocity;
     this.yAccel = yAcceleration;
     this.yLoc = yLocation;
 
     this.isColliding = false;
-
-    this.rightEdge = line (this.x+this.w, this.yLoc, this.x+this.w, this.yLoc+this.h);
-    this.leftEdge = line (this.x, this.yLoc, this.x, this.yLoc+this.h);
-    this.bottomEdge = line (this.x, this.yLoc+this.h, this.x+this.w, this.yLoc+this.h);
-
-    this.hit = false;
   }
 
-  // Implement gravity!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   updateShow(playerAvatar) { 
+
+    // Y-Direction movement physics: if acceleration is acquired, apply it to player's y position. 
     this.yVel += this.yAccel;
     this.yLoc += this.yVel;
-    this.yAccel = 0;   // after moving each time, turn the acceleration back to 0
+    // After moving each time, turn the acceleration back to 0 and apply gravity:
+    this.yAccel = 0; 
     this.yVel += gravity;
-    this.xSmooth = this.x + tileWidth;
 
-    // if it is going past the ground make it stay on the ground and stop it from moving 
+    // if player is going past the ground make it stay on the ground and stop it from moving:
     if (this.yLoc > ground) {
       this.yLoc = ground;
       this.yVel = 0;
       isJumping = false;
     }
-    else if (this.yLoc < 55) {   // if it is going past the roof make it fall 
+    // If player is going past the top, black banner, make it fall back down:
+    else if (this.yLoc < 55) {   
       this.yVel = 0;
       this.yAccel = +5;
     }
 
+
+    // Player movement in the right direction:
     if (keyIsPressed && keyCode === RIGHT_ARROW) {
+      // As long as player is not colliding, and game-environemnt displayed on-screen covers a specific 
+      // portion of the text file, change player avatar and scroll the screen to the right:
       if (enemyColliding === false) {
         if (this.position.x < 80*tileWidth) {
           playerAvatar = marioRun; 
           this.scrollVelocity.add(this.scrollAcceleration);
           this.position.add(this.scrollVelocity); 
         }                                               
-        // show run:
-        if (this.xSmooth <= this.position.x + 500) {
+        // As long as player remains a max. of 500 pixels from left of screen, allow player to scroll right:
+        if (this.x <= this.position.x + 500) {
           this.x += this.dx;
         }
       }
     }
+
+
+    // Player movement in the left direction:
     else if (keyIsPressed && keyCode === LEFT_ARROW) {
+      // As long as player is not colliding, display player avatar, move player x position to the left:
       if (enemyColliding === false) {    
         playerAvatar = marioRunBack;                                 
-        // show run:
         this.x -= this.dx;
+        // If player tries to go farther than the left edge of the scene shown, restrict player's x position to the left edge of the screen: 
         if (this.x < this.position.x) {
           this.x = this.position.x;
         }
       }
     }
+
+
+    // Player attack key:
     else if(keyIsPressed && keyCode === DOWN_ARROW) {
+      // Switch player state to "attack" mode:
       playerState = 1;
+      // Change player avatar:
       if (playerState === 1) {
         playerAvatar = marioAttack; 
       }
     }
     else {
-      // show duck:
+      // keep neutral player avatar:
       playerAvatar = marioDuck;
     }
-    // show user:
+    // display player:
     image(playerAvatar, this.x, this.yLoc, this.w, this.h);
   }
 
+
+
+  // Player collision with top of platforms:
   collisionTop(platformX, platformY, platformXFar, platformYBottom) {
-    this.previousY = this.yLoc;
+    
+    // Using p5.collide2d library to detect collision:
     this.isColliding = collideLineRect(platformX, platformY, platformXFar, platformY, this.x, this.yLoc, this.w, this.h); // beta testing change of this.x values
-    //if (this.x+this.w >= platformX && this.x+this.w <= platformXFar && this.y+this.h === platformY) {
+    
+    // If player is colliding directly with the top of platform, or is positioned within the 'range' of the top of the platform.
     if ((this.isColliding === true) || (player.yLoc >= platformY && player.yLoc + player.h < platformYBottom/2 && player.x >= platformX && player.x <= platformXFar)) {
+      // Position player just on top of the platform (offsetting it by 0.01 pixels to avoid getting trapped on platform):
       this.yLoc = platformY - (this.h+0.01);
-      //this.yAccel = 0;
       this.yVel = 0;
+      // If player was jumping before, turn off jump:
       isJumping = false;
       return true;
     }
+    // If player is not colliding, and not at the top of a jump, allow for full range of motion again:
     else {
       if (this.yAccel === 0) {
-        this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
+        this.dx = random(3, 10);  
       }
       return false;
     }
   }
 
+
+
+  // Player collision with Left of platforms:
   collisionLeft(platformX, platformY, platformXFar, platformYBottom) {
+    // Using p5.collide2d library to detect collision:
     this.isColliding = collideLineRect(platformX, platformY, platformX, platformYBottom, this.x, this.yLoc, this.w, this.h);
-    if (this.hit === false) {
-      if (this.isColliding === true) {
-        this.hit = true;
-        this.hit = false;
-        this.dx = 0;            // restrict player's movement in the x direction (until done falling).
-        this.yVel = 0;
-        this.yAccel = +1;      //////////change to 5
-      }
-      if (this.yLoc === ground) {
-        this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
-      }
+    if (this.isColliding === true) {
+      // If colliding, prevent player movement in the x-axis (preventing player from intersecting the platform):
+      this.dx = 0; 
+      // Make player fall:      
+      this.yVel = 0;
+      this.yAccel = +4;      
     }
-    if (this.isColliding === false) {
-      this.hit = false;
+    // Once player reaches ground, allow full movement again.
+    if (this.yLoc === ground) {
+      this.dx = random(3, 10);  
     }
   }
 
+
+
+  // Player collision with Right of platforms:
   collisionRight(platformX, platformY, platformXFar, platformYBottom) {
+    // Using p5.collide2d library to detect collision:
     this.isColliding = collideLineRect(platformXFar, platformY, platformXFar, platformYBottom, this.x, this.yLoc, this.w, this.h);
-    if (this.hit === false) {
-      if (this.isColliding === true) {
-        this.hit = true;
-        this.hit = false;
-        this.dx = 0;            // restrict player's movement in the x direction (until done falling).
-        this.yVel = 0;
-        this.yAccel = +1;      //////////change to 5
-      }
-      if (this.yLoc === ground) {
-        this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
-      }
+    if (this.isColliding === true) {
+      // If colliding, prevent player movement in the x-axis (preventing player from intersecting the platform):
+      this.dx = 0;            
+      // Make player fall:   
+      this.yVel = 0;
+      this.yAccel = +4;
     }
-    if (this.isColliding === false) {
-      this.hit = false;
+    // Once player reaches ground, allow full movement again.
+    if (this.yLoc === ground) {
+      this.dx = random(3, 10);  
     }
   }
 
+
+
+  // Player collision with Right of platforms:
   collisionBottom(platformX, platformY, platformXFar, platformYBottom) {
+    // Using p5.collide2d library to detect collision:
     this.isColliding = collideLineRect(platformX, platformYBottom, platformXFar, platformYBottom, this.x, this.yLoc, this.w, this.h);
-    if (this.hit === false) {
-      if (this.isColliding === true) {
-        this.hit = true;
-        this.hit = false;
-        this.dx = 0;            // restrict player's movement in the x direction (until done falling).
-        this.yVel = 0;
-        this.yAccel = +1;      //////////change to 5
-      }
-      if (this.yLoc === ground) {
-        this.dx = random(3, 10);  //once player reaches ground, allow full movement again.
-      }
+    if (this.isColliding === true) {
+      // If colliding, prevent player movement in the x-axis (preventing player from intersecting the platform):
+      this.dx = 0;            
+      // Make player fall:  
+      this.yVel = 0;
+      this.yAccel = +4;
     }
-    if (this.isColliding === false) {
-      this.hit = false;
+    // Once player reaches ground, allow full movement again.
+    if (this.yLoc === ground) {
+      this.dx = random(3, 10);  
     }
   }
 
-  kick() {
-  }
 
-  attack() {
-    fill(255, 0, 0);
-    ellipse(this.x, this.y, 50, 50);
+
+  // Enemy collision:
+  playerCollision(pointToSubtract) {
+    // As long as player has lives left:
+    if (playerLives >=1) {
+      // Remove a life from the life counter: 
+      console.log("old player life " + playerLives);
+      let oldPlayerLives = playerLives;
+      return playerLives = oldPlayerLives - pointToSubtract;
+    }
+
+    // Otherwise, If no lives left, trigger game over screen:
+    else if (playerLives === 0){
+      screenState = "Game Over";
+    }
   }
 }

@@ -1,8 +1,11 @@
 // Variables for the coordinates location of the four corners of platforms:
 let platformX, platformY, platformYBottom, platformXFar;
 
-let hats;                                                                //tester
-let points;
+// The player life points to subtract during enemy collision:
+let pointToSubtract;                                                             
+
+
+
 
 function displayStartScreen() {
   // Start screen with menu:
@@ -11,6 +14,7 @@ function displayStartScreen() {
   fill(200, 50, 20, 100);
   rect(menuX, menuY, menuWidth, menuHeight, 30); 
 
+  // Menu buttons:
   startButton.hoveredOver();
   infoButton.hoveredOver();
   startButton.show();
@@ -55,6 +59,7 @@ function displayStartScreen() {
 
   /////////////////////////////////////// END OF SCROLL SCREEN /////////////////////////////////////////////
 
+
     // Reads textfile for location of mario castle needed to complete the game:
     // (Placed outside of the normal showTiles() function so that mario can 'layer' over top the castle):
     for (let y = 0; y < lettersHigh; y++) {
@@ -83,13 +88,7 @@ function displayStartScreen() {
     }
 
     // Shows and updates player:
-    player.updateShow(playerAvatar);
-
-    // // Trigger Game Over if player dies:
-    // if (playerLives === 0) {
-    //   screenState = "Game Over";
-    // }  
-
+    player.updateShow(playerAvatar); 
 
     // For every letter in the textfile, show the corresponding game tile:
     for (let y = 0; y < lettersHigh; y++) {
@@ -97,7 +96,6 @@ function displayStartScreen() {
         showTiles(tiles[x][y], x, y); 
       }
     }
-
     //////////////////////////////// KOOPA ENEMY SHOW(), MOVE() AND COLLISION /////////////////////////////////////
     
     // For each koopa in koopaArray, show, move and detect collision:
@@ -105,17 +103,44 @@ function displayStartScreen() {
       let thisKoopa = koopaArray[index];
       thisKoopa.updateShow();
       thisKoopa.move();
+      lastPlayerX = player.x;                                    //????????????????????????????
       thisKoopa.enemyCollision();
-      //thisKoopa.enemyState();
 
-      // if (thisKoopa.lifeArray[0] === 1 && thisKoopa.lifeArray[1] === 1 && thisKoopa.lifeArray[2] === 1) {
-      //   // "Kill" thisKoopa by splicing it from koopaArray.
-      //   koopaArray.splice(koopaArray.indexOf(thisKoopa), 1);
-      //   console.log(thisKoopa.lifeArray);
-      // }
+      // Determines what to do if collision is true:
+      if (thisKoopa.enemyCollision(player) === true) {
+        // If playerState is attack mode (1), and thisKoopa has atleast 1 life: 
+        if (playerState === 1) {
+          if (thisKoopa.lifeArray.length >=1) {
+            // Remove a life from the koopaArray. 
+            thisKoopa.lifeArray.splice(thisKoopa.lifeArray[2], 1);
+          }
+
+          // Otherwise, If koopa has no lives left:
+          else {
+            // "Kill" thisKoopa by splicing it from koopaArray. 
+            koopaArray.splice(koopaArray.indexOf(thisKoopa), 1);
+          }
+
+          //Turn playerState to normal:
+          playerState = 0;
+        }
+
+        // Instead, if playerState is already normal (0), subract 1 from player life:
+        else if (playerState === 0) {
+          enemyColliding = true;
+          // Only if the last and current player x position changed significantly, subtract player lives:  //??????????
+          if (abs(lastPlayerX-player.x) > 50) {
+            pointToSubtract = 1;
+          }
+          else {
+            pointToSubtract = 0;
+          }
+          
+          // player-class function that subtracts and returns the playerlives:
+          player.playerCollision(pointToSubtract);
+        }
+      }
     }
-    
-  
     //////////////////////////////// CRAB ENEMY SHOW(), MOVE() AND COLLISION ////////////////////////////////
     
     // For each crab in crabArray, show and detect collision:
@@ -149,27 +174,18 @@ function displayStartScreen() {
             crabArray.splice(crabArray.indexOf(thisCrab), 1);
           }
 
-          //Agument player score, and turn playerState to normal:
-          hats++;
+          //Turn playerState to normal:
           playerState = 0;
         }
 
-        // If playerState is normal (0), subract 1 from player life:
+        // Instead, if playerState is already normal (0), subract 1 from player life:
         else if (playerState === 0) {
           enemyColliding = true;
+          let pointToSubtract = 1;
+          player.playerCollision(pointToSubtract);
         }
       }
     }
-
-
-
-    // Subtract 1 from playerLives if player collides with any enemy:                    //???
-    if (enemyColliding === true) {
-      console.log("enemyColliding");
-      playerLives -= 1;
-      enemyColliding = false;
-    }
-
     ////////////////////////////////////////////// COINS ////////////////////////////////////////////////////
 
     // For every coin object in coinArray, show the coin and detect collision with player:
@@ -182,7 +198,6 @@ function displayStartScreen() {
         coins ++;
       }
     }
-
     //////////////////////////////////////////// MYSTERY BOXES ///////////////////////////////////////////////
 
     // For every box object in boxArray, show the box and detect collision with player:
@@ -203,7 +218,8 @@ function displayStartScreen() {
 
 
 
-  // Loads different tile images accroding to type of tile in textfile:
+
+  // A Function that loads different tile images accroding to type of tile in textfile:
   function showTiles(location, x, y) {
 
     // Mario-Flag:
@@ -219,32 +235,21 @@ function displayStartScreen() {
     // Platform:
     if (location  === "#") {
 
-      platformX = x * tileWidth;
-      platformY = y * tileHeight;
-      platformYBottom = platformY+tileHeight;
-      platformXFar = platformX+tileWidth;
+      // Establishes the 4 edges of each platform:
+      platformX = x * tileWidth;                // Left most edge.
+      platformY = y * tileHeight;               // Top most edge.
+      platformYBottom = platformY+tileHeight;   // Bottom most edge.
+      platformXFar = platformX+tileWidth;       // Right most edge.
 
-      // let platformLeft = line(platformX, platformY, platformX, platformYBottom);
-      // let platformRight = line(platformXFar, platformY, platformXFar, platformYBottom);
-      // let platformTop = line(platformX, platformY, platformXFar, platformY);
-      // let platformBottom = line(platformX, platformYBottom, platformXFar, platformYBottom);
-
+      // Displays the platform:
       image(platformImage, platformX, platformY, tileWidth, tileHeight);
       
-      // Check for collision between player and 4 sides of each platform:
+      // Checks for collision between player and 4 sides of each platform:
       player.collisionTop(platformX, platformY, platformXFar, platformYBottom);
       player.collisionLeft(platformX, platformY, platformXFar, platformYBottom);
       player.collisionRight(platformX, platformY, platformXFar, platformYBottom);
       player.collisionBottom(platformX, platformY, platformXFar, platformYBottom);
     } 
-
-    if (location === "B") {
-
-    }
-
-    if (location === "K") {
-
-    }
   }
 
 
@@ -262,10 +267,12 @@ function displayGameOverScreen() {
     text("You ran out of time!", windowWidth/2, windowHeight/5);
   }
 
+  // Game over message:
   textSize(80);  
   fill(255, 0, 0);
   text("GAME OVER", windowWidth/2, windowHeight/2);
-    
+  
+  // Displays the number of total coins earned in game:
   textSize(50);
   fill(255);
   text("Coins earned: " + coins, windowWidth/2, windowHeight/1.5);
@@ -288,7 +295,7 @@ function displayCompletedScreen() {
   text("Coins earned: " + coins, windowWidth/2, windowHeight/1.5);
   
   // Offers option of restarting the game:
-  setTimeout(alert("Play Again?"), timeElapsed);
+  setTimeout(alert("Play Again?"), frameCount + 2000);
   // If window button clicked, reloads the game:
   document.location.reload();
 }

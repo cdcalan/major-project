@@ -10,3 +10,18 @@ Problems:
 
 - 3) Animation:
     As part of my "Nice to Have" list, I wanted to improve the game graphics by turning the coins and running avatars of each sprite into gifs in javascript by sequentially looping through their images. This was another learning curve for me because I had to learn how to work with the p5.play library for animations.  
+
+
+      //Reads text file for number of coins and pushes their coordinate location into an empty array:
+  // for (let y = 0; y < lettersHigh; y++) {
+  //   for (let x = 0; x < lettersWide; x++) {
+  //     if (tiles[x][y] === "K") {
+  //       koopaCloud.push([x, y]);
+  //     }
+  //   }
+  // }
+  // // For each coin in "cloud" array, create a new Coin object with its location, and push it into the coinArray:
+  // for (let i = koopaCloud.length - 1; i > -1; i--) {
+  //   let coordinates = koopaCloud[i];
+  //   koopaArray[i] = new Koopa(coordinates[0]*tileWidth, coordinates[1]*tileHeight, (coordinates[0]*tileWidth)-10, (coordinates[0]*tileWidth)+400);
+  // }
