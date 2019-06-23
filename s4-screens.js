@@ -214,6 +214,10 @@ function displayStartScreen() {
       coin.show();
       // If player is colliding with coin, collect the coin by splicing it from coinArray and augment player coins counter. 
       if (coin.colliding(player) === true) {
+        
+        // Play sound effect:
+        soundEffect.play();
+
         coinArray.splice(coinArray.indexOf(coin), 1);
         coins ++;
       }

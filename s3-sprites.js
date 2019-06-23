@@ -256,6 +256,7 @@ class Player extends Sprites {
     
     // If player is colliding directly with the top of platform, or is positioned within the 'range' of the top of the platform.
     if ((this.isColliding === true) || (player.yLoc >= platformY && player.yLoc + player.h < platformYBottom/2 && player.x > platformX && player.x < platformXFar)) {
+
       // Position player just on top of the platform (offsetting it by 0.01 pixels to avoid getting trapped on platform):
       this.yLoc = platformY - (this.h+0.01);
       this.yVel = 0;
@@ -279,6 +280,10 @@ class Player extends Sprites {
     // Using p5.collide2d library to detect collision:
     this.isColliding = collideLineRect(platformX, platformY, platformX, platformYBottom, this.x, this.yLoc, this.w, this.h);
     if (this.isColliding === true) {
+      
+      // Play sound effect:
+      soundEffect.play();
+      
       // If colliding, prevent player movement in the x-axis (preventing player from intersecting the platform):
       this.dx = 0; 
       // Make player fall:      
@@ -298,6 +303,10 @@ class Player extends Sprites {
     // Using p5.collide2d library to detect collision:
     this.isColliding = collideLineRect(platformXFar, platformY, platformXFar, platformYBottom, this.x, this.yLoc, this.w, this.h);
     if (this.isColliding === true) {
+      
+      // Play sound effect:
+      soundEffect.play();
+      
       // If colliding, prevent player movement in the x-axis (preventing player from intersecting the platform):
       this.dx = 0;            
       // Make player fall:   
@@ -317,7 +326,11 @@ class Player extends Sprites {
     // Using p5.collide2d library to detect collision:
     this.isColliding = collideLineRect(platformX, platformYBottom, platformXFar, platformYBottom, this.x, this.yLoc, this.w, this.h);
     if (this.isColliding === true) {
-      // If colliding, prevent player movement in the x-axis (preventing player from intersecting the platform):
+     
+     // Play sound effect:
+     soundEffect.play();
+     
+     // If colliding, prevent player movement in the x-axis (preventing player from intersecting the platform):
       this.dx = 0;            
       // Make player fall:  
       this.yVel = 0;

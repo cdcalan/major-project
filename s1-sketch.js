@@ -47,12 +47,17 @@ let playerLives, pLives, coins;
 // Player jump physics variables:
 let gravity, yLocation, ground, yVelocity, yAcceleration, isJumping;
 
+// Sound effect:
+let soundEffect;
 
 
 function preload() {
   // Loading structure of game environment from text file:
   level = "assets/textFiles/1.txt";
   lines = loadStrings(level);
+
+  // Load sound:
+  soundEffect = loadSound("assets/Input-06.mp3");
 
   // Background scenery:
   scrollImage = loadImage("assets/environment/marioBg1.jpg");
