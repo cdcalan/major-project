@@ -7,6 +7,7 @@
 /////////////////COLORS//////////////////////
 
 
+let flag = true;
 
 let timer; // 1 minute
 let countUp = 76;
@@ -88,6 +89,8 @@ function preload() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+
+  poins = "none";
 
   setInterval(timeIt, 1000);
 
@@ -186,7 +189,7 @@ function setup() {
 
   //////////////////////////////////////////////KOOPA GENERATION////////////////////////////////////////////////
   
-  // Reads text file for number of coins and pushes their coordinate location into an empty array:
+  //Reads text file for number of coins and pushes their coordinate location into an empty array:
   // for (let y = 0; y < lettersHigh; y++) {
   //   for (let x = 0; x < lettersWide; x++) {
   //     if (tiles[x][y] === "K") {
@@ -202,7 +205,7 @@ function setup() {
 
   // ////////////////////////////////// CRAB AND ROCKS GENERATION ////////////////////////////////////////////
   
-  // // Reads text file for number of coins and pushes their coordinate location into an empty array:
+  // Reads text file for number of coins and pushes their coordinate location into an empty array:
   // for (let y = 0; y < lettersHigh; y++) {
   //   for (let x = 0; x < lettersWide; x++) {
   //     if (tiles[x][y] === "B") {
@@ -217,23 +220,25 @@ function setup() {
   //   rockArray[i] = new Rock(coordinates[0]*tileWidth, coordinates[1]*tileHeight);
   // }
 
-  // crab1 = new Crab(29, 2);
-  // crab2 = new Crab(19, 4);
-  // crab3 = new Crab(2, 9);
-  // crab4 = new Crab(19, 13);
-  // crab5 = new Crab(32, 13); 
-  koopa1 = new Koopa(37, 4, 1864.05, 2274.05);
-  koopa2 = new Koopa(57, 4, 2877.0499999999997, 3287.0499999999997);
-  koopa3 = new Koopa(76, 4, 3839.4, 4249.4);   //apparently works with just one now?
-  koopa4 = new Koopa(17, 9, 851.05, 1261.05);
-  koopa5 = new Koopa(36, 9, 1813.3999999999998, 2223.3999999999996);
-  koopa6 = new Koopa(57, 9, 2877.0499999999997, 3287.0499999999997);
-  // rock1 = new Rock(29, 2);
-  // rock2 = new Rock(19, 4);
-  // rock3 = new Rock(2, 9);
-  // rock4 = new Rock(19, 13);
-  // rock5 = new Rock(32, 13);
-  
+  crab1 = new Crab(31, 2);
+  crab2 = new Crab(20, 4);
+  crab3 = new Crab(2, 9);
+  crab4 = new Crab(78, 9);
+  crab5 = new Crab(29, 13); 
+  crab6 = new Crab(70, 13); 
+  koopa1 = new Koopa(37, 4, 2798.3, 3208.3);
+  koopa2 = new Koopa(57, 4, 4316.3, 4726.3);
+  koopa3 = new Koopa(76, 4, 5758.400000000001, 6168.400000000001);   
+  koopa4 = new Koopa(17, 9, 1280.3000000000001, 1690.3000000000001);
+  koopa5 = new Koopa(36, 9, 2722.4, 3132.4);
+  koopa6 = new Koopa(57, 9, 4316.3, 4726.3);
+  rock1 = new Rock(31, 2);
+  rock2 = new Rock(20, 4);
+  rock3 = new Rock(2, 9);
+  rock4 = new Rock(78, 9);
+  rock5 = new Rock(29, 13); 
+  rock6 = new Rock(70, 13);
+
   // crab1 = new Crab(29, 2);
   // crab2 = new Crab(19, 4);
   // crab3 = new Crab(2, 9);
@@ -252,9 +257,9 @@ function setup() {
   // rock5 = new Rock(32, 13);
 
   // // Put each enemy object into an empty array to be called/deleted from:
-  // crabArray = [crab1, crab2, crab3, crab4, crab5];
+  crabArray = [crab1, crab2, crab3, crab4, crab5, crab6];
   koopaArray = [koopa1, koopa2, koopa3, koopa4, koopa5, koopa6];
-  // rockArray = [rock1, rock2, rock3, rock4, rock5];
+  rockArray = [rock1, rock2, rock3, rock4, rock5, rock6];
 }
 
 

@@ -2,6 +2,7 @@
 let platformX, platformY, platformYBottom, platformXFar;
 
 let hats;                                                                //tester
+let points;
 
 function displayStartScreen() {
   // Start screen with menu:
@@ -52,14 +53,7 @@ function displayStartScreen() {
     // For Scrolling of all Game elements besides the background: offset everything by player position.x variable).
     translate(-player.position.x, 0);
 
-  /////////////////////////////////////// END OF SCROLL SCREEN ///////////////////////////////////////////////
-   
-  // koopa1.move(16, 9, 810.4, 1150);
-    // koopa2.move(23, 9, 810.4, 1164.95);
-    // koopa3.move(40, 4, 1880, 2200);
-    // koopa4.move(43, 9, 1815, 2190);
-    // koopa5.move(56, 9, 2830, 3200);
-    // koopa6.move(58, 4, 2900, 3200);
+  /////////////////////////////////////// END OF SCROLL SCREEN /////////////////////////////////////////////
 
     // Reads textfile for location of mario castle needed to complete the game:
     // (Placed outside of the normal showTiles() function so that mario can 'layer' over top the castle):
@@ -104,7 +98,7 @@ function displayStartScreen() {
       }
     }
 
-    /////////////////////////////////KOOPA ENEMY SHOW(), MOVE() AND COLLISION//////////////////////////////////////
+    //////////////////////////////// KOOPA ENEMY SHOW(), MOVE() AND COLLISION /////////////////////////////////////
     
     // For each koopa in koopaArray, show, move and detect collision:
     for (let index = koopaArray.length -1; index > -1; index--) {
@@ -112,33 +106,15 @@ function displayStartScreen() {
       thisKoopa.updateShow();
       thisKoopa.move();
       thisKoopa.enemyCollision();
+      //thisKoopa.enemyState();
 
-      // Determines what to do if collision is true:
-      if (thisKoopa.enemyCollision(player) === true) {
-        // If playerState is attack mode (1), and thisKoopa has atleast 1 life: 
-        if (playerState === 1) {
-          if (thisKoopa.lifeArray.length >=1) {
-            // Remove a life from the koopaArray. 
-            thisKoopa.lifeArray.splice(thisKoopa.lifeArray.indexOf(thisKoopa.lifeArray.length-1), 1);
-          }
-          
-          // Otherwise, If koopa has no lives left:
-          else {
-            // "Kill" thisKoopa by splicing it from koopaArray. 
-            koopaArray.splice(koopaArray.indexOf(thisKoopa), 1);
-          }
-          
-          //Agument player score, and turn playerState to normal:
-          hats++;
-          playerState = 0;
-        }
-
-        // If playerState is normal (0), subract 1 from player life:
-        else if (playerState === 0) {
-          enemyColliding = true;
-        }
-      }
+      // if (thisKoopa.lifeArray[0] === 1 && thisKoopa.lifeArray[1] === 1 && thisKoopa.lifeArray[2] === 1) {
+      //   // "Kill" thisKoopa by splicing it from koopaArray.
+      //   koopaArray.splice(koopaArray.indexOf(thisKoopa), 1);
+      //   console.log(thisKoopa.lifeArray);
+      // }
     }
+    
   
     //////////////////////////////// CRAB ENEMY SHOW(), MOVE() AND COLLISION ////////////////////////////////
     
@@ -164,7 +140,7 @@ function displayStartScreen() {
         if (playerState === 1) {
           if (thisCrab.lifeArray.length >=1) {
             // Remove a life from the CrabArray. 
-            thisCrab.lifeArray.splice(thisCrab.lifeArray.indexOf(thisCrab.lifeArray.length-1), 1);
+            thisCrab.lifeArray.splice(thisCrab.lifeArray[2], 1);
           }
 
           // Otherwise, If crab has no lives left:
@@ -184,7 +160,6 @@ function displayStartScreen() {
         }
       }
     }
-
 
 
 
@@ -228,7 +203,6 @@ function displayStartScreen() {
 
 
 
-  
   // Loads different tile images accroding to type of tile in textfile:
   function showTiles(location, x, y) {
 

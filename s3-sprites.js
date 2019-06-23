@@ -21,6 +21,7 @@ class Sprites {
 
     // Number of lives:
     this.lifeArray = [0, 0, 0];
+    this.lives = 3;
 
     // Local variable to check if player is colliding with a particular enemy:
     this.enemyColliding = false;
@@ -30,19 +31,62 @@ class Sprites {
     // Checks if player is colliding with enemy sprites:
     this.enemyColliding = collideRectRect(this.x, this.y, this.w, this.h, player.x, player.yLoc, player.w, player.h);
     if (this.enemyColliding === true) {
+      console.log("hello " + "playerstate " + playerState);
+      if (playerState === 1) {
+        if (this.enemyColliding === true && flag === true) {
+          this.lives -= 1;
+          flag = false;
+        }
+      }
+
       enemyColliding = true;         
 
       // Resists player by trying to push player back away from enemy upon impact (makes it harder for player to hit crabs):
       if (player.x < this.x) {
-        player.x -= 1.1*this.dx;
+        player.x -= 1*this.dx;
       }
       if (player.x > this.x) {
-        player.x += 1.1*this.dx;
+        player.x += 1*this.dx;
       }
-    return this.enemyColliding;
-    }
+      return this.enemyColliding;
+    }/////////////////////////////////////////////////////////////////////
+    if (this.enemyColliding === false) {
+      flag = true;
+    }////////////////////////////////////////////////////////////////////////
     enemyColliding = false;
   }
+
+  // enemyState() {
+  //   // Determines what to do if collision is true:
+  //   if (this.enemyCollision(player) === true) {
+  //     // If playerState is attack mode (1), and thisKoopa has atleast 1 life: 
+  //     if (playerState === 1) {
+  //       if (this.lifeArray[2] === 0) {
+  //         for (let i = 0; i < 3; i++) {
+  //           // Remove a life from the koopaArray. 
+  //           if (this.lifeArray[1] === 0) {
+  //             this.lifeArray.splice(this.lifeArray[1], 1, 1);
+  //             //return this.lifeArray;
+  //           }
+  //           if (this.lifeArray[0] === 0) {
+  //             this.lifeArray.splice(this.lifeArray[0], 1, 1);
+  //             //return this.lifeArray;
+  //           }
+  //           else {
+  //             this.lifeArray.splice(this.lifeArray[2], 1, 1);
+              
+  //           }
+  //         }
+          
+  //       }
+  //       //return this.lifeArray;
+  //     }     
+  //     // If playerState is normal (0), subract 1 from player life:
+  //     else if (playerState === 0) {
+  //       enemyColliding = true;
+  //     }
+  //   }
+  // }
 }
 
 
@@ -121,7 +165,7 @@ class Koopa extends Sprites {
       ellipse(this.x, this.y, 10, 10);
   }
   move(x, y, boundaryLeft, boundaryRight) {
-    translate(player.position.x, 0);
+    //translate(player.position.x, 0);
     if (this.x >= this.boundaryXLeft && this.x <= this.boundaryXRight) {
       this.x += this.dx;
     }
@@ -129,7 +173,7 @@ class Koopa extends Sprites {
       this.dx = -1 *  this.dx;
       this.x += this.dx;
     }
-    translate(-player.position.x, 0);
+    //translate(-player.position.x, 0);
   }
 }
 
